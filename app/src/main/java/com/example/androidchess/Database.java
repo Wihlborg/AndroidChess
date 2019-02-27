@@ -7,14 +7,13 @@ import java.sql.SQLException;
 
 public class Database {
 
-    private PreparedStatement statement = null;
     private Connection connect = null;
-    private String url = "jdbc:mysql://localhost/shack";
 
     // database constructor
-    public Database() throws SQLException {
+    public Database(){
 
         try {
+            String url = "jdbc:mysql://localhost/shack";
             connect = (Connection) DriverManager.getConnection(url);
             System.out.println("Connected to database");
         } catch (SQLException ex) {
@@ -23,28 +22,23 @@ public class Database {
 
     }
 
-    public void addUser( String username,String email, String password, int account_id) throws  SQLException{
+    //For registering accounts
+    public void addUser( String username,String email, String password, int account_id) {
 
         String query = "insert into user (username, email, password, id)" + "values (?, ?, ?, ?)";
-
         // create the mysql insert preparedStatement
-        PreparedStatement preparedStmt = connect.prepareStatement(query);
-        preparedStmt.setString(1, username);
-        preparedStmt.setString(2,email);
-        preparedStmt.setString(3,password);
-        preparedStmt.setInt(4,account_id);
+        try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
+            preparedStmt.setString(1, username);
+            preparedStmt.setString(2, email);
+            preparedStmt.setString(3, password);
+            preparedStmt.setInt(4, account_id);
 
-        preparedStmt.execute();
-        connect.close();
-
-
-
-
-
+            preparedStmt.execute();
+            //connect.close();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
-
-
-
 
 
 
