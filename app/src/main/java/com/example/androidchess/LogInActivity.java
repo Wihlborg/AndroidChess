@@ -155,13 +155,7 @@ public class LogInActivity  extends AppCompatActivity{
                 return false;
             }
 
-                db.authenticateUser(mUsername, mPassword);
-                /*if (db.username1.equals(mUsername)) {
-                    // Account exists, return true if the password matches.
-                    return db.password1.equals(mPassword);
-                }*/
-
-            // TODO: register the new account here.
+            db.authenticateUser(mUsername, mPassword);
             return true;
         }
 
@@ -170,6 +164,7 @@ public class LogInActivity  extends AppCompatActivity{
             mAuthTask = null;
 
             if (success) {
+                //Add a new activity for online play later
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
