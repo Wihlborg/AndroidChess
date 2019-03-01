@@ -10,6 +10,7 @@ public class Database {
     public Database(){
 
         try {
+            //Uploaded to gearhost with name myshack and login myshack and password liridon!
             String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
             connect = DriverManager.getConnection(url);
             System.out.println("Connected to database");
