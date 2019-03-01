@@ -8,10 +8,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.*;
 
 public class LogInActivity  extends AppCompatActivity{
 
@@ -37,7 +34,7 @@ public class LogInActivity  extends AppCompatActivity{
         mUsername = findViewById(R.id.username);
         mPasswordView = findViewById(R.id.password);
         // Set up the register form
-        mRegisterButton = findViewById(R.id.register_button);
+        mRegisterButton = findViewById(R.id.register_button_from_login);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -61,13 +58,12 @@ public class LogInActivity  extends AppCompatActivity{
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Going to register!", Toast.LENGTH_SHORT).show();
 
                 Intent registerActivity = new Intent(LogInActivity.this, RegisterActivity.class);
                 startActivity(registerActivity);
             }
         });
-         //findViewById(R.id.login_form);
-         //findViewById(R.id.login_progress);
     }
 
 
@@ -99,13 +95,13 @@ public class LogInActivity  extends AppCompatActivity{
             cancel = true;
         }
 
-        // Check for a valid email address.
+        // Check for a valid username.
         if (TextUtils.isEmpty(username)) {
             mUsername.setError(getString(R.string.error_field_required));
             focusView = mUsername;
             cancel = true;
         } else if (!isUsernameValid(username)) {
-            mUsername.setError(getString(R.string.error_invalid_email));
+            mUsername.setError(getString(R.string.error_invalid_username));
             focusView = mUsername;
             cancel = true;
         }
@@ -146,17 +142,8 @@ public class LogInActivity  extends AppCompatActivity{
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
-            try {
-                // Simulate network access.
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                return false;
-            }
-
-            db.authenticateUser(mUsername, mPassword);
-            return true;
+            return db.authenticateUser(mUsername, mPassword);
         }
 
         @Override
@@ -164,7 +151,7 @@ public class LogInActivity  extends AppCompatActivity{
             mAuthTask = null;
 
             if (success) {
-                //Add a new activity for online play later
+                //Add a new activity for online play later?
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

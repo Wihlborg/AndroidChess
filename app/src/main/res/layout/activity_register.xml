@@ -18,8 +18,8 @@
 
     <ScrollView
             android:id="@+id/register_form"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_width="358dp"
+            android:layout_height="wrap_content">
 
         <LinearLayout
                 android:id="@+id/email_registration_form"
@@ -68,8 +68,7 @@
                         android:imeActionLabel="@string/action_sign_in_short"
                         android:imeOptions="actionUnspecified"
                         android:inputType="textPassword"
-                        android:maxLines="1"
-                        android:singleLine="true" android:autoText="true" android:autofillHints=""/>
+                        android:maxLines="1"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -87,7 +86,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:id="@+id/return_button"
+                    android:id="@+id/return_button_from_register"
                     android:textStyle="bold"/>
 
 

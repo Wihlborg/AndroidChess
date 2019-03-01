@@ -10,7 +10,7 @@ public class Database {
     public Database(){
 
         try {
-            String url = "jdbc:mysql://localhost";
+            String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
             connect = DriverManager.getConnection(url);
             System.out.println("Connected to database");
         } catch (SQLException ex) {
@@ -22,7 +22,7 @@ public class Database {
     //For registering user
     public void registerUser( String username,String email, String password, int account_id) {
 
-        String query = "INSERT INTO shack.user (username, email, password, id)" + "VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO myshack.user (username, email, password, id)" + "VALUES (?, ?, ?, ?)";
         // create the mysql insert preparedStatement
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
             preparedStmt.setString(1, username);
@@ -31,7 +31,6 @@ public class Database {
             preparedStmt.setInt(4, account_id);
 
             preparedStmt.execute();
-            //connect.close();
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -40,7 +39,7 @@ public class Database {
     //For authentication of logging in into the app as a user
     public boolean authenticateUser(String username, String password){
         boolean flag = false;
-        String query = "SELECT username, password FROM shack.user where username = ? AND password = ?";
+        String query = "SELECT username, password FROM myshack.user where username = ? AND password = ?";
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
             preparedStmt.setString(1, username);
             preparedStmt.setString(2, password);

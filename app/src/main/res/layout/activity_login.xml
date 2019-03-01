@@ -13,7 +13,7 @@
 
     <!-- Login progress -->
     <ProgressBar
-            android:id="@+id/login_progress"
+            android:id="@+id/register_progress"
             style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
                         android:id="@+id/username"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/prompt_email"
+                        android:hint="@string/prompt_username"
                         android:inputType="textEmailAddress"
                         android:maxLines="1"
                         android:singleLine="true"/>
@@ -75,7 +75,7 @@
                     android:textStyle="bold"/>
 
             <Button
-                    android:id="@+id/register_button"
+                    android:id="@+id/register_button_from_login"
                     style="?android:textAppearanceSmall"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
