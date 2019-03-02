@@ -1,6 +1,5 @@
 package com.example.androidchess;
 
-import android.content.AsyncQueryHandler;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import android.os.StrictMode;
 import java.util.Random;
 
 public class RegisterActivity extends AppCompatActivity {
@@ -28,19 +26,10 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mUsernameText;
     private static int account_id = 0;
 
-    //Objects
-    private static Random random = new Random();
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-       /* if (android.os.Build.VERSION.SDK_INT > 8) {
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-       */
         mReturnButton = findViewById(R.id.return_button_from_register);
         mRegisterButton = findViewById(R.id.create_user_button);
         mEmailText = findViewById(R.id.email);
