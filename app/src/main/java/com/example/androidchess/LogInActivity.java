@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,6 +12,7 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.*;
 
 public class LogInActivity  extends AppCompatActivity{
+    private static final String TAG = "LogInActivity";
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
@@ -21,9 +23,6 @@ public class LogInActivity  extends AppCompatActivity{
     private AutoCompleteTextView mUsername;
     private EditText mPasswordView;
     private Button mRegisterButton;
-
-    //Database
-    Database db = new Database();
 
 
     @Override
@@ -119,18 +118,18 @@ public class LogInActivity  extends AppCompatActivity{
     }
 
     private boolean isUsernameValid(String username) {
-        return username.length() > 4 && username.length() < 16;
+        return username.length() > 3 && username.length() < 15;
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4 && password.length() < 16;
+        return password.length() > 3 && password.length() < 15;
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+     class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mUsername;
         private final String mPassword;
@@ -142,6 +141,8 @@ public class LogInActivity  extends AppCompatActivity{
 
         @Override
         protected Boolean doInBackground(Void... params) {
+            //Database
+            Database db = new Database();
 
             return db.authenticateUser(mUsername, mPassword);
         }
@@ -152,6 +153,7 @@ public class LogInActivity  extends AppCompatActivity{
 
             if (success) {
                 //Add a new activity for online play later?
+                Log.d(TAG,"Log In Success");
                 finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));

@@ -1,6 +1,8 @@
 package com.example.androidchess;
 
+import android.content.AsyncQueryHandler;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -8,9 +10,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.os.StrictMode;
 import java.util.Random;
 
 public class RegisterActivity extends AppCompatActivity {
+    /**
+     * Keep track of the register task to ensure we can cancel it if requested.
+     */
+    private UserRegisterTask mAuthTask = null;
+
 
     // UI references.
     private Button mReturnButton;
@@ -20,13 +28,19 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText mUsernameText;
     private static int account_id = 0;
 
-    //Database
-    Database db = new Database();
+    //Objects
+    private static Random random = new Random();
+
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+       /* if (android.os.Build.VERSION.SDK_INT > 8) {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+       */
         mReturnButton = findViewById(R.id.return_button_from_register);
         mRegisterButton = findViewById(R.id.create_user_button);
         mEmailText = findViewById(R.id.email);
@@ -36,7 +50,7 @@ public class RegisterActivity extends AppCompatActivity {
         mReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"Returning to log in!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Returning to log in!", Toast.LENGTH_SHORT).show();
 
                 Intent returnActivity = new Intent(RegisterActivity.this, LogInActivity.class);
                 startActivity(returnActivity);
@@ -52,19 +66,20 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     }
+
     private boolean isUsernameValid(String username) {
-        return username.length() > 4 && username.length() < 16;
+        return username.length() > 3 && username.length() < 15;
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 4 && password.length() < 16;
+        return password.length() > 3 && password.length() < 15;
     }
 
     private boolean isEmailValid(String email) {
         return email.length() > 4 && email.contains("@");
     }
 
-    public void attemptSignUp(){
+    public void attemptSignUp() {
         boolean cancel = false;
         View focusView = null;
 
@@ -81,9 +96,9 @@ public class RegisterActivity extends AppCompatActivity {
             focusView = mEmailText;
             cancel = true;
         } else if (!isEmailValid(mEmailText.getText().toString())) {
-        mEmailText.setError(getString(R.string.error_invalid_email));
-        focusView = mEmailText;
-        cancel = true;
+            mEmailText.setError(getString(R.string.error_invalid_email));
+            focusView = mEmailText;
+            cancel = true;
         }
 
         // Check for a valid username.
@@ -102,15 +117,50 @@ public class RegisterActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            Random random = new Random();
-            account_id = random.nextInt(1000000);
+            account_id = 0;
             String user = String.valueOf(mUsernameText.getText());
             String email = String.valueOf(mEmailText.getText());
             String password = String.valueOf(mPasswordText.getText());
-            db.registerUser(user,email,password,account_id);
-            Toast.makeText(getBaseContext(),"User created, returning!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getBaseContext(), "User created, returning!", Toast.LENGTH_SHORT).show();
             Intent returnActivity = new Intent(RegisterActivity.this, LogInActivity.class);
             startActivity(returnActivity);
+            mAuthTask = new UserRegisterTask(user, email, password, account_id);
+            mAuthTask.execute((Void) null);
+
+        }
+    }
+
+
+    /**
+     * Represents an asynchronous registration task used to authenticate
+     * the user.
+     */
+
+    class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
+        private final String mUsername;
+        private final String mEmail;
+        private final String mPassword;
+        private final int mAccount_Id;
+
+
+        UserRegisterTask(String username, String email, String password, int account_id) {
+            mUsername = username;
+            mEmail = email;
+            mPassword = password;
+            mAccount_Id = account_id;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            Database db = new Database();
+
+            return db.registerUser(mUsername, mEmail, mPassword, mAccount_Id);
+        }
+
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
         }
     }
 

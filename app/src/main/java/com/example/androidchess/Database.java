@@ -1,29 +1,31 @@
 package com.example.androidchess;
 
+import android.util.Log;
 import java.sql.*;
 
 public class Database {
+    private static final String TAG = "Database";
 
     private Connection connect = null;
 
     // database constructor
-    public Database(){
+    public Database() {
 
+        String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
         try {
-            //Uploaded to gearhost with name myshack and login myshack and password liridon!
-            String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
             connect = DriverManager.getConnection(url);
-            System.out.println("Connected to database");
-        } catch (SQLException ex) {
-            System.out.println("Failed to connect to database");
+            Log.d(TAG,"Connected to database");
+        } catch (SQLException e) {
+            Log.d(TAG, "Failed to connect to database");
         }
 
     }
 
     //For registering user
-    public void registerUser( String username,String email, String password, int account_id) {
+    public boolean registerUser( String username,String email, String password, int account_id) {
+        boolean flag = false;
 
-        String query = "INSERT INTO myshack.user (username, email, password, id)" + "VALUES (?, ?, ?, ?)";
+        String query = "INSERT INTO myshack.user (username, email, password, account_id)" + "VALUES (?, ?, ?, ?)";
         // create the mysql insert preparedStatement
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
             preparedStmt.setString(1, username);
@@ -32,9 +34,12 @@ public class Database {
             preparedStmt.setInt(4, account_id);
 
             preparedStmt.execute();
+            flag = true;
         }catch (Exception e){
             e.printStackTrace();
         }
+
+        return flag;
     }
 
     //For authentication of logging in into the app as a user
