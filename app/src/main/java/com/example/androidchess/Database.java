@@ -28,11 +28,10 @@ public class Database {
         String query = "INSERT INTO myshack.user (username, email, password, account_id)" + "VALUES (?, ?, ?, ?)";
         // create the mysql insert preparedStatement
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
-           int i = preparedStmt.executeUpdate();
             preparedStmt.setString(1, username);
             preparedStmt.setString(2, email);
             preparedStmt.setString(3, password);
-            preparedStmt.setInt(4, i);
+            preparedStmt.setInt(4, account_id);
 
             preparedStmt.execute();
             flag = true;
