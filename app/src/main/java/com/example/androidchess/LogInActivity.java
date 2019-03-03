@@ -22,7 +22,8 @@ public class LogInActivity  extends AppCompatActivity{
     // UI references.
     private AutoCompleteTextView mUsername;
     private EditText mPasswordView;
-    private Button mRegisterButton;
+    protected Button mRegisterButton;
+    protected Button mSignInButton;
 
 
     @Override
@@ -46,7 +47,7 @@ public class LogInActivity  extends AppCompatActivity{
             }
         });
 
-        Button mSignInButton = findViewById(R.id.sign_in_button);
+        mSignInButton = findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {

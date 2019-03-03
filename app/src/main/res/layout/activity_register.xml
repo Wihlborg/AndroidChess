@@ -78,7 +78,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/action_register"
+                    android:text="@string/action_sing_up"
                     android:textStyle="bold"/>
             <Button
                     android:text="@string/action_return_to_login"

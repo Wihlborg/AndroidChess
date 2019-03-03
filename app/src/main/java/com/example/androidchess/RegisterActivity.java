@@ -18,12 +18,11 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     // UI references.
-    private Button mReturnButton;
-    private Button mRegisterButton;
+    protected Button mReturnButton;
+    protected Button mRegisterButton;
     private EditText mEmailText;
     private EditText mPasswordText;
     private EditText mUsernameText;
-    private static int account_id = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,18 +54,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
-    private boolean isUsernameValid(String username) {
-        return username.length() > 3 && username.length() < 15;
-    }
-
-    private boolean isPasswordValid(String password) {
-        return password.length() > 3 && password.length() < 15;
-    }
-
-    private boolean isEmailValid(String email) {
-        return email.length() > 4 && email.contains("@");
-    }
-
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
     public void attemptSignUp() {
         if (mAuthTask != null) {
             return;
@@ -76,7 +68,11 @@ public class RegisterActivity extends AppCompatActivity {
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(mPasswordText.getText().toString()) && !isPasswordValid(mPasswordText.getText().toString())) {
+        if (TextUtils.isEmpty(mPasswordText.getText())){
+            mPasswordText.setError(getString(R.string.error_field_required));
+            focusView = mPasswordText;
+            cancel = true;
+        }else if (!isPasswordValid(mPasswordText.getText().toString())){
             mPasswordText.setError(getString(R.string.error_invalid_password));
             focusView = mPasswordText;
             cancel = true;
@@ -109,7 +105,7 @@ public class RegisterActivity extends AppCompatActivity {
             // form field with an error.
             focusView.requestFocus();
         } else {
-            account_id = 0;
+            int account_id = 0;
             String user = String.valueOf(mUsernameText.getText());
             String email = String.valueOf(mEmailText.getText());
             String password = String.valueOf(mPasswordText.getText());
@@ -122,6 +118,17 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    private boolean isUsernameValid(String username) {
+        return username.length() > 3 && username.length() < 15;
+    }
+
+    private boolean isPasswordValid(String password) {
+        return password.length() > 3 && password.length() < 15;
+    }
+
+    private boolean isEmailValid(String email) {
+        return email.length() > 4 && email.contains("@");
+    }
 
     /**
      * Represents an asynchronous registration task used to authenticate

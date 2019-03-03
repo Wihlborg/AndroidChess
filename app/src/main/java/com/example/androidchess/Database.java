@@ -45,7 +45,7 @@ public class Database {
     //For authentication of logging in into the app as a user
     public boolean authenticateUser(String username, String password){
         boolean flag = false;
-        String query = "SELECT username, password FROM myshack.user where username = ? AND password = ?";
+        String query = "SELECT username, password FROM myshack.user WHERE username = ? AND password = ?";
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
             preparedStmt.setString(1, username);
             preparedStmt.setString(2, password);
