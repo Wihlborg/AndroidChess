@@ -32,11 +32,14 @@ public class Database {
             preparedStmt.setString(2, email);
             preparedStmt.setString(3, password);
             preparedStmt.setInt(4, account_id);
-
             preparedStmt.execute();
+
             flag = true;
+            Log.d(TAG,"Successful: INSERT  ");
+
         }catch (Exception e){
             e.printStackTrace();
+            Log.d(TAG, String.valueOf(e));
         }
 
         return flag;
@@ -57,10 +60,13 @@ public class Database {
 
             if (username1.equals(username) && password1.equals(password)){
                 flag = true;
+                Log.d(TAG,"Authentication successful");
             }
 
         }catch (Exception e){
             e.printStackTrace();
+            Log.d(TAG, String.valueOf(e));
+
         }
 
         return flag;
