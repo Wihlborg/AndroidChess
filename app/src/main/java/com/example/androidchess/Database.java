@@ -8,7 +8,7 @@ public class Database {
 
     private Connection connect = null;
 
-    // database constructor
+    //Database constructor
     public Database() {
 
         String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
