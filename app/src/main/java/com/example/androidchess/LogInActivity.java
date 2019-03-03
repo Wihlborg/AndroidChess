@@ -160,7 +160,7 @@ public class LogInActivity  extends AppCompatActivity{
                 Log.d(TAG,"Log In Success");
             } else {
 
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.setError(getString(R.string.error_incorrect_login));
                 mPasswordView.requestFocus();
             }
         }
