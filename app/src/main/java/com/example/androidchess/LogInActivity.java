@@ -143,7 +143,6 @@ public class LogInActivity  extends AppCompatActivity{
         protected Boolean doInBackground(Void... params) {
             //Database
             Database db = new Database();
-
             return db.authenticateUser(mUsername, mPassword);
         }
 
@@ -152,12 +151,15 @@ public class LogInActivity  extends AppCompatActivity{
             mAuthTask = null;
 
             if (success) {
-                //Add a new activity for online play later?
                 //Replace later with an actual online layout
                 //This is just for testing if it works or not.
+                //Might be a good idea to use
+                //Intent r = new Intent(ThisClass.this, NextClass.class); startActivity(r);
                 setContentView(R.layout.signedin_layout);
+                Toast.makeText(getApplicationContext(),"Log In Success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG,"Log In Success");
             } else {
+
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();
             }

@@ -3,7 +3,7 @@
               xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
               android:layout_height="match_parent" android:orientation="vertical">
     <TextView
-            android:text="TextView"
+            android:text="TestLogIn"
             android:layout_width="match_parent"
             android:id="@+id/textView2" android:layout_height="50dp"/>
 </LinearLayout>
