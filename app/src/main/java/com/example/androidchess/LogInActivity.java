@@ -39,18 +39,18 @@ public class LogInActivity  extends AppCompatActivity{
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
                 if (id == EditorInfo.IME_ACTION_DONE || id == EditorInfo.IME_NULL) {
-                    attemptLogin();
+                    attemptSignIn();
                     return true;
                 }
                 return false;
             }
         });
 
-        Button mEmailSignInButton = findViewById(R.id.sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mSignInButton = findViewById(R.id.sign_in_button);
+        mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                attemptLogin();
+                attemptSignIn();
             }
         });
 
@@ -71,7 +71,7 @@ public class LogInActivity  extends AppCompatActivity{
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptSignIn() {
         if (mAuthTask != null) {
             return;
         }
@@ -153,8 +153,10 @@ public class LogInActivity  extends AppCompatActivity{
 
             if (success) {
                 //Add a new activity for online play later?
+                //Replace later with an actual online layout
+                //This is just for testing if it works or not.
+                setContentView(R.layout.signedin_layout);
                 Log.d(TAG,"Log In Success");
-                finish();
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
                 mPasswordView.requestFocus();

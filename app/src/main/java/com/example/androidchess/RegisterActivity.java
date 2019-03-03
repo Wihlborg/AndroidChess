@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-import java.util.Random;
 
 public class RegisterActivity extends AppCompatActivity {
     /**
@@ -69,6 +68,10 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     public void attemptSignUp() {
+        if (mAuthTask != null) {
+            return;
+        }
+
         boolean cancel = false;
         View focusView = null;
 
