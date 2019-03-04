@@ -1,4 +1,4 @@
-package com.example.androidchess;
+package com.example.androidchess.chessboard;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
@@ -7,20 +7,19 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import com.example.androidchess.R;
 
 public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;
-    private final ImageViewCell[] pieces;
-
-    public ImageAdapter(Context mContext, ImageViewCell[] pieces) {
-        this.mContext = mContext;
-        this.pieces = pieces;
-    }
+    public final ImageViewCell[][] pieces2 = new ImageViewCell[8][8];
+    public final ImageViewCell[] pieces = new ImageViewCell[64];
+    private int currentCells = 0;
+    private int currentCellsX = 0;
+    private int currentCellsY = 0;
 
     public ImageAdapter(Context mContext) {
         this.mContext = mContext;
-        this.pieces = null;
     }
 
     @Override
@@ -30,7 +29,7 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return pieces[position];
     }
 
     @Override
@@ -62,6 +61,17 @@ public class ImageAdapter extends BaseAdapter {
         }
 
         img.setImageResource(pieceIds[position]);
+        img.setFileName(img.getResources().getResourceName(pieceIds[position]));
+
+        if (currentCellsX < 8) {
+            if (currentCellsY < 8) {
+                pieces2[currentCellsX][currentCellsY] = img;
+                currentCellsY = currentCellsY++ % 8;
+            }
+            currentCellsX++;
+        }
+
+        pieces[currentCells++] = img;
         return img;
     }
 
@@ -140,13 +150,4 @@ public class ImageAdapter extends BaseAdapter {
 
     };
 
-    private String getPieceName(int position) {
-        switch (position) {
-            case 0:
-                return "rw";
-
-            default:
-                return "ts";
-        }
-    }
 }

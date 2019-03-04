@@ -1,4 +1,4 @@
-package com.example.androidchess;
+package com.example.androidchess.chessboard;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -33,6 +33,10 @@ public class ImageViewCell extends android.support.v7.widget.AppCompatImageView 
             return false;
         else
             return true;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public void onDraw(Canvas canvas) {
