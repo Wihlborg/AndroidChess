@@ -1,11 +1,14 @@
 package com.example.androidchess;
 
 import android.util.Log;
+import android.widget.EditText;
+
 import java.sql.*;
 
 public class Database {
     private static final String TAG = "Database";
     private static Database db = null;
+    private Encryption encrypt = new Encryption();
 
 
     private Connection connect = null;
@@ -40,12 +43,12 @@ public class Database {
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
             preparedStmt.setString(1, username);
             preparedStmt.setString(2, email);
-            preparedStmt.setString(3, password);
+            preparedStmt.setString(3, encrypt.passwordEncryptor(username,password));
             preparedStmt.setInt(4, account_id);
             preparedStmt.execute();
 
             flag = true;
-            Log.d(TAG,"Successful: INSERT  ");
+            Log.d(TAG,"Registration Successful");
 
         }catch (Exception e){
             e.printStackTrace();
@@ -61,14 +64,14 @@ public class Database {
         String query = "SELECT username, password FROM myshack.user WHERE username = ? AND password = ?";
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
             preparedStmt.setString(1, username);
-            preparedStmt.setString(2, password);
+            preparedStmt.setString(2, encrypt.passwordEncryptor(username,password));
 
             ResultSet resultSet = preparedStmt.executeQuery();
             resultSet.next();
             String username1 = resultSet.getString("username");
             String password1 = resultSet.getString("password");
 
-            if (username1.equals(username) && password1.equals(password)){
+            if (username1.equals(username) && password1.equals(encrypt.passwordEncryptor(username,password))){
                 flag = true;
                 Log.d(TAG,"Authentication successful");
             }

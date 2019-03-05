@@ -21,8 +21,8 @@ public class RegisterActivity extends AppCompatActivity {
     protected Button mReturnButton;
     protected Button mRegisterButton;
     private EditText mEmailText;
-    private EditText mPasswordText;
-    private EditText mUsernameText;
+    public EditText mPasswordText;
+    public EditText mUsernameText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
