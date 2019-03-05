@@ -3,6 +3,7 @@ package com.example.androidchess.chessboard;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -13,7 +14,7 @@ public class Game extends AppCompatActivity {
 
     GridView board;
     ImageAdapter imageAdapter;
-    ImageViewCell[] pieces;
+    //ImageView[] pieces = new ImageView[64];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +36,88 @@ public class Game extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                swap(position);
-
+                possibleMoves(position);
             }
         });
 
-        pieces = imageAdapter.pieces;
+    }
 
+    public void printArray(ImageView[] pieces, String tag) {
+        Log.d("gridview size", Integer.toString(board.getChildCount()));
+        String toString = "";
+        for (int i = 0; i < pieces.length; i++) {
+            toString += "[" + pieces[i].getTag() + "], ";
+        }
+        //toString = pieces.toString();
+        Log.d(tag, toString);
     }
 
     public boolean validCell(int position) {
-        if (pieces[position].fileName.charAt(0) != 't')
+        if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't')
             return true;
         else
             return false;
     }
 
     public void bishopCheck(int position) {
+        int x = position % 8;
+        int y = position / 8;
+        int i = x;
+        int n = y;
+        boolean obstacle = false;
+        while (i < 8 && n < 8 && !obstacle) {
+            int t = i + 8*n;
+            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+                obstacle = true;
+            }
+            else {
+                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+            }
+            i++;
+            n++;
+        }
 
+        i = x;
+        n = y;
+        while (i < 0 && n < 0 && !obstacle) {
+            int t = i + 8*n;
+            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+                obstacle = true;
+            }
+            else {
+                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+            }
+            i--;
+            n--;
+        }
+
+        i = x;
+        n = y;
+        while (i < 0 && n < 0 && !obstacle) {
+            int t = i + 8*n;
+            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+                obstacle = true;
+            }
+            else {
+                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+            }
+            i++;
+            n--;
+        }
+
+        i = x;
+        n = y;
+        while (i < 0 && n < 0 && !obstacle) {
+            int t = i + 8*n;
+            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+                obstacle = true;
+            }
+            else {
+                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+            }
+            i--;
+            n++;
+        }
     }
 
     public void rookCheck(int position) {
@@ -64,7 +129,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void pawnCheck(int position) {
-
+        
     }
 
     public void kingCheck(int position) {
@@ -72,7 +137,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void possibleMoves(int position) {
-        switch (pieces[position].fileName.charAt(0)) {
+        switch (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0)) {
             // queen
             case 'q':
                 bishopCheck(position);
