@@ -115,6 +115,7 @@ public class LogInActivity  extends AppCompatActivity{
             // perform the user login attempt.
             mAuthTask = new UserLoginTask(username, password);
             mAuthTask.execute((Void) null);
+
         }
     }
 
@@ -143,8 +144,8 @@ public class LogInActivity  extends AppCompatActivity{
         @Override
         protected Boolean doInBackground(Void... params) {
             //Database
-            Database db = new Database();
-            return db.authenticateUser(mUsername, mPassword);
+
+            return Database.getInstance().authenticateUser(mUsername, mPassword);
         }
 
         @Override
@@ -155,7 +156,9 @@ public class LogInActivity  extends AppCompatActivity{
                 //Replace later with an actual online layout
                 //This is just for testing if it works or not.
                 //Might be a good idea to use
-                //Intent r = new Intent(ThisClass.this, NextClass.class); startActivity(r);
+                //Intent r = new Intent(LogInActivity.this, NextClass.class);
+                //startActivity(r);
+
                 setContentView(R.layout.signedin_layout);
                 Toast.makeText(getApplicationContext(),"Log In Success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG,"Log In Success");
