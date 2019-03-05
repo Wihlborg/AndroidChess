@@ -13,8 +13,8 @@ public class Database {
 
     private Connection connect = null;
 
-    //Singleton instance
-    public static Database getInstance(){
+    //Singleton instance of Database
+     static Database getInstance(){
         if (db == null){
             db = new Database();
         }
@@ -35,7 +35,7 @@ public class Database {
     }
 
     //For registering user
-    public boolean registerUser( String username,String email, String password, int account_id) {
+     boolean registerUser( String username,String email, String password, int account_id) {
         boolean flag = false;
 
         String query = "INSERT INTO myshack.user (username, email, password, account_id)" + "VALUES (?, ?, ?, ?)";
@@ -59,7 +59,7 @@ public class Database {
     }
 
     //For authentication of logging in into the app as a user
-    public boolean authenticateUser(String username, String password){
+     boolean authenticateUser(String username, String password){
         boolean flag = false;
         String query = "SELECT username, password FROM myshack.user WHERE username = ? AND password = ?";
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
