@@ -1,11 +1,9 @@
 package com.example.androidchess;
 
 import android.util.Log;
-import android.widget.EditText;
-
 import java.sql.*;
 
-public class Database {
+ class Database {
     private static final String TAG = "Database";
     private static Database db = null;
     private Encryption encrypt = new Encryption();
