@@ -14,6 +14,7 @@ public class Game extends AppCompatActivity {
 
     GridView board;
     ImageAdapter imageAdapter;
+    boolean[] possibleMoves = new boolean[64];
     //ImageView[] pieces = new ImageView[64];
 
     @Override
@@ -53,7 +54,7 @@ public class Game extends AppCompatActivity {
     }
 
     public boolean validCell(int position) {
-        if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't')
+        if (getCell(position).getTag().toString().charAt(0) != 't')
             return true;
         else
             return false;
@@ -62,58 +63,77 @@ public class Game extends AppCompatActivity {
     public void bishopCheck(int position) {
         int x = position % 8;
         int y = position / 8;
+
+        // diagonal towards bottom right
         int i = x;
         int n = y;
         boolean obstacle = false;
         while (i < 8 && n < 8 && !obstacle) {
             int t = i + 8*n;
-            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+            if (getCell(position).getTag().toString().charAt(0) != 't') {
+                possibleMoves[t] = true;
                 obstacle = true;
             }
             else {
-                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+                possibleMoves[t] = true;
+                getCell(t).setAlpha(1f);
             }
             i++;
             n++;
         }
 
+        // diagonal towards top left
         i = x;
         n = y;
+        obstacle = false;
         while (i < 0 && n < 0 && !obstacle) {
+
+            // position in array currently getting looked at
             int t = i + 8*n;
-            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+
+            if (getCell(position).getTag().toString().charAt(0) != 't') {
+                possibleMoves[t] = true;
                 obstacle = true;
             }
             else {
-                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+                possibleMoves[t] = true;
+                getCell(t).setAlpha(1f);
             }
             i--;
             n--;
         }
 
+        // diagonal towards top right
         i = x;
         n = y;
+        obstacle = false;
         while (i < 0 && n < 0 && !obstacle) {
             int t = i + 8*n;
-            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+            if (getCell(position).getTag().toString().charAt(0) != 't') {
+                possibleMoves[t] = true;
                 obstacle = true;
             }
             else {
-                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+                possibleMoves[t] = true;
+                getCell(t).setAlpha(1f);
             }
             i++;
             n--;
         }
 
+        // diagonal toward bottom left
         i = x;
         n = y;
+        obstacle = false;
         while (i < 0 && n < 0 && !obstacle) {
             int t = i + 8*n;
-            if (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0) != 't') {
+            if (getCell(position).getTag().toString().charAt(0) != 't') {
+                possibleMoves[t] = true;
                 obstacle = true;
             }
             else {
-                ((ImageView)board.getItemAtPosition(position)).setAlpha(1f);
+                possibleMoves[t] = true;
+                getCell(t).setAlpha(1f);
             }
             i--;
             n++;
@@ -129,7 +149,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void pawnCheck(int position) {
-        
+
     }
 
     public void kingCheck(int position) {
@@ -137,7 +157,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void possibleMoves(int position) {
-        switch (((ImageView)board.getItemAtPosition(position)).getTag().toString().charAt(0)) {
+        switch (getCell(position).getTag().toString().charAt(0)) {
             // queen
             case 'q':
                 bishopCheck(position);
@@ -166,7 +186,7 @@ public class Game extends AppCompatActivity {
         }
     }
 
-    public boolean legalMove() {
+    public boolean legalMove(int position) {
 
         return true;
     }
@@ -192,6 +212,8 @@ public class Game extends AppCompatActivity {
 
     }
 
-
+    public ImageView getCell(int position) {
+        return ((ImageView)board.getItemAtPosition(position));
+    }
 }
 
