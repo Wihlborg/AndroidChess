@@ -10,7 +10,7 @@ import java.sql.*;
 
 
     private Connection connect = null;
-    //Test push
+
     //Singleton instance of Database
      static Database getInstance(){
         if (db == null){
@@ -82,6 +82,29 @@ import java.sql.*;
 
         return flag;
     }
+
+    boolean forgotPassword(String email, String username) {
+         boolean flag = false;
+         String password = "random";
+         Mail.getInstance().sendEmail(email,password, username);
+
+         String query = ("UPDATE myshack.user SET password = ? WHERE email = "+ email);
+
+         try (PreparedStatement preparedStatement = connect.prepareStatement(query)) {
+
+             preparedStatement.setString(1, encrypt.passwordEncryptor(username,password));
+             ResultSet resultSet = preparedStatement.executeQuery();
+
+             resultSet.next();
+             flag = true;
+
+         } catch (Exception e) {
+
+             e.getSuppressed();
+
+         }
+         return flag;
+     }
 
 
 

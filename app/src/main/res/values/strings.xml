@@ -17,4 +17,6 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="action_forgot_password">Forgot password</string>
+    <string name="action_recover_password">Recover password</string>
 </resources>

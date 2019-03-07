@@ -17,14 +17,14 @@ public class LogInActivity  extends AppCompatActivity{
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    protected UserLoginTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView mUsername;
     private EditText mPasswordView;
     protected Button mRegisterButton;
     protected Button mSignInButton;
-
+    protected Button mForgotButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,15 @@ public class LogInActivity  extends AppCompatActivity{
 
                 Intent registerActivity = new Intent(LogInActivity.this, RegisterActivity.class);
                 startActivity(registerActivity);
+            }
+        });
+
+        mForgotButton = findViewById(R.id.forgot_password_button);
+        mForgotButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent forgot = new Intent(LogInActivity.this, ForgotActivity.class);
+                startActivity(forgot);
             }
         });
     }

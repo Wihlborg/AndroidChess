@@ -14,7 +14,7 @@ public class RegisterActivity extends AppCompatActivity {
     /**
      * Keep track of the register task to ensure we can cancel it if requested.
      */
-    private UserRegisterTask mAuthTask = null;
+    protected UserRegisterTask mAuthTask = null;
 
 
     // UI references.

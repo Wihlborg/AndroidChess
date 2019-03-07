@@ -77,6 +77,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" android:id="@+id/register_button_from_login"
                     style="@android:style/TextAppearance.Small"/>
+            <Button
+                    android:text="@string/action_forgot_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/forgot_password_button"
+                    style="@android:style/TextAppearance.Small"/>
 
         </LinearLayout>
     </ScrollView>
