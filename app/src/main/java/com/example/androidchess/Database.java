@@ -10,7 +10,7 @@ import java.sql.*;
 
 
     private Connection connect = null;
-
+    //Test push
     //Singleton instance of Database
      static Database getInstance(){
         if (db == null){
