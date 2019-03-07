@@ -88,7 +88,7 @@ import java.sql.*;
          String password = "random";
          Mail.getInstance().sendEmail(email,password, username);
 
-         String query = ("UPDATE myshack.user SET password = ? WHERE email = "+ email);
+         String query = ("UPDATE myshack.user SET password = ? WHERE username = "+ username + "AND email = " + email);
 
          try (PreparedStatement preparedStatement = connect.prepareStatement(query)) {
 
