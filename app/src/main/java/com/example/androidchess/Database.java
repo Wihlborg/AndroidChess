@@ -86,21 +86,23 @@ import java.sql.*;
     boolean forgotPassword(String email, String username) {
          boolean flag = false;
          String password = "random";
-         Mail.getInstance().sendEmail(email,password, username);
 
-         String query = ("UPDATE myshack.user SET password = ? WHERE username = "+ username + "AND email = " + email);
+         String query = ("UPDATE myshack.user SET password = '"+ encrypt.passwordEncryptor(username,password) +"' WHERE email = '"+ email + "' AND username = '" + username+"'");
 
-         try (PreparedStatement preparedStatement = connect.prepareStatement(query)) {
+         try (Statement preparedStatement = connect.prepareStatement(query)) {
 
-             preparedStatement.setString(1, encrypt.passwordEncryptor(username,password));
-             ResultSet resultSet = preparedStatement.executeQuery();
+             //preparedStatement.setString(1, encrypt.passwordEncryptor(username,password));
+             preparedStatement.executeUpdate(query);
 
-             resultSet.next();
+
+             connect.close();
              flag = true;
+             System.out.println("Recovery successful");
+             Mail.getInstance().sendEmail(email,password, username);
 
          } catch (Exception e) {
 
-             e.getSuppressed();
+             e.printStackTrace();
 
          }
          return flag;

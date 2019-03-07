@@ -9,8 +9,8 @@ public class Mail {
     private static Mail mailObject = null;
     private String host = "smtp.gmail.com";
     private String port = "587";
-    private final String shackUser = "android.tjack@gmail.com";
-    private final String shackPassword = "password";
+    private final String shackUser = "droidtjack@gmail.com";
+    private final String shackPassword = "hkrtjack127";
     private boolean authentication=true;
     private boolean smtpServerTTLSEnabled = true;
     private Session session;
@@ -49,7 +49,7 @@ public class Mail {
                     InternetAddress.parse(recipientEmail));
             message.setSubject("Password Recovery");
             message.setText("Hello, " + username + "\nYour new password: " + recoverPassword
-            + "\n Regards, " + "\nAndroidChess");
+            + "\nRegards, " + "\nAndroidChess");
 
             Transport.send(message);
 
