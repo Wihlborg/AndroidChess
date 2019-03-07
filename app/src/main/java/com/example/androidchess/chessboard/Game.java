@@ -14,14 +14,15 @@ public class Game extends AppCompatActivity {
 
     GridView board;
     ImageAdapter imageAdapter;
-    boolean[] possibleMoves = new boolean[64];
-    //ImageView[] pieces = new ImageView[64];
+    public static boolean[] possibleMoves = new boolean[64];
+    //ImageView[] squares = new ImageView[64];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.game);
 
+        resetPossibleMoves();
         board = findViewById(R.id.board);
         imageAdapter = new ImageAdapter(this);
 
@@ -37,10 +38,15 @@ public class Game extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                possibleMoves(position);
+                swap(position);
             }
         });
 
+    }
+
+    public void resetPossibleMoves() {
+        for (int i = 0; i<64; i++)
+            possibleMoves[i] = false;
     }
 
     public void printArray(ImageView[] pieces, String tag) {
@@ -49,7 +55,7 @@ public class Game extends AppCompatActivity {
         for (int i = 0; i < pieces.length; i++) {
             toString += "[" + pieces[i].getTag() + "], ";
         }
-        //toString = pieces.toString();
+        //toString = squares.toString();
         Log.d(tag, toString);
     }
 
@@ -65,76 +71,73 @@ public class Game extends AppCompatActivity {
         int y = position / 8;
 
         // diagonal towards bottom right
-        int i = x;
-        int n = y;
+        int i = x+1;
+        int n = y+1;
         boolean obstacle = false;
         while (i < 8 && n < 8 && !obstacle) {
-            int t = i + 8*n;
-            if (getCell(position).getTag().toString().charAt(0) != 't') {
-                possibleMoves[t] = true;
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
                 obstacle = true;
             }
-            else {
-                possibleMoves[t] = true;
-                getCell(t).setAlpha(1f);
-            }
+            possibleMoves[currentPos] = true;
             i++;
             n++;
+
         }
 
         // diagonal towards top left
-        i = x;
-        n = y;
+        i = x-1;
+        n = y-1;
         obstacle = false;
-        while (i < 0 && n < 0 && !obstacle) {
+        while (i >= 0 && n >= 0 && !obstacle) {
 
             // position in array currently getting looked at
-            int t = i + 8*n;
+            int currentPos = i + 8*n;
 
-            if (getCell(position).getTag().toString().charAt(0) != 't') {
-                possibleMoves[t] = true;
+            if (getFilename(currentPos).charAt(0) != 't') {
+                Log.d("obstacle i- n-", "true @" + i+n + ", " + getFilename(position));
                 obstacle = true;
             }
-            else {
-                possibleMoves[t] = true;
-                getCell(t).setAlpha(1f);
-            }
+
+            possibleMoves[currentPos] = true;
+
             i--;
             n--;
         }
 
         // diagonal towards top right
-        i = x;
-        n = y;
+        i = x+1;
+        n = y-1;
         obstacle = false;
-        while (i < 0 && n < 0 && !obstacle) {
-            int t = i + 8*n;
-            if (getCell(position).getTag().toString().charAt(0) != 't') {
-                possibleMoves[t] = true;
+        while (i < 8 && n >= 0 && !obstacle) {
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n-", "true @" + i+n + ", " + getFilename(position));
                 obstacle = true;
             }
-            else {
-                possibleMoves[t] = true;
-                getCell(t).setAlpha(1f);
-            }
+
+            possibleMoves[currentPos] = true;
+
             i++;
             n--;
         }
 
         // diagonal toward bottom left
-        i = x;
-        n = y;
+        i = x-1;
+        n = y+1;
         obstacle = false;
-        while (i < 0 && n < 0 && !obstacle) {
-            int t = i + 8*n;
-            if (getCell(position).getTag().toString().charAt(0) != 't') {
-                possibleMoves[t] = true;
+        while (i >= 0 && n < 8 && !obstacle) {
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i- n+", "true @" + i+n + ", " + getFilename(position));
                 obstacle = true;
             }
-            else {
-                possibleMoves[t] = true;
-                getCell(t).setAlpha(1f);
-            }
+
+            possibleMoves[currentPos] = true;
             i--;
             n++;
         }
@@ -157,7 +160,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void possibleMoves(int position) {
-        switch (getCell(position).getTag().toString().charAt(0)) {
+        switch (getFilename(position).charAt(0)) {
             // queen
             case 'q':
                 bishopCheck(position);
@@ -178,42 +181,86 @@ public class Game extends AppCompatActivity {
             // bishop
             case 'b':
                 bishopCheck(position);
+                Log.d("switch", "entered case b");
                 break;
             // pawn
             case 'p':
                 pawnCheck(position);
                 break;
         }
+        imageAdapter.currentCells = 0;
+        imageAdapter.notifyDataSetChanged();
+        board.invalidateViews();
     }
 
     public boolean legalMove(int position) {
-
-        return true;
+        if (possibleMoves[position])
+            return true;
+        else
+            return false;
     }
 
     int swapCounter = 0;
     int firstPos;
     //int firstID;
 
-    public void swap(int pos) {
-        if (++swapCounter == 1) {
-            //firstID = imageAdapter.pieceIds[pos];
-            firstPos = pos;
-        } else if (swapCounter == 2) {
-            int temp = imageAdapter.pieceIds[pos];
-            imageAdapter.pieceIds[pos] = imageAdapter.pieceIds[firstPos];
+    //TODO not currently checking for enemy or friendly peices
+    public void swap(int position) {
+
+        if (++swapCounter == 1 && getFilename(position).charAt(0) != 't' ) {
+            firstPos = position;
+            possibleMoves(position);
+        }
+
+        // && legalMove(position)
+        else if (swapCounter == 2 ) {
+            int temp = imageAdapter.pieceIds[position];
+
+            imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
+
             imageAdapter.pieceIds[firstPos] = temp;
 
+            imageAdapter.currentCells = 0;
             imageAdapter.notifyDataSetChanged();
             board.invalidateViews();
 
             swapCounter = 0;
+            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+            resetPossibleMoves();
+        }
+        else {
+            swapCounter = 0;
         }
 
+        print2DArray();
+
+    }
+
+    public void print2DArray() {
+        Log.d("", "----------------");
+        for (int n = 0; n < 8; n++) {
+            String row = "";
+            for (int i = 0; i < 8; i++) {
+                if (Game.possibleMoves[i+n*8])
+                    row += "1";
+
+                else
+                    row += "0";
+            }
+            Log.d("", row+ "..." + n);
+        }
     }
 
     public ImageView getCell(int position) {
         return ((ImageView)board.getItemAtPosition(position));
     }
+
+    public String getFilename(int position) {
+        String fileName = getCell(position).getResources().getResourceName(imageAdapter.pieceIds[position]);
+        fileName = fileName.charAt(fileName.length()-2) + "" + fileName.charAt(fileName.length()-1);
+        Log.d("filename", fileName);
+        return fileName;
+    }
+
 }
 

@@ -1,7 +1,6 @@
 package com.example.androidchess.chessboard;
 
 import android.content.Context;
-import android.nfc.Tag;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -14,11 +13,13 @@ import com.example.androidchess.R;
 public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;
-    public ImageView[] pieces = new ImageView[64];
-    private int currentCells = 0;
+    public ImageView[] squares = new ImageView[64];
+    //public String[] piecesStr = new String[64];
+    public int currentCells = 0;
 
     public ImageAdapter(Context mContext) {
         this.mContext = mContext;
+
         //Log.d("chess", Integer.toString(pieceIds.length));
     }
 
@@ -29,7 +30,8 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return pieces[position];
+
+        return squares[position];
     }
 
     @Override
@@ -39,12 +41,11 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-
+        //Log.d("array" ,""+currentCells);
         ImageView img;
 
         // if the view has not been created before
         if (convertView == null) {
-
             DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
 
             int width = metrics.widthPixels / 8;
@@ -56,25 +57,111 @@ public class ImageAdapter extends BaseAdapter {
 
             img.setScaleType(ImageView.ScaleType.FIT_XY);
             img.setPadding(1, 1, 1, 1);
-            pieces[currentCells++] = img;
-        } else {
+
+            String fileName = img.getResources().getResourceName(pieceIds[position]);
+            //fileName = fileName.charAt(fileName.length()-2) + "" + fileName.charAt(fileName.length()-1);
+
+            if (currentCells < 64) {
+                squares[currentCells++] = img;
+                //piecesStr[currentCells++] = fileName;
+            }
+
+            int x = position % 8;
+            int y = position / 8;
+            char c = 97;
+
+            img.setTag((c+x)+y);
+            Log.d("cell" , ""+Character.toString(((char)(c+x)))+(y+1));
+
+            //if (position > 15 && position < 48)
+              //  img.setAlpha(0f);
+
+        }
+        else {
+            //Log.d("" ,  "converrtView");
             img = (ImageView) convertView;
         }
 
         img.setImageResource(pieceIds[position]);
-
         String fileName = img.getResources().getResourceName(pieceIds[position]);
         fileName = fileName.charAt(fileName.length()-2) + "" + fileName.charAt(fileName.length()-1);
-        img.setTag(fileName);
 
-        if (position > 15 && position < 48)
+        if (fileName.charAt(0) == 't' && !Game.possibleMoves[position]) {
             img.setAlpha(0f);
+        }
+        else {
+            img.setAlpha(1f);
+        }
 
+        //img.setTag(fileName);
         //Log.d("currentCells", Integer.toString(currentCells));
         return img;
     }
 
     public Integer[] pieceIds = {
+            R.drawable.rb,
+            R.drawable.nb,
+            R.drawable.bb,
+            R.drawable.qb,
+            R.drawable.kb,
+            R.drawable.bb,
+            R.drawable.nb,
+            R.drawable.rb,
+
+            R.drawable.pb,
+            R.drawable.pb,
+            R.drawable.pb,
+            R.drawable.pb,
+            R.drawable.pb,
+            R.drawable.pb,
+            R.drawable.pb,
+            R.drawable.pb,
+
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+            R.drawable.ts,
+
+            R.drawable.pw,
+            R.drawable.pw,
+            R.drawable.pw,
+            R.drawable.pw,
+            R.drawable.pw,
+            R.drawable.pw,
+            R.drawable.pw,
+            R.drawable.pw,
+
             R.drawable.rw,
             R.drawable.nw,
             R.drawable.bw,
@@ -83,69 +170,6 @@ public class ImageAdapter extends BaseAdapter {
             R.drawable.bw,
             R.drawable.nw,
             R.drawable.rw,
-
-            R.drawable.pw,
-            R.drawable.pw,
-            R.drawable.pw,
-            R.drawable.pw,
-            R.drawable.pw,
-            R.drawable.pw,
-            R.drawable.pw,
-            R.drawable.pw,
-
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-            R.drawable.ts,
-
-            R.drawable.pb,
-            R.drawable.pb,
-            R.drawable.pb,
-            R.drawable.pb,
-            R.drawable.pb,
-            R.drawable.pb,
-            R.drawable.pb,
-            R.drawable.pb,
-
-            R.drawable.rb,
-            R.drawable.nb,
-            R.drawable.bb,
-            R.drawable.kb,
-            R.drawable.qb,
-            R.drawable.bb,
-            R.drawable.nb,
-            R.drawable.rb,
 
     };
 
