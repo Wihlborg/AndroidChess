@@ -1,7 +1,9 @@
 package com.example.androidchess.chessboard.pieces;
 
 import android.util.Log;
+import com.example.androidchess.R;
 
+import static com.example.androidchess.chessboard.Game.getCell;
 import static com.example.androidchess.chessboard.Game.getFilename;
 import static com.example.androidchess.chessboard.Game.possibleMoves;
 
@@ -26,48 +28,64 @@ public class Knight {
 
         currentPos = (x + 2) + (8 * (y + 1));
         if (x + 2 < 8 && y + 1 < 8 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x+2,y+1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x + 1) + (8 * (y + 2));
         if (x + 1 < 8 && y + 2 < 8 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x+1, y+2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 1) + (8 * (y + 2));
         if (x - 1 >= 0 && y + 2 < 8 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x-1, y+2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 2) + (8 * (y + 1));
         if (x - 2 >= 0 && y + 1 < 8 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x-2, y+1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 2) + (8 * (y - 1));
         if (x - 2 >= 0 && y - 1 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x-2, y-1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 1) + (8 * (y - 2));
         if (x - 1 >= 0 && y - 2 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x-1, y-2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x + 1) + (8 * (y - 2));
         if (x + 1 < 8 && y - 2 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x+1, y-2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x + 2) + (8 * (y - 1));
         if (x + 2 < 8 && y - 1 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            if (!getFilename(currentPos).equals("ts"))
+                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             Log.d("x+2, y-1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
