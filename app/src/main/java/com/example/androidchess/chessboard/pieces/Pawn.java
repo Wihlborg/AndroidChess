@@ -36,6 +36,22 @@ public class Pawn {
             if (n >= 0 && getFilename(currentPos).charAt(0) == 't') {
                 possibleMoves[currentPos] = true;
             }
+            i = x - 1;
+            n = y - 1;
+            currentPos = i + 8 * n;
+            if (n >= 0 && i >= 0 && getFilename(currentPos).charAt(1) == 'b') {
+                possibleMoves[currentPos] = true;
+
+            }
+            i = x + 1;
+            n = y - 1;
+            currentPos = i + 8 * n;
+            if (n >= 0 && i < 8 && getFilename(currentPos).charAt(1) == 'b') {
+                possibleMoves[currentPos] = true;
+
+            }
+
+
         }
     }
 
@@ -59,9 +75,31 @@ public class Pawn {
             }
         } else {
             currentPos = i + 8 * n;
-            if (n < 8 && getFilename(currentPos).charAt(0) == 't') {
+
+            if (n >= 8 && getFilename(currentPos).charAt(0) == 't') {
                 possibleMoves[currentPos] = true;
             }
+
+
+            i = x + 1;
+            n = y - 1;
+            currentPos = i + 8 * n;
+            if (n < 8 && i < 8 && getFilename(currentPos).charAt(1) == 'w') {
+                possibleMoves[currentPos] = true;
+
+            }
+            i = x - 1;
+            n = y - 1;
+            currentPos = i + 8 * n;
+            if (n < 8 && i >=0 && getFilename(currentPos).charAt(1) == 'w') {
+                possibleMoves[currentPos] = true;
+
+            }
+
+
+
+
+
         }
     }
 
