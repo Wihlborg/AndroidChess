@@ -449,6 +449,10 @@ public class Game extends AppCompatActivity {
 
     }
 
+    public void colorKingCheck(char color) {
+        
+    }
+
     public void possibleMoves(int position) {
         switch (getFilename(position).charAt(0)) {
             // queen
@@ -475,7 +479,7 @@ public class Game extends AppCompatActivity {
                 break;
             // pawn
             case 'p':
-                pawnCheck(position);
+                //pawnCheck(position);
                 break;
         }
         refreshViews();
