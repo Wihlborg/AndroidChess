@@ -151,7 +151,7 @@ public class Game extends AppCompatActivity {
         boolean obstacle = false;
 
 
-        while (i < 8 && obstacle) {
+        while (i < 8 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -166,7 +166,7 @@ public class Game extends AppCompatActivity {
         i = x;
         n = y + 1;
         obstacle = false;
-        while (n < 8 && obstacle) {
+        while (n < 8 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -183,7 +183,7 @@ public class Game extends AppCompatActivity {
         i = x;
         n = y - 1;
         obstacle = false;
-        while (n >= 0 && obstacle) {
+        while (n >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -199,7 +199,7 @@ public class Game extends AppCompatActivity {
         i = x - 1;
         n = y;
         obstacle = false;
-        while (i >= 0 && obstacle) {
+        while (i >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -228,52 +228,48 @@ public class Game extends AppCompatActivity {
         int currentB = i - n - 1;
         int currentW = i + n + 1;
 
-        if (((ImageView) board.getItemAtPosition(currentPosW)).getTag().toString().charAt(1) == 'w') {
-            if (n == 1 && obstacle) {
-                if (((ImageView) board.getItemAtPosition(currentPosW)).getTag().toString().charAt(0) != 't') {
+        if (getFilename(currentW).charAt(1) == 'w') {
+            if (n == 1 && !obstacle) {
+                if (getFilename(currentW).charAt(0) != 't') {
                     obstacle = true;
-                } else {
-                    ((ImageView) board.getItemAtPosition(currentPosW)).setAlpha(1f);
                 }
+                possibleMoves[currentW] = true;
                 n++;
             }
         }
 
-        if (((ImageView) board.getItemAtPosition(currentPosB)).getTag().toString().charAt(1) == 'b') {
-            if (n == 7 && obstacle) {
-                if (((ImageView) board.getItemAtPosition(currentPosB)).getTag().toString().charAt(0) != 't') {
+        if (getFilename(currentB).charAt(1) == 'b') {
+            if (n == 7 && !obstacle) {
+                if (getFilename(currentB).charAt(0) != 't') {
                     obstacle = true;
-                } else {
-                    ((ImageView) board.getItemAtPosition(currentPosB)).setAlpha(1f);
                 }
+                possibleMoves[currentB] = true;
                 n--;
             }
         }
 
 
-        if (n != 1 || n != 7 && obstacle) {
+        if (n != 1 || n != 7 && !obstacle) {
 
 
-            if (((ImageView) board.getItemAtPosition(currentW)).getTag().toString().charAt(1) == 'w') {
+            if (getFilename(currentW).charAt(1) == 'w') {
                 {
                 }
-                if (((ImageView) board.getItemAtPosition(currentW)).getTag().toString().charAt(0) != 't') {
+                if (getFilename(currentW).charAt(0) != 't') {
                     obstacle = true;
-                } else {
-                    ((ImageView) board.getItemAtPosition(currentW)).setAlpha(1f);
                 }
+                possibleMoves[currentW] = true;
                 n++;
             }
 
 
-            if (((ImageView) board.getItemAtPosition(currentB)).getTag().toString().charAt(1) == 'b') {
+            if (getFilename(currentB).charAt(1) == 'b') {
                 {
                 }
-                if (((ImageView) board.getItemAtPosition(currentB)).getTag().toString().charAt(0) != 't') {
+                if (getFilename(currentB).charAt(0) != 't') {
                     obstacle = true;
-                } else {
-                    ((ImageView) board.getItemAtPosition(currentB)).setAlpha(1f);
                 }
+                possibleMoves[currentB] = true;
                 n--;
             }
 
@@ -290,7 +286,7 @@ public class Game extends AppCompatActivity {
         int n = y;
         boolean obstacle = false;
 
-        while (n < 1 && obstacle) {
+        while (n < 1 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -301,7 +297,8 @@ public class Game extends AppCompatActivity {
             n++;
         }
 
-        while (i < 1 && obstacle) {
+        obstacle = false;
+        while (i < 1 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -312,7 +309,8 @@ public class Game extends AppCompatActivity {
             i++;
         }
 
-        while (i >= 0 && obstacle) {
+        obstacle = false;
+        while (i >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -323,7 +321,8 @@ public class Game extends AppCompatActivity {
             i--;
         }
 
-        while (n >= 0 && obstacle) {
+        obstacle = false;
+        while (n >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -334,8 +333,8 @@ public class Game extends AppCompatActivity {
             n--;
         }
 
-
-        while (n < 1 && i < 1 && obstacle) {
+        obstacle = false;
+        while (n < 1 && i < 1 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -347,8 +346,8 @@ public class Game extends AppCompatActivity {
             i++;
         }
 
-
-        while (n >= 0 && i >= 0 && obstacle) {
+        obstacle = false;
+        while (n >= 0 && i >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -360,8 +359,8 @@ public class Game extends AppCompatActivity {
             i--;
         }
 
-
-        while (n < 1 && i >= 0 && obstacle) {
+        obstacle = false;
+        while (n < 1 && i >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -373,8 +372,8 @@ public class Game extends AppCompatActivity {
             i--;
         }
 
-
-        while (n >= 0 && i < 1 && obstacle) {
+        obstacle = false;
+        while (n >= 0 && i < 1 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
@@ -385,8 +384,7 @@ public class Game extends AppCompatActivity {
             n--;
             i++;
         }
-
-
+        
     }
 
     public void possibleMoves(int position) {
