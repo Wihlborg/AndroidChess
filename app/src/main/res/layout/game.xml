@@ -8,17 +8,17 @@
     tools:context=".chessboard.Game">
 
     <ImageView
-        android:id="@+id/boardImg"
-        android:layout_width="match_parent"
-        android:layout_height="464dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
-        android:src="@drawable/chessboardnoborderbrown"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/boardImg"
+            android:layout_width="match_parent"
+            android:layout_height="464dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/chessboardnoborderbrown"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     <GridView
         android:id="@+id/board"
         android:layout_width="0dp"

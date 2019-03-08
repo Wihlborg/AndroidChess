@@ -98,23 +98,46 @@ public class Game extends AppCompatActivity {
             firstPos = position;
             possibleMoves(position);
         } else if (swapCounter == 2 && legalMove(position)) {
-            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
-            int temp = imageAdapter.pieceIds[position];
+            // checks if first piece has different name than the second clicked piece and if its not a empty piece
+            if (getFilename(firstPos).charAt(1) != getFilename(position).charAt(1) && !getFilename(position).equals("ts")) {
+                imageAdapter.pieceIds[position] = R.drawable.ts;
+                int temp = imageAdapter.pieceIds[position];
 
-            imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
+                imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
 
-            imageAdapter.pieceIds[firstPos] = temp;
+                imageAdapter.pieceIds[firstPos] = temp;
 
-            refreshViews();
-            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
-            swapCounter = 0;
-            resetPossibleMoves();
+                refreshViews();
+                swapCounter = 0;
+                resetPossibleMoves();
+                resetBackgrounds();
+            } else {
+                Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+                int temp = imageAdapter.pieceIds[position];
+
+                imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
+
+                imageAdapter.pieceIds[firstPos] = temp;
+
+                refreshViews();
+                Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+                swapCounter = 0;
+                resetPossibleMoves();
+                resetBackgrounds();
+            }
         } else {
             swapCounter = 0;
             resetPossibleMoves();
             refreshViews();
+            resetBackgrounds();
         }
         print2DArray();
+    }
+
+    public void resetBackgrounds() {
+        for (int i = 0; i < 64; i++) {
+            getCell(i).setBackgroundResource(0);
+        }
     }
 
     public void refreshViews() {
@@ -124,8 +147,9 @@ public class Game extends AppCompatActivity {
     }
 
     public void resetPossibleMoves() {
-        for (int i = 0; i < 64; i++)
+        for (int i = 0; i < 64; i++) {
             possibleMoves[i] = false;
+        }
     }
 
     public void printArray(ImageView[] pieces, String tag) {
