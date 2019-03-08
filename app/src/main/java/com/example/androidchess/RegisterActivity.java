@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -155,6 +156,17 @@ public class RegisterActivity extends AppCompatActivity {
             return Database.getInstance().registerUser(mUsername, mEmail, mPassword, mAccount_Id);
         }
 
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthTask = null;
+            if (success) {
+                Intent returnTo = new Intent(RegisterActivity.this, LogInActivity.class);
+                Toast.makeText(getApplicationContext(),"Registration success", Toast.LENGTH_SHORT).show();
+                startActivity(returnTo);
+            } else {
+                Toast.makeText(getApplicationContext(),"Registration failed", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         @Override
         protected void onCancelled() {

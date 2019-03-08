@@ -127,7 +127,7 @@ public class ForgotActivity extends AppCompatActivity {
                 startActivity(returnTo);
                 Log.d(TAG,"Recovery Success");
             } else {
-
+                Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
             }
         }
 

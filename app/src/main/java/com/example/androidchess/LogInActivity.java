@@ -169,10 +169,10 @@ public class LogInActivity  extends AppCompatActivity{
                 //startActivity(r);
 
                 setContentView(R.layout.signedin_layout);
-                Toast.makeText(getApplicationContext(),"Log In Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(),"Log In success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG,"Log In Success");
             } else {
-
+                Toast.makeText(getApplicationContext(),"Log In failed", Toast.LENGTH_SHORT).show();
                 mPasswordView.setError(getString(R.string.error_incorrect_login));
                 mPasswordView.requestFocus();
             }
