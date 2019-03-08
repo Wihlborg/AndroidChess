@@ -146,16 +146,16 @@ public class Game extends AppCompatActivity {
     public void rookCheck(int position) {
         int x = position % 8;
         int y = position / 8;
-        int i = x+1;
+        int i = x + 1;
         int n = y;
         boolean obstacle = false;
 
 
         while (i < 8 && obstacle) {
-            int currentPos = i + 8*n;
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -164,13 +164,13 @@ public class Game extends AppCompatActivity {
         }
 
         i = x;
-        n = y+1;
+        n = y + 1;
         obstacle = false;
         while (n < 8 && obstacle) {
-            int currentPos = i + 8*n;
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -181,13 +181,13 @@ public class Game extends AppCompatActivity {
 
 
         i = x;
-        n = y-1;
+        n = y - 1;
         obstacle = false;
         while (n >= 0 && obstacle) {
-            int currentPos = i + 8*n;
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -196,14 +196,14 @@ public class Game extends AppCompatActivity {
 
         }
 
-        i = x-1;
+        i = x - 1;
         n = y;
         obstacle = false;
         while (i >= 0 && obstacle) {
-            int currentPos = i + 8*n;
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -213,71 +213,7 @@ public class Game extends AppCompatActivity {
     }
 
     public void knightCheck(int position) {
-        int x = position % 8;
-        int y = position / 8;
-        int currentPos = x + 8 * y;
 
-        if (getFilename(currentPos).charAt(1) == 'w') {
-            colorKnightCheck(position, 'w');
-        }
-        else {
-            colorKnightCheck(position, 'b');
-        }
-
-    }
-
-    public void colorKnightCheck(int position, char color) {
-        int x = position % 8;
-        int y = position / 8;
-        int currentPos = x + 8 * y;
-
-        currentPos = (x + 2) + (8 * (y + 1));
-        if (x+2 < 8 && y+1 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+2,y+1" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x + 1) + (8 * (y + 2));
-        if (x+1 < 8 && y+2 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+1, y+2" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x - 1) + (8 * (y + 2));
-        if (x-1 >= 0 && y+2 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-1, y+2" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x - 2) + (8 * (y + 1));
-        if (x-2 >= 0 && y+1 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-2, y+1" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x - 2) + (8 * (y - 1));
-        if (x-2 >= 0 && y-1 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-2, y-1" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x - 1) + (8 * (y - 2));
-        if (x-1 >= 0 && y-2 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-1, y-2" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x + 1) + (8 * (y - 2));
-        if (x+1 < 8 && y-2 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+1, y-2" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
-
-        currentPos = (x + 2) + (8 * (y - 1));
-        if (x+2 < 8 && y-1 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+2, y-1" , currentPos+"");
-            possibleMoves[currentPos] = true;
-        }
     }
 
     public void pawnCheck(int position) {
@@ -354,44 +290,44 @@ public class Game extends AppCompatActivity {
         int n = y;
         boolean obstacle = false;
 
-        while (n<1 && obstacle){
-            int currentPos = i + 8*n;
+        while (n < 1 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
             n++;
         }
 
-        while (i<1 && obstacle){
-            int currentPos = i + 8*n;
+        while (i < 1 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
             i++;
         }
 
-        while (i>=0 && obstacle){
-            int currentPos = i + 8*n;
+        while (i >= 0 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
             i--;
         }
 
-        while (n>=0 && obstacle){
-            int currentPos = i + 8*n;
+        while (n >= 0 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -399,12 +335,11 @@ public class Game extends AppCompatActivity {
         }
 
 
-
-        while (n<1 && i<1 && obstacle){
-            int currentPos = i + 8*n;
+        while (n < 1 && i < 1 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -413,11 +348,11 @@ public class Game extends AppCompatActivity {
         }
 
 
-        while (n>=0 && i>=0 && obstacle){
-            int currentPos = i + 8*n;
+        while (n >= 0 && i >= 0 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -426,11 +361,11 @@ public class Game extends AppCompatActivity {
         }
 
 
-        while (n<1 && i>=0 && obstacle){
-            int currentPos = i + 8*n;
+        while (n < 1 && i >= 0 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
@@ -439,20 +374,17 @@ public class Game extends AppCompatActivity {
         }
 
 
-        while (n>=0 && i<1 && obstacle){
-            int currentPos = i + 8*n;
+        while (n >= 0 && i < 1 && obstacle) {
+            int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
             possibleMoves[currentPos] = true;
             n--;
             i++;
         }
-
-
-
 
 
     }
@@ -486,7 +418,9 @@ public class Game extends AppCompatActivity {
                 pawnCheck(position);
                 break;
         }
-        refreshViews();
+        imageAdapter.currentCells = 0;
+        imageAdapter.notifyDataSetChanged();
+        board.invalidateViews();
     }
 
     public boolean legalMove(int position) {
@@ -508,18 +442,20 @@ public class Game extends AppCompatActivity {
             possibleMoves(position);
         }
 
-        //TODO && legalMove(position)
+        // && legalMove(position)
         else if (swapCounter == 2) {
-            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
             int temp = imageAdapter.pieceIds[position];
 
             imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
 
             imageAdapter.pieceIds[firstPos] = temp;
 
-            refreshViews();
-            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+            imageAdapter.currentCells = 0;
+            imageAdapter.notifyDataSetChanged();
+            board.invalidateViews();
+
             swapCounter = 0;
+            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
             resetPossibleMoves();
         } else {
             swapCounter = 0;
@@ -527,12 +463,6 @@ public class Game extends AppCompatActivity {
 
         print2DArray();
 
-    }
-
-    public void refreshViews() {
-        imageAdapter.currentCells = 0;
-        imageAdapter.notifyDataSetChanged();
-        board.invalidateViews();
     }
 
     public void print2DArray() {
