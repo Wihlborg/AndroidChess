@@ -213,7 +213,71 @@ public class Game extends AppCompatActivity {
     }
 
     public void knightCheck(int position) {
+        int x = position % 8;
+        int y = position / 8;
+        int currentPos = x + 8 * y;
 
+        if (getFilename(currentPos).charAt(1) == 'w') {
+            colorKnightCheck(position, 'w');
+        }
+        else {
+            colorKnightCheck(position, 'b');
+        }
+
+    }
+
+    public void colorKnightCheck(int position, char color) {
+        int x = position % 8;
+        int y = position / 8;
+        int currentPos = x + 8 * y;
+
+        currentPos = (x + 2) + (8 * (y + 1));
+        if (x+2 < 8 && y+1 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+2,y+1" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x + 1) + (8 * (y + 2));
+        if (x+1 < 8 && y+2 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+1, y+2" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x - 1) + (8 * (y + 2));
+        if (x-1 >= 0 && y+2 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-1, y+2" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x - 2) + (8 * (y + 1));
+        if (x-2 >= 0 && y+1 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-2, y+1" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x - 2) + (8 * (y - 1));
+        if (x-2 >= 0 && y-1 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-2, y-1" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x - 1) + (8 * (y - 2));
+        if (x-1 >= 0 && y-2 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-1, y-2" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x + 1) + (8 * (y - 2));
+        if (x+1 < 8 && y-2 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+1, y-2" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
+
+        currentPos = (x + 2) + (8 * (y - 1));
+        if (x+2 < 8 && y-1 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+2, y-1" , currentPos+"");
+            possibleMoves[currentPos] = true;
+        }
     }
 
     public void pawnCheck(int position) {
@@ -229,7 +293,7 @@ public class Game extends AppCompatActivity {
         int currentW = i + n + 1;
 
         if (getFilename(currentW).charAt(1) == 'w') {
-            if (n == 1 && obstacle) {
+            if (n == 1 && !obstacle) {
                 if (getFilename(currentW).charAt(0) != 't') {
                     obstacle = true;
                 }
@@ -239,7 +303,7 @@ public class Game extends AppCompatActivity {
         }
 
         if (getFilename(currentB).charAt(1) == 'b') {
-            if (n == 7 && obstacle) {
+            if (n == 7 && !obstacle) {
                 if (getFilename(currentB).charAt(0) != 't') {
                     obstacle = true;
                 }
@@ -249,7 +313,7 @@ public class Game extends AppCompatActivity {
         }
 
 
-        if (n != 1 || n != 7 && obstacle) {
+        if (n != 1 || n != 7 && !obstacle) {
 
 
             if (getFilename(currentW).charAt(1) == 'w') {
@@ -275,11 +339,9 @@ public class Game extends AppCompatActivity {
 
 
         }
-
     }
 
     public void kingCheck(int position) {
-
         int x = position % 8;
         int y = position / 8;
         int i = x;
@@ -387,6 +449,10 @@ public class Game extends AppCompatActivity {
 
     }
 
+    public void colorKingCheck(char color) {
+        
+    }
+
     public void possibleMoves(int position) {
         switch (getFilename(position).charAt(0)) {
             // queen
@@ -413,12 +479,10 @@ public class Game extends AppCompatActivity {
                 break;
             // pawn
             case 'p':
-                pawnCheck(position);
+                //pawnCheck(position);
                 break;
         }
-        imageAdapter.currentCells = 0;
-        imageAdapter.notifyDataSetChanged();
-        board.invalidateViews();
+        refreshViews();
     }
 
     public boolean legalMove(int position) {
@@ -440,20 +504,18 @@ public class Game extends AppCompatActivity {
             possibleMoves(position);
         }
 
-        // && legalMove(position)
+        //TODO && legalMove(position)
         else if (swapCounter == 2) {
+            Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
             int temp = imageAdapter.pieceIds[position];
 
             imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
 
             imageAdapter.pieceIds[firstPos] = temp;
 
-            imageAdapter.currentCells = 0;
-            imageAdapter.notifyDataSetChanged();
-            board.invalidateViews();
-
-            swapCounter = 0;
+            refreshViews();
             Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+            swapCounter = 0;
             resetPossibleMoves();
         } else {
             swapCounter = 0;
@@ -461,6 +523,12 @@ public class Game extends AppCompatActivity {
 
         print2DArray();
 
+    }
+
+    public void refreshViews() {
+        imageAdapter.currentCells = 0;
+        imageAdapter.notifyDataSetChanged();
+        board.invalidateViews();
     }
 
     public void print2DArray() {
