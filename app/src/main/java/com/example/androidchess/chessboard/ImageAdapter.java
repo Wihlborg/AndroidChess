@@ -71,7 +71,7 @@ public class ImageAdapter extends BaseAdapter {
             char c = 97;
 
             img.setTag((c+x)+y);
-            Log.d("cell" , ""+Character.toString(((char)(c+x)))+(y+1));
+            //Log.d("cell" , ""+Character.toString(((char)(c+x)))+(y+1));
 
             //if (position > 15 && position < 48)
               //  img.setAlpha(0f);
