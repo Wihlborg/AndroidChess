@@ -7,7 +7,7 @@ import static com.example.androidchess.chessboard.Game.possibleMoves;
 
 public class Knight {
 
-    public static void knightCheck(int position) {
+    public void knightCheck(int position) {
         int x = position % 8;
         int y = position / 8;
         int currentPos = x + 8 * y;
@@ -19,7 +19,7 @@ public class Knight {
         }
     }
 
-    public static void colorKnightCheck(int position, char color) {
+    public void colorKnightCheck(int position, char color) {
         int x = position % 8;
         int y = position / 8;
         int currentPos = x + 8 * y;

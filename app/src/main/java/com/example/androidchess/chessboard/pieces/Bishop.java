@@ -7,7 +7,19 @@ import static com.example.androidchess.chessboard.Game.possibleMoves;
 
 public class Bishop {
 
-    public static void bishopCheck(int position) {
+    public void bishopCheck(int position) {
+        int x = position % 8;
+        int y = position / 8;
+        int currentPos = x + 8 * y;
+
+        if (getFilename(currentPos).charAt(1) == 'w') {
+            colorBishopCheck(position, 'w');
+        } else {
+            colorBishopCheck(position, 'b');
+        }
+    }
+
+    public void colorBishopCheck(int position, char color) {
         int x = position % 8;
         int y = position / 8;
 
@@ -18,11 +30,12 @@ public class Bishop {
         while (i < 8 && n < 8 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
-
                 Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            possibleMoves[currentPos] = true;
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             i++;
             n++;
 
@@ -41,9 +54,9 @@ public class Bishop {
                 Log.d("obstacle i- n-", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-
-            possibleMoves[currentPos] = true;
-
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             i--;
             n--;
         }
@@ -59,9 +72,9 @@ public class Bishop {
                 Log.d("obstacle i+ n-", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-
-            possibleMoves[currentPos] = true;
-
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             i++;
             n--;
         }
@@ -77,8 +90,9 @@ public class Bishop {
                 Log.d("obstacle i- n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-
-            possibleMoves[currentPos] = true;
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             i--;
             n++;
         }

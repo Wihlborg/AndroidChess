@@ -7,7 +7,20 @@ import static com.example.androidchess.chessboard.Game.possibleMoves;
 
 public class Rook {
 
-    public static void rookCheck(int position) {
+    public void rookCheck(int position) {
+        int x = position % 8;
+        int y = position / 8;
+        int currentPos = x + 8 * y;
+
+        if (getFilename(currentPos).charAt(1) == 'w') {
+            colorRookCheck(position, 'w');
+        } else {
+            colorRookCheck(position, 'b');
+        }
+    }
+
+
+    public void colorRookCheck(int position, char color) {
         int x = position % 8;
         int y = position / 8;
         int i = x + 1;
@@ -18,10 +31,12 @@ public class Rook {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
+                Log.d("obstacle i+ n", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            possibleMoves[currentPos] = true;
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             i++;
 
         }
@@ -33,11 +48,12 @@ public class Rook {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
+                Log.d("obstacle i n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            possibleMoves[currentPos] = true;
-
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             n++;
 
         }
@@ -49,11 +65,13 @@ public class Rook {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
+                Log.d("obstacle i n-", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            possibleMoves[currentPos] = true;
-
+            if (getFilename(currentPos).charAt(1) != color) {
+                Log.d("boolean", "true" + i+n);
+                possibleMoves[currentPos] = true;
+            }
             n--;
 
         }
@@ -64,12 +82,14 @@ public class Rook {
         while (i >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
-
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
+                Log.d("obstacle i- n", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            possibleMoves[currentPos] = true;
+            if (getFilename(currentPos).charAt(1) != color) {
+                possibleMoves[currentPos] = true;
+            }
             i--;
         }
     }
+
 }

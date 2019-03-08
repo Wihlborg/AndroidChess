@@ -160,7 +160,7 @@ public class Game extends AppCompatActivity {
     public static String getFilename(int position) {
         String fileName = getCell(position).getResources().getResourceName(imageAdapter.pieceIds[position]);
         fileName = fileName.charAt(fileName.length() - 2) + "" + fileName.charAt(fileName.length() - 1);
-        Log.d("filename", fileName);
+        //Log.d("filename", fileName);
         return fileName;
     }
 
