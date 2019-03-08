@@ -1,9 +1,11 @@
-package com.example.androidchess.chessboard;
+package com.example.androidchess.chessboard.pieces;
 
 import android.util.Log;
 
+import static com.example.androidchess.chessboard.Game.getFilename;
+import static com.example.androidchess.chessboard.Game.possibleMoves;
+
 public class Bishop {
-    static Game game=new Game();
 
     public static void bishopCheck(int position) {
         int x = position % 8;
@@ -15,12 +17,12 @@ public class Bishop {
         boolean obstacle = false;
         while (i < 8 && n < 8 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
             i++;
             n++;
 
@@ -35,12 +37,12 @@ public class Bishop {
             // position in array currently getting looked at
             int currentPos = i + 8 * n;
 
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
-                Log.d("obstacle i- n-", "true @" + i + n + ", " + Game.getFilename(position));
+            if (getFilename(currentPos).charAt(0) != 't') {
+                Log.d("obstacle i- n-", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
 
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
 
             i--;
             n--;
@@ -52,13 +54,13 @@ public class Bishop {
         obstacle = false;
         while (i < 8 && n >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n-", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i+ n-", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
 
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
 
             i++;
             n--;
@@ -70,13 +72,13 @@ public class Bishop {
         obstacle = false;
         while (i >= 0 && n < 8 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i- n+", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i- n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
 
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
             i--;
             n++;
         }

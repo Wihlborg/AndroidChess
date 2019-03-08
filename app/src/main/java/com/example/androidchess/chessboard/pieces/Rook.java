@@ -1,9 +1,12 @@
-package com.example.androidchess.chessboard;
+package com.example.androidchess.chessboard.pieces;
 
 import android.util.Log;
 
-public class Queen {
-    static Game game=new Game();
+import static com.example.androidchess.chessboard.Game.getFilename;
+import static com.example.androidchess.chessboard.Game.possibleMoves;
+
+public class Rook {
+
     public static void rookCheck(int position) {
         int x = position % 8;
         int y = position / 8;
@@ -11,15 +14,14 @@ public class Queen {
         int n = y;
         boolean obstacle = false;
 
-
         while (i < 8 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
             i++;
 
         }
@@ -29,29 +31,28 @@ public class Queen {
         obstacle = false;
         while (n < 8 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
 
             n++;
 
         }
-
 
         i = x;
         n = y - 1;
         obstacle = false;
         while (n >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
 
             n--;
 
@@ -62,23 +63,13 @@ public class Queen {
         obstacle = false;
         while (i >= 0 && !obstacle) {
             int currentPos = i + 8 * n;
-            if (Game.getFilename(currentPos).charAt(0) != 't') {
+            if (getFilename(currentPos).charAt(0) != 't') {
 
-                Log.d("obstacle i+ n+", "true @" + i + n + ", " + Game.getFilename(position));
+                Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
                 obstacle = true;
             }
-            game.possibleMoves[currentPos] = true;
+            possibleMoves[currentPos] = true;
             i--;
         }
-
     }
-
-
-
-
-
-
-
-
-
 }

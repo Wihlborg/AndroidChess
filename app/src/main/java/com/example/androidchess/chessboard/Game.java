@@ -9,14 +9,14 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.example.androidchess.R;
+import com.example.androidchess.chessboard.pieces.*;
 
 public class Game extends AppCompatActivity {
-    Rook rook=new Rook();
-    Knight knight=new Knight();
-    Pawn pawn=new Pawn();
-    Bishop bishop=new Bishop();
-    King king=new King();
-    Queen queen=new Queen();
+    Rook rook = new Rook();
+    Knight knight = new Knight();
+    Pawn pawn = new Pawn();
+    Bishop bishop = new Bishop();
+    King king = new King();
 
     static GridView board;
     static ImageAdapter imageAdapter;
@@ -50,21 +50,6 @@ public class Game extends AppCompatActivity {
 
     }
 
-    public void resetPossibleMoves() {
-        for (int i = 0; i < 64; i++)
-            possibleMoves[i] = false;
-    }
-
-    public void printArray(ImageView[] pieces, String tag) {
-        Log.d("gridview size", Integer.toString(board.getChildCount()));
-        String toString = "";
-        for (int i = 0; i < pieces.length; i++) {
-            toString += "[" + pieces[i].getTag() + "], ";
-        }
-        //toString = squares.toString();
-        Log.d(tag, toString);
-    }
-
     public void possibleMoves(int position) {
         switch (getFilename(position).charAt(0)) {
             // queen
@@ -87,7 +72,6 @@ public class Game extends AppCompatActivity {
             // bishop
             case 'b':
                 bishop.bishopCheck(position);
-                Log.d("switch", "entered case b");
                 break;
             // pawn
             case 'p':
@@ -106,7 +90,6 @@ public class Game extends AppCompatActivity {
 
     int swapCounter = 0;
     int firstPos;
-    //int firstID;
 
     //TODO not currently checking for enemy or friendly peices
     public void swap(int position) {
@@ -114,10 +97,7 @@ public class Game extends AppCompatActivity {
         if (++swapCounter == 1 && getFilename(position).charAt(0) != 't') {
             firstPos = position;
             possibleMoves(position);
-        }
-
-        //TODO && legalMove(position)
-        else if (swapCounter == 2) {
+        } else if (swapCounter == 2 && legalMove(position)) {
             Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
             int temp = imageAdapter.pieceIds[position];
 
@@ -131,16 +111,31 @@ public class Game extends AppCompatActivity {
             resetPossibleMoves();
         } else {
             swapCounter = 0;
+            resetPossibleMoves();
+            refreshViews();
         }
-
         print2DArray();
-
     }
 
     public void refreshViews() {
         imageAdapter.currentCells = 0;
         imageAdapter.notifyDataSetChanged();
         board.invalidateViews();
+    }
+
+    public void resetPossibleMoves() {
+        for (int i = 0; i < 64; i++)
+            possibleMoves[i] = false;
+    }
+
+    public void printArray(ImageView[] pieces, String tag) {
+        Log.d("gridview size", Integer.toString(board.getChildCount()));
+        String toString = "";
+        for (int i = 0; i < pieces.length; i++) {
+            toString += "[" + pieces[i].getTag() + "], ";
+        }
+        //toString = squares.toString();
+        Log.d(tag, toString);
     }
 
     public void print2DArray() {
