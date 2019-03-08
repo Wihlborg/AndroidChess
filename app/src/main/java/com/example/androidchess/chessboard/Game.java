@@ -229,7 +229,7 @@ public class Game extends AppCompatActivity {
         int currentW = i + n + 1;
 
         if (getFilename(currentW).charAt(1) == 'w') {
-            if (n == 1 && !obstacle) {
+            if (n == 1 && obstacle) {
                 if (getFilename(currentW).charAt(0) != 't') {
                     obstacle = true;
                 }
@@ -239,7 +239,7 @@ public class Game extends AppCompatActivity {
         }
 
         if (getFilename(currentB).charAt(1) == 'b') {
-            if (n == 7 && !obstacle) {
+            if (n == 7 && obstacle) {
                 if (getFilename(currentB).charAt(0) != 't') {
                     obstacle = true;
                 }
@@ -249,7 +249,7 @@ public class Game extends AppCompatActivity {
         }
 
 
-        if (n != 1 || n != 7 && !obstacle) {
+        if (n != 1 || n != 7 && obstacle) {
 
 
             if (getFilename(currentW).charAt(1) == 'w') {
@@ -384,7 +384,7 @@ public class Game extends AppCompatActivity {
             n--;
             i++;
         }
-        
+
     }
 
     public void possibleMoves(int position) {
