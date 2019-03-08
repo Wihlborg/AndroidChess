@@ -144,6 +144,71 @@ public class Game extends AppCompatActivity {
     }
 
     public void rookCheck(int position) {
+        int x = position % 8;
+        int y = position / 8;
+        int i = x+1;
+        int n = y;
+        boolean obstacle = false;
+
+
+        while (i < 8 && obstacle) {
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            i++;
+
+        }
+
+        i = x;
+        n = y+1;
+        obstacle = false;
+        while (n < 8 && obstacle) {
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+
+            n++;
+
+        }
+
+
+        i = x;
+        n = y-1;
+        obstacle = false;
+        while (n >= 0 && obstacle) {
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+
+            n--;
+
+        }
+
+        i = x-1;
+        n = y;
+        obstacle = false;
+        while (i >= 0 && obstacle) {
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            i--;
+        }
 
     }
 
@@ -152,10 +217,179 @@ public class Game extends AppCompatActivity {
     }
 
     public void pawnCheck(int position) {
+        int x = position % 8;
+        int y = position / 8;
+        int i = x;
+        int n = y;
+        boolean obstacle = false;
+
+        int currentPosB = i - n - 2;
+        int currentPosW = i + n + 2;
+        int currentB = i - n - 1;
+        int currentW = i + n + 1;
+
+        if (((ImageView) board.getItemAtPosition(currentPosW)).getTag().toString().charAt(1) == 'w') {
+            if (n == 1 && obstacle) {
+                if (((ImageView) board.getItemAtPosition(currentPosW)).getTag().toString().charAt(0) != 't') {
+                    obstacle = true;
+                } else {
+                    ((ImageView) board.getItemAtPosition(currentPosW)).setAlpha(1f);
+                }
+                n++;
+            }
+        }
+
+        if (((ImageView) board.getItemAtPosition(currentPosB)).getTag().toString().charAt(1) == 'b') {
+            if (n == 7 && obstacle) {
+                if (((ImageView) board.getItemAtPosition(currentPosB)).getTag().toString().charAt(0) != 't') {
+                    obstacle = true;
+                } else {
+                    ((ImageView) board.getItemAtPosition(currentPosB)).setAlpha(1f);
+                }
+                n--;
+            }
+        }
+
+
+        if (n != 1 || n != 7 && obstacle) {
+
+
+            if (((ImageView) board.getItemAtPosition(currentW)).getTag().toString().charAt(1) == 'w') {
+                {
+                }
+                if (((ImageView) board.getItemAtPosition(currentW)).getTag().toString().charAt(0) != 't') {
+                    obstacle = true;
+                } else {
+                    ((ImageView) board.getItemAtPosition(currentW)).setAlpha(1f);
+                }
+                n++;
+            }
+
+
+            if (((ImageView) board.getItemAtPosition(currentB)).getTag().toString().charAt(1) == 'b') {
+                {
+                }
+                if (((ImageView) board.getItemAtPosition(currentB)).getTag().toString().charAt(0) != 't') {
+                    obstacle = true;
+                } else {
+                    ((ImageView) board.getItemAtPosition(currentB)).setAlpha(1f);
+                }
+                n--;
+            }
+
+
+        }
 
     }
 
     public void kingCheck(int position) {
+
+        int x = position % 8;
+        int y = position / 8;
+        int i = x;
+        int n = y;
+        boolean obstacle = false;
+
+        while (n<1 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            n++;
+        }
+
+        while (i<1 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            i++;
+        }
+
+        while (i>=0 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            i--;
+        }
+
+        while (n>=0 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            n--;
+        }
+
+
+
+        while (n<1 && i<1 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            n++;
+            i++;
+        }
+
+
+        while (n>=0 && i>=0 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            n--;
+            i--;
+        }
+
+
+        while (n<1 && i>=0 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            n++;
+            i--;
+        }
+
+
+        while (n>=0 && i<1 && obstacle){
+            int currentPos = i + 8*n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                Log.d("obstacle i+ n+", "true @" + i+n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            possibleMoves[currentPos] = true;
+            n--;
+            i++;
+        }
+
+
+
+
 
     }
 
