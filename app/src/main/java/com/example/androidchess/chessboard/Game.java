@@ -154,8 +154,7 @@ public class Game extends AppCompatActivity {
 
         if (getFilename(currentPos).charAt(1) == 'w') {
             colorKnightCheck(position, 'w');
-        }
-        else {
+        } else {
             colorKnightCheck(position, 'b');
         }
 
@@ -167,50 +166,50 @@ public class Game extends AppCompatActivity {
         int currentPos = x + 8 * y;
 
         currentPos = (x + 2) + (8 * (y + 1));
-        if (x+2 < 8 && y+1 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+2,y+1" , currentPos+"");
+        if (x + 2 < 8 && y + 1 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+2,y+1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x + 1) + (8 * (y + 2));
-        if (x+1 < 8 && y+2 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+1, y+2" , currentPos+"");
+        if (x + 1 < 8 && y + 2 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+1, y+2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 1) + (8 * (y + 2));
-        if (x-1 >= 0 && y+2 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-1, y+2" , currentPos+"");
+        if (x - 1 >= 0 && y + 2 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-1, y+2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 2) + (8 * (y + 1));
-        if (x-2 >= 0 && y+1 < 8 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-2, y+1" , currentPos+"");
+        if (x - 2 >= 0 && y + 1 < 8 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-2, y+1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 2) + (8 * (y - 1));
-        if (x-2 >= 0 && y-1 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-2, y-1" , currentPos+"");
+        if (x - 2 >= 0 && y - 1 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-2, y-1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x - 1) + (8 * (y - 2));
-        if (x-1 >= 0 && y-2 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x-1, y-2" , currentPos+"");
+        if (x - 1 >= 0 && y - 2 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x-1, y-2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x + 1) + (8 * (y - 2));
-        if (x+1 < 8 && y-2 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+1, y-2" , currentPos+"");
+        if (x + 1 < 8 && y - 2 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+1, y-2", currentPos + "");
             possibleMoves[currentPos] = true;
         }
 
         currentPos = (x + 2) + (8 * (y - 1));
-        if (x+2 < 8 && y-1 >= 0 && getFilename(currentPos).charAt(1) != color) {
-            Log.d("x+2, y-1" , currentPos+"");
+        if (x + 2 < 8 && y - 1 >= 0 && getFilename(currentPos).charAt(1) != color) {
+            Log.d("x+2, y-1", currentPos + "");
             possibleMoves[currentPos] = true;
         }
     }
