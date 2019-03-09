@@ -39,10 +39,12 @@ public class Mail {
         });
     }
 
+    /** Sends email confirmation of new password with help of
+     *  Simple Mail Transfer Protocol + Multi-purpose Internet Mail Extension
+     */
     public void sendEmail(String recipientEmail, String recoverPassword, String username){
 
         try {
-
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(shackUser));
             message.setRecipients(Message.RecipientType.TO,

@@ -8,8 +8,6 @@ class Database {
     private static final String TAG = "Database";
     private static Database db = null;
     private Encryption encrypt = new Encryption();
-
-
     private Connection connect = null;
 
     //Singleton instance of Database
@@ -51,7 +49,7 @@ class Database {
 
         }catch (Exception e){
             e.printStackTrace();
-            Log.d(TAG, String.valueOf(e));
+            Log.d(TAG, "Failed registration");
         }
 
         return flag;
@@ -77,7 +75,7 @@ class Database {
 
         }catch (Exception e){
             e.printStackTrace();
-            Log.d(TAG, String.valueOf(e));
+            Log.d(TAG,"Failed authentication");
 
         }
 
@@ -96,7 +94,7 @@ class Database {
              {
                  string[j] = (char)('a' + random.nextInt(26));
              }
-             randomStrings = new String(string);
+             randomStrings = String.valueOf(string);
 
          return randomStrings;
      }
@@ -106,7 +104,6 @@ class Database {
     boolean forgotPassword(String email, String username) {
          boolean flag = false;
          String password = randomGenerated();
-
          String query = ("UPDATE myshack.user SET password = '" +
                  encrypt.passwordEncryptor(username,password) +"' WHERE email = '"+ email +"'");
 
@@ -114,15 +111,19 @@ class Database {
 
              preparedStatement.executeUpdate(query);
 
-
              connect.close();
              flag = true;
-             System.out.println("Recovery successful");
-             Mail.getInstance().sendEmail(email,password, username);
+             Log.d(TAG,"Recovery successful");
 
          } catch (Exception e) {
 
              e.printStackTrace();
+         }
+
+         if (flag) {
+            Mail.getInstance().sendEmail(email, password, username);
+         }else{
+             Log.d(TAG,"Failed to send ");
          }
 
          return flag;
