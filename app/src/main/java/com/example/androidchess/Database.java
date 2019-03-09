@@ -45,7 +45,7 @@ class Database {
             preparedStmt.execute();
 
             flag = true;
-            Log.d(TAG,"Registration Successful");
+            Log.d(TAG,"Registration successful");
 
         }catch (Exception e){
             e.printStackTrace();

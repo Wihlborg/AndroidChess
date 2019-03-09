@@ -102,6 +102,10 @@ public class ForgotActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Represents an asynchronous forgot password task used to recover a new
+     * password for the user.
+     */
     class UserForgotPassword extends AsyncTask<Void, Void, Boolean> {
         String email;
         String user;

@@ -39,8 +39,9 @@ public class Mail {
         });
     }
 
-    /** Sends email confirmation of new password with help of
-     *  Simple Mail Transfer Protocol + Multi-purpose Internet Mail Extension
+    /**
+     * Sends email confirmation of new password with help of
+     * Simple Mail Transfer Protocol + Multi-purpose Internet Mail Extension
      */
     public void sendEmail(String recipientEmail, String recoverPassword, String username){
 

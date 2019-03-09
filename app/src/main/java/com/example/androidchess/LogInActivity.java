@@ -137,7 +137,7 @@ public class LogInActivity  extends AppCompatActivity{
     }
 
     /**
-     * Represents an asynchronous registration task used to authenticate
+     * Represents an asynchronous sign in task used to authenticate
      * the user.
      */
      class UserLoginTask extends AsyncTask<Void, Void, Boolean> {

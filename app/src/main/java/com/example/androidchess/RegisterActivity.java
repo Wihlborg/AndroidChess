@@ -132,8 +132,8 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     * Represents an asynchronous registration task used to authenticate
-     * the user.
+     * Represents an asynchronous sign up task used for creation
+     * of a user.
      */
 
     class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
