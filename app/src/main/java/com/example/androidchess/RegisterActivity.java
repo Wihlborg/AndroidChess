@@ -1,15 +1,15 @@
 package com.example.androidchess;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
 
 public class RegisterActivity extends AppCompatActivity {
     /**
@@ -19,21 +19,27 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     // UI references.
+    private LinearLayout mLayout;
     protected Button mReturnButton;
     protected Button mRegisterButton;
-    private EditText mEmailText;
-    public EditText mPasswordText;
-    public EditText mUsernameText;
+    private TextInputEditText mEmailText;
+    public TextInputEditText mPasswordText;
+    public TextInputEditText mUsernameText;
+    private ProgressBar mBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        //Set up layout
+        mLayout = findViewById(R.id.LinearRegister);
         mReturnButton = findViewById(R.id.return_button_from_register);
         mRegisterButton = findViewById(R.id.create_user_button);
         mEmailText = findViewById(R.id.email);
         mUsernameText = findViewById(R.id.username);
         mPasswordText = findViewById(R.id.password);
+        //Might add animation of loading (optional)
+        mBar = findViewById(R.id.register_progress);
 
         mReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,6 +54,12 @@ public class RegisterActivity extends AppCompatActivity {
         mRegisterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 attemptSignUp();
             }
         });

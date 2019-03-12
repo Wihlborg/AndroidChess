@@ -1,15 +1,16 @@
 package com.example.androidchess;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
 
 public class ForgotActivity extends AppCompatActivity {
     /**
@@ -19,23 +20,35 @@ public class ForgotActivity extends AppCompatActivity {
     private final static String TAG = "ForgotActivity";
 
     //UI
+    private LinearLayout mLayout;
     protected Button mSendButton;
     protected Button mReturnButton;
-    private EditText mEmail;
-    private EditText mUsername;
+    private TextInputEditText mEmail;
+    private TextInputEditText mUsername;
+    private ProgressBar mBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgotpassword);
+        //Set up layout
+        mLayout = findViewById(R.id.LinearForgot);
         mEmail = findViewById(R.id.email_from_forgot);
         mSendButton = findViewById(R.id.send_recovery_button);
         mUsername = findViewById(R.id.user_from_forgot);
         mReturnButton = findViewById(R.id.return_from_forgot);
+        //Might add animation of loading (optional)
+        mBar = findViewById(R.id.forgot_progress);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 recoverPassword();
             }
         });

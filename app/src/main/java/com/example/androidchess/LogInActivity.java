@@ -1,5 +1,7 @@
 package com.example.androidchess;
+import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 public class LogInActivity  extends AppCompatActivity{
@@ -20,21 +23,29 @@ public class LogInActivity  extends AppCompatActivity{
     protected UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView mUsername;
-    private EditText mPasswordView;
+    private LinearLayout mLayout;
+    private TextInputEditText mUsername;
+    private TextInputEditText mPasswordView;
     protected Button mRegisterButton;
     protected Button mSignInButton;
     protected Button mForgotButton;
+    private ProgressBar mBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Set up layout
+        mLayout = findViewById(R.id.LinearLogin);
         // Set up the login form.
         mUsername = findViewById(R.id.username);
         mPasswordView = findViewById(R.id.password);
         // Set up the register form
         mRegisterButton = findViewById(R.id.register_button_from_login);
+
+        //Might add animation of loading (optional)
+        mBar = findViewById(R.id.login_progress);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -51,6 +62,12 @@ public class LogInActivity  extends AppCompatActivity{
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                try {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 attemptSignIn();
             }
         });
