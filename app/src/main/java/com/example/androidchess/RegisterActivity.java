@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 public class RegisterActivity extends AppCompatActivity {
+    //Enables Log comments
     private static final String TAG = "RegisterActivity";
     /**
      * Keep track of the register task to ensure we can cancel it if requested.

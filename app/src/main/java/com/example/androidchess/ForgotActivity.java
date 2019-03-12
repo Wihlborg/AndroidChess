@@ -13,11 +13,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 public class ForgotActivity extends AppCompatActivity {
+    //Enables Log comments
+    private final static String TAG = "ForgotActivity";
     /**
      * Keep track of the forgot task to ensure we can cancel it if requested.
      */
     protected UserForgotPassword mAuthTask = null;
-    private final static String TAG = "ForgotActivity";
+
 
     //UI
     private LinearLayout mLayoutForgot;

@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 public class LogInActivity  extends AppCompatActivity{
+    //Enables Log comments
     private static final String TAG = "LogInActivity";
 
     /**
