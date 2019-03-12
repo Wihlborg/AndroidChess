@@ -174,7 +174,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Intent returnTo = new Intent(RegisterActivity.this, LogInActivity.class);
                 Toast.makeText(getApplicationContext(),"Registration success", Toast.LENGTH_SHORT).show();
                 startActivity(returnTo);
-                Log.d(TAG,"Recovery Success");
+                Log.d(TAG,"Registration Success");
             } else {
                 Toast.makeText(getApplicationContext(),"Registration failed", Toast.LENGTH_SHORT).show();
             }
