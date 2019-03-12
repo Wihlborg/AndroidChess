@@ -110,10 +110,6 @@ public class ForgotActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             mAuthTask = new UserForgotPassword(email, user);
-            Intent returnTo = new Intent(ForgotActivity.this, LogInActivity.class);
-            Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
-            startActivity(returnTo);
-            Log.d(TAG,"Recovery Success");
             mAuthTask.execute((Void) null);
         }
 
@@ -139,6 +135,18 @@ public class ForgotActivity extends AppCompatActivity {
             return Database.getInstance().forgotPassword(email, user);
         }
 
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthTask = null;
+            if (success) {
+                Intent returnTo = new Intent(ForgotActivity.this, LogInActivity.class);
+                Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                startActivity(returnTo);
+                Log.d(TAG,"Recovery Success");
+            } else {
+                Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
 
         @Override
         protected void onCancelled() {

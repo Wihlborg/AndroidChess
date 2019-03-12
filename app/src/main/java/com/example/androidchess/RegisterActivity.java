@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
 
 public class RegisterActivity extends AppCompatActivity {
+    private static final String TAG = "RegisterActivity";
     /**
      * Keep track of the register task to ensure we can cancel it if requested.
      */
@@ -122,9 +124,6 @@ public class RegisterActivity extends AppCompatActivity {
             String user = String.valueOf(mUsernameText.getText());
             String email = String.valueOf(mEmailText.getText());
             String password = String.valueOf(mPasswordText.getText());
-            Toast.makeText(getBaseContext(), "User created, returning!", Toast.LENGTH_SHORT).show();
-            Intent returnActivity = new Intent(RegisterActivity.this, LogInActivity.class);
-            startActivity(returnActivity);
             mAuthTask = new UserRegisterTask(user, email, password, account_id);
             mAuthTask.execute((Void) null);
 
@@ -166,6 +165,18 @@ public class RegisterActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... voids) {
 
             return Database.getInstance().registerUser(mUsername, mEmail, mPassword, mAccount_Id);
+        }
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthTask = null;
+            if (success) {
+                Intent returnTo = new Intent(RegisterActivity.this, LogInActivity.class);
+                Toast.makeText(getApplicationContext(),"Registration success", Toast.LENGTH_SHORT).show();
+                startActivity(returnTo);
+                Log.d(TAG,"Recovery Success");
+            } else {
+                Toast.makeText(getApplicationContext(),"Registration failed", Toast.LENGTH_SHORT).show();
+            }
         }
 
         @Override
