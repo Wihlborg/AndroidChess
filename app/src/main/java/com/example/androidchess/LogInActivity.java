@@ -23,7 +23,7 @@ public class LogInActivity  extends AppCompatActivity{
     protected UserLoginTask mAuthTask = null;
 
     // UI references.
-    private LinearLayout mLayout;
+    private LinearLayout mLayoutLogIn;
     private TextInputEditText mUsername;
     private TextInputEditText mPasswordView;
     protected Button mRegisterButton;
@@ -37,7 +37,7 @@ public class LogInActivity  extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         //Set up layout
-        mLayout = findViewById(R.id.LinearLogin);
+        mLayoutLogIn = findViewById(R.id.LinearLogin);
         // Set up the login form.
         mUsername = findViewById(R.id.username);
         mPasswordView = findViewById(R.id.password);
@@ -64,7 +64,7 @@ public class LogInActivity  extends AppCompatActivity{
             public void onClick(View view) {
                 try {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(mLayoutLogIn.getWindowToken(), 0);
                 } catch (Exception e){
                     e.printStackTrace();
                 }

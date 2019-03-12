@@ -20,7 +20,7 @@ public class ForgotActivity extends AppCompatActivity {
     private final static String TAG = "ForgotActivity";
 
     //UI
-    private LinearLayout mLayout;
+    private LinearLayout mLayoutForgot;
     protected Button mSendButton;
     protected Button mReturnButton;
     private TextInputEditText mEmail;
@@ -32,7 +32,7 @@ public class ForgotActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgotpassword);
         //Set up layout
-        mLayout = findViewById(R.id.LinearForgot);
+        mLayoutForgot = findViewById(R.id.LinearForgot);
         mEmail = findViewById(R.id.email_from_forgot);
         mSendButton = findViewById(R.id.send_recovery_button);
         mUsername = findViewById(R.id.user_from_forgot);
@@ -45,7 +45,7 @@ public class ForgotActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(mLayoutForgot.getWindowToken(), 0);
                 } catch (Exception e){
                     e.printStackTrace();
                 }

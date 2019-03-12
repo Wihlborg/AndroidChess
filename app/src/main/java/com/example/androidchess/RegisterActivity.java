@@ -19,7 +19,7 @@ public class RegisterActivity extends AppCompatActivity {
 
 
     // UI references.
-    private LinearLayout mLayout;
+    private LinearLayout mLayoutRegister;
     protected Button mReturnButton;
     protected Button mRegisterButton;
     private TextInputEditText mEmailText;
@@ -32,7 +32,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         //Set up layout
-        mLayout = findViewById(R.id.LinearRegister);
+        mLayoutRegister = findViewById(R.id.LinearRegister);
         mReturnButton = findViewById(R.id.return_button_from_register);
         mRegisterButton = findViewById(R.id.create_user_button);
         mEmailText = findViewById(R.id.email);
@@ -56,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 try {
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(mLayout.getWindowToken(), 0);
+                    imm.hideSoftInputFromWindow(mLayoutRegister.getWindowToken(), 0);
                 } catch (Exception e){
                     e.printStackTrace();
                 }
@@ -166,18 +166,6 @@ public class RegisterActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... voids) {
 
             return Database.getInstance().registerUser(mUsername, mEmail, mPassword, mAccount_Id);
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            mAuthTask = null;
-            if (success) {
-                Intent returnTo = new Intent(RegisterActivity.this, LogInActivity.class);
-                Toast.makeText(getApplicationContext(),"Registration success", Toast.LENGTH_SHORT).show();
-                startActivity(returnTo);
-            } else {
-                Toast.makeText(getApplicationContext(),"Registration failed", Toast.LENGTH_SHORT).show();
-            }
         }
 
         @Override
