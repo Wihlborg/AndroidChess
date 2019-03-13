@@ -18,6 +18,7 @@ public class ForgotActivity extends AppCompatActivity {
     /**
      * Keep track of the forgot task to ensure we can cancel it if requested.
      */
+
     protected UserForgotPassword mAuthTask = null;
 
 
