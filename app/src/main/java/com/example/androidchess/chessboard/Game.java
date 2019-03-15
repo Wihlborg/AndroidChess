@@ -140,6 +140,15 @@ public class Game extends AppCompatActivity {
         refreshViews();
     }
 
+    public String getFenNotation() {
+        String fenStr = imageAdapter.getBoardStr();
+        if (whiteTurn)
+            fenStr += " w";
+        else
+            fenStr += " b";
+        return fenStr;
+    }
+
     public boolean legalMove(int position) {
         if (possibleMoves[position])
             return true;
@@ -163,12 +172,6 @@ public class Game extends AppCompatActivity {
         for (int i = 0; i < 64; i++) {
             possibleMoves[i] = false;
         }
-    }
-
-    public String getFenNotation() {
-        String fenStr = imageAdapter.getBoardStr();
-
-        return fenStr;
     }
 
     public void printArray(ImageView[] pieces, String tag) {
