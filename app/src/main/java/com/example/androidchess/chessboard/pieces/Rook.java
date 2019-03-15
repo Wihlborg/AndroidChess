@@ -3,9 +3,7 @@ package com.example.androidchess.chessboard.pieces;
 import android.util.Log;
 import com.example.androidchess.R;
 
-import static com.example.androidchess.chessboard.Game.getCell;
-import static com.example.androidchess.chessboard.Game.getFilename;
-import static com.example.androidchess.chessboard.Game.possibleMoves;
+import static com.example.androidchess.chessboard.Game.*;
 
 public class Rook {
 
@@ -14,9 +12,9 @@ public class Rook {
         int y = position / 8;
         int currentPos = x + 8 * y;
 
-        if (getFilename(currentPos).charAt(1) == 'w') {
+        if (getFilename(currentPos).charAt(1) == 'w' && whiteTurn) {
             colorRookCheck(position, 'w');
-        } else {
+        } else if (getFilename(currentPos).charAt(1) == 'b' && !whiteTurn){
             colorRookCheck(position, 'b');
         }
     }
@@ -28,9 +26,10 @@ public class Rook {
         int i = x + 1;
         int n = y;
         boolean obstacle = false;
+        int currentPos;
 
         while (i < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
+            currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 Log.d("obstacle i+ n", "true @" + i + n + ", " + getFilename(position));
@@ -49,7 +48,7 @@ public class Rook {
         n = y + 1;
         obstacle = false;
         while (n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
+            currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 Log.d("obstacle i n+", "true @" + i + n + ", " + getFilename(position));
@@ -68,7 +67,7 @@ public class Rook {
         n = y - 1;
         obstacle = false;
         while (n >= 0 && !obstacle) {
-            int currentPos = i + 8 * n;
+            currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 Log.d("obstacle i n-", "true @" + i + n + ", " + getFilename(position));
@@ -88,7 +87,7 @@ public class Rook {
         n = y;
         obstacle = false;
         while (i >= 0 && !obstacle) {
-            int currentPos = i + 8 * n;
+            currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
                 Log.d("obstacle i- n", "true @" + i + n + ", " + getFilename(position));
                 if (getFilename(currentPos).charAt(1) != color)

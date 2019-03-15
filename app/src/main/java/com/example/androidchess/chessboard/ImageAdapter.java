@@ -9,12 +9,13 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.example.androidchess.R;
-
+import static com.example.androidchess.chessboard.Game.getCell;
+import static com.example.androidchess.chessboard.Game.getFilename;
+import static com.example.androidchess.chessboard.Game.possibleMoves;
 public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;
     public ImageView[] squares = new ImageView[64];
-    //public String[] piecesStr = new String[64];
     public int currentCells = 0;
 
     public ImageAdapter(Context mContext) {
@@ -96,6 +97,52 @@ public class ImageAdapter extends BaseAdapter {
         //img.setTag(fileName);
         //Log.d("currentCells", Integer.toString(currentCells));
         return img;
+    }
+
+    public String getBoardStr() {
+        String fenString = "";
+        int emptyCellCounter = 0;
+        int n;
+        for (int i = 0; i<pieceIds.length; i++) {
+            String imgName = getFilename(i);
+            n = i % 8;
+
+            // for empty rows
+            if (n == 0 && !fenString.isEmpty()) {
+                if (emptyCellCounter > 0) {
+                    fenString += Integer.toString(emptyCellCounter);
+                    emptyCellCounter = 0;
+                }
+                fenString += '/';
+            }
+
+            // for white pieces
+            if (imgName.charAt(1) == 'w') {
+                if (imgName.charAt(0) != 't') {
+                    if (emptyCellCounter > 0)
+                        fenString += Integer.toString(emptyCellCounter);
+                    fenString += imgName.toUpperCase().charAt(0);
+                    emptyCellCounter = 0;
+                }
+                else {
+                    emptyCellCounter++;
+                }
+            }
+
+            // for black pieces
+            else {
+                if (imgName.charAt(0) != 't') {
+                    if (emptyCellCounter > 0)
+                        fenString += emptyCellCounter;
+                    fenString += imgName.charAt(0);
+                    emptyCellCounter = 0;
+                }
+                else {
+                    emptyCellCounter++;
+                }
+            }
+        }
+        return fenString;
     }
 
     public Integer[] pieceIds = {

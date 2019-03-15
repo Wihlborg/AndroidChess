@@ -8,6 +8,7 @@ import com.example.androidchess.R;
 import static com.example.androidchess.chessboard.Game.getCell;
 import static com.example.androidchess.chessboard.Game.getFilename;
 import static com.example.androidchess.chessboard.Game.possibleMoves;
+import static com.example.androidchess.chessboard.Game.whiteTurn;
 
 public class Bishop {
 
@@ -16,9 +17,9 @@ public class Bishop {
         int y = position / 8;
         int currentPos = x + 8 * y;
 
-        if (getFilename(currentPos).charAt(1) == 'w') {
+        if (getFilename(currentPos).charAt(1) == 'w' && whiteTurn) {
             colorBishopCheck(position, 'w');
-        } else {
+        } else if (getFilename(currentPos).charAt(1) == 'b' && !whiteTurn){
             colorBishopCheck(position, 'b');
         }
     }

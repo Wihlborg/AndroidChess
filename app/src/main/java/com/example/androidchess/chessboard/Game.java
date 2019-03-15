@@ -20,8 +20,8 @@ public class Game extends AppCompatActivity {
 
     static GridView board;
     static ImageAdapter imageAdapter;
+    public static boolean whiteTurn = true;
     public static boolean[] possibleMoves = new boolean[64];
-    //ImageView[] squares = new ImageView[64];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +44,69 @@ public class Game extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                System.out.println(getFenNotation());
                 swap(position);
             }
         });
 
+    }
+
+    boolean turnCheck(int position) {
+        if (getFilename(position).charAt(1) == 'w' && whiteTurn)
+            return true;
+        else if (getFilename(position).charAt(1) == 'b' && !whiteTurn)
+            return true;
+        else
+            return false;
+    }
+
+    int swapCounter = 0;
+    int firstPos;
+
+    public void swap(int position) {
+
+        if (++swapCounter == 1 && getFilename(position).charAt(0) != 't' && turnCheck(position)) {
+            firstPos = position;
+            possibleMoves(position);
+        } else if (swapCounter == 2 && legalMove(position)) {
+            // checks if first piece has different name than the second clicked piece and if its not a empty piece
+            if (getFilename(firstPos).charAt(1) != getFilename(position).charAt(1) && !getFilename(position).equals("ts")) {
+                imageAdapter.pieceIds[position] = R.drawable.ts;
+                int temp = imageAdapter.pieceIds[position];
+
+                imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
+
+                imageAdapter.pieceIds[firstPos] = temp;
+
+                refreshViews();
+                swapCounter = 0;
+                resetPossibleMoves();
+                resetBackgrounds();
+            } else {
+                Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+                int temp = imageAdapter.pieceIds[position];
+
+                imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
+
+                imageAdapter.pieceIds[firstPos] = temp;
+
+                refreshViews();
+                Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
+                swapCounter = 0;
+                resetPossibleMoves();
+                resetBackgrounds();
+                if (whiteTurn)
+                    whiteTurn = false;
+                else
+                    whiteTurn = true;
+            }
+        } else {
+            swapCounter = 0;
+            resetPossibleMoves();
+            refreshViews();
+            resetBackgrounds();
+        }
+        print2DArray();
     }
 
     public void possibleMoves(int position) {
@@ -88,52 +147,6 @@ public class Game extends AppCompatActivity {
             return false;
     }
 
-    int swapCounter = 0;
-    int firstPos;
-
-    //TODO not currently checking for enemy or friendly peices
-    public void swap(int position) {
-
-        if (++swapCounter == 1 && getFilename(position).charAt(0) != 't') {
-            firstPos = position;
-            possibleMoves(position);
-        } else if (swapCounter == 2 && legalMove(position)) {
-            // checks if first piece has different name than the second clicked piece and if its not a empty piece
-            if (getFilename(firstPos).charAt(1) != getFilename(position).charAt(1) && !getFilename(position).equals("ts")) {
-                imageAdapter.pieceIds[position] = R.drawable.ts;
-                int temp = imageAdapter.pieceIds[position];
-
-                imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
-
-                imageAdapter.pieceIds[firstPos] = temp;
-
-                refreshViews();
-                swapCounter = 0;
-                resetPossibleMoves();
-                resetBackgrounds();
-            } else {
-                Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
-                int temp = imageAdapter.pieceIds[position];
-
-                imageAdapter.pieceIds[position] = imageAdapter.pieceIds[firstPos];
-
-                imageAdapter.pieceIds[firstPos] = temp;
-
-                refreshViews();
-                Log.d("swap", getFilename(firstPos) + ", " + getFilename(position));
-                swapCounter = 0;
-                resetPossibleMoves();
-                resetBackgrounds();
-            }
-        } else {
-            swapCounter = 0;
-            resetPossibleMoves();
-            refreshViews();
-            resetBackgrounds();
-        }
-        print2DArray();
-    }
-
     public void resetBackgrounds() {
         for (int i = 0; i < 64; i++) {
             getCell(i).setBackgroundResource(0);
@@ -150,6 +163,12 @@ public class Game extends AppCompatActivity {
         for (int i = 0; i < 64; i++) {
             possibleMoves[i] = false;
         }
+    }
+
+    public String getFenNotation() {
+        String fenStr = imageAdapter.getBoardStr();
+
+        return fenStr;
     }
 
     public void printArray(ImageView[] pieces, String tag) {

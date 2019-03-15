@@ -3,9 +3,7 @@ package com.example.androidchess.chessboard.pieces;
 import android.util.Log;
 import com.example.androidchess.R;
 
-import static com.example.androidchess.chessboard.Game.getCell;
-import static com.example.androidchess.chessboard.Game.getFilename;
-import static com.example.androidchess.chessboard.Game.possibleMoves;
+import static com.example.androidchess.chessboard.Game.*;
 
 public class Knight {
 
@@ -14,9 +12,9 @@ public class Knight {
         int y = position / 8;
         int currentPos = x + 8 * y;
 
-        if (getFilename(currentPos).charAt(1) == 'w') {
+        if (getFilename(currentPos).charAt(1) == 'w' && whiteTurn) {
             colorKnightCheck(position, 'w');
-        } else {
+        } else if (getFilename(currentPos).charAt(1) == 'b' && !whiteTurn){
             colorKnightCheck(position, 'b');
         }
     }

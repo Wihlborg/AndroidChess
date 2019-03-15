@@ -2,16 +2,14 @@ package com.example.androidchess.chessboard.pieces;
 
 import com.example.androidchess.R;
 
-import static com.example.androidchess.chessboard.Game.getCell;
-import static com.example.androidchess.chessboard.Game.getFilename;
-import static com.example.androidchess.chessboard.Game.possibleMoves;
+import static com.example.androidchess.chessboard.Game.*;
 
 public class King {
 
     public void kingCheck(int position) {
-        if (getFilename(position).charAt(1) == 'w')
+        if (getFilename(position).charAt(1) == 'w' && whiteTurn)
             colorKingCheck(position, 'w');
-        else
+        else if (getFilename(position).charAt(1) == 'b' && !whiteTurn)
             colorKingCheck(position, 'b');
     }
 
