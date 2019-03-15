@@ -1,14 +1,9 @@
 package com.example.androidchess.chessboard.pieces;
 
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import com.example.androidchess.R;
 
-import static com.example.androidchess.chessboard.Game.getCell;
-import static com.example.androidchess.chessboard.Game.getFilename;
-import static com.example.androidchess.chessboard.Game.possibleMoves;
-import static com.example.androidchess.chessboard.Game.whiteTurn;
+import static com.example.androidchess.chessboard.Game.*;
 
 public class Bishop {
 
