@@ -30,7 +30,7 @@ public class Pawn {
 
                     obstacle = true;
                 }
-                if (getFilename(currentPos).charAt(1) != 'w') {
+                if (getFilename(currentPos).charAt(0) == 't') {
                     possibleMoves[currentPos] = true;
                 }
                 n--;
@@ -87,7 +87,7 @@ public class Pawn {
 
                     obstacle = true;
                 }
-                if (getFilename(currentPos).charAt(1) != 'b') {
+                if (getFilename(currentPos).charAt(0) == 't') {
                     possibleMoves[currentPos] = true;
                 }
                 n++;
