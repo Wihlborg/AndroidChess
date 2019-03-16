@@ -1,8 +1,11 @@
 package com.example.androidchess
 
+import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import com.facebook.share.model.ShareLinkContent
+import com.facebook.share.widget.ShareDialog
 
 class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,4 +43,8 @@ class MenuActivity : AppCompatActivity() {
 
     }
 }
+
+//Hur man sharear länk på FB: Vi kanske ska sharea bild istället?
+/*val content = ShareLinkContent.Builder().setContentUrl(Uri.parse("www.google.com")).build()
+ShareDialog(this).show(content)*/
 
