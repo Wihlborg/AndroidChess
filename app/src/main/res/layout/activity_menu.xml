@@ -67,9 +67,20 @@
     <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/textView" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="250dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="102dp" android:layout_marginTop="54dp"
-            app:layout_constraintTop_toBottomOf="@+id/imageView" android:layout_marginBottom="273dp"
-            app:layout_constraintBottom_toTopOf="@+id/shareButton"/>
+            android:id="@+id/textView"
+            android:layout_marginTop="44dp"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:layout_marginEnd="131dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="124dp" app:layout_constraintStart_toEndOf="@+id/multiplayerbutton"
+            app:layout_constraintHorizontal_bias="0.215" android:text="Username" android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toTopOf="@+id/eloView"/>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/eloView"
+            android:text="Elo" android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/textView" android:layout_marginBottom="256dp"
+            app:layout_constraintBottom_toTopOf="@+id/shareButton" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="125dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="267dp"/>
 </android.support.constraint.ConstraintLayout>

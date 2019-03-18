@@ -19,6 +19,9 @@ class MenuActivity : AppCompatActivity() {
         val textField = findViewById<TextView>(R.id.textView)
         textField.text = "Username: \n" + User.name
 
+        val eloField = findViewById<TextView>(R.id.eloView)
+        eloField.text = "Elo: \n" + User.elo
+
         val multiPlayerButton = findViewById<Button>(R.id.multiplayerbutton)
         multiPlayerButton.setOnClickListener { playMultiplayer() }
 
