@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
+import android.widget.ImageButton
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 
@@ -25,6 +26,9 @@ class MenuActivity : AppCompatActivity() {
 
         val logOutButton = findViewById<Button>(R.id.logoutbutton)
         logOutButton.setOnClickListener { logOut() }
+
+        val shareByte = findViewById<ImageButton>(R.id.shareButton)
+        shareByte.setOnClickListener{share()}
     }
 
     //TODO: implement intents for changing activity
@@ -43,6 +47,12 @@ class MenuActivity : AppCompatActivity() {
     fun logOut(){
         val intent = Intent(this, LogInActivity::class.java)
         startActivity(intent)
+    }
+
+    fun share(){
+        val content = ShareLinkContent.Builder().setContentUrl(Uri.parse("https://www.facebook.com/AndroidChess-592467867902828/")).
+            setQuote("Join me on AndroidChess").build()
+        ShareDialog(this).show(content)
     }
 }
 

@@ -39,11 +39,12 @@
             android:text="Log Out"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/logoutbutton" android:layout_marginTop="32dp"
-            app:layout_constraintTop_toBottomOf="@+id/optionbutton" app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="40dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="161dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="283dp"/>
+            android:id="@+id/logoutbutton"
+            android:layout_marginTop="33dp"
+            app:layout_constraintTop_toBottomOf="@+id/optionbutton" android:layout_marginBottom="128dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="64dp" app:layout_constraintEnd_toStartOf="@+id/shareButton"
+            android:layout_marginEnd="154dp"/>
     <ImageView
             android:layout_width="175dp"
             android:layout_height="175dp" app:srcCompat="@drawable/qw"
@@ -53,4 +54,14 @@
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="118dp"
             android:layout_marginBottom="540dp" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.041"/>
+    <ImageButton
+            android:layout_width="92dp"
+            android:layout_height="64dp" app:srcCompat="@drawable/com_facebook_button_icon_blue"
+            android:id="@+id/shareButton"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="44dp"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.883" android:layout_marginBottom="8dp"
+            android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.906"/>
 </android.support.constraint.ConstraintLayout>
