@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.TextView
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 
@@ -14,6 +15,9 @@ class MenuActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
         supportActionBar!!.hide()
+
+        val textField = findViewById<TextView>(R.id.textView)
+        textField.text = "Username: \n" + User.name
 
         val multiPlayerButton = findViewById<Button>(R.id.multiplayerbutton)
         multiPlayerButton.setOnClickListener { playMultiplayer() }
@@ -56,7 +60,4 @@ class MenuActivity : AppCompatActivity() {
     }
 }
 
-//Hur man sharear länk på FB: Vi kanske ska sharea bild istället?
-/*val content = ShareLinkContent.Builder().setContentUrl(Uri.parse("www.google.com")).build()
-ShareDialog(this).show(content)*/
 

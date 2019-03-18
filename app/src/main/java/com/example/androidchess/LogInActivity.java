@@ -181,6 +181,8 @@ public class LogInActivity  extends AppCompatActivity{
             mAuthTask = null;
 
             if (success) {
+                User user = User.INSTANCE;
+                user.setName(mUsername);
                 Intent r = new Intent(LogInActivity.this, MenuActivity.class);
                 startActivity(r);
                 Toast.makeText(getApplicationContext(),"Log In success", Toast.LENGTH_SHORT).show();
