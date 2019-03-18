@@ -180,13 +180,8 @@ public class LogInActivity  extends AppCompatActivity{
             mAuthTask = null;
 
             if (success) {
-                //Replace later with an actual online layout
-                //This is just for testing if it works or not.
-                //Might be a good idea to use
-                //Intent r = new Intent(LogInActivity.this, NextClass.class);
-                //startActivity(r);
-
-                setContentView(R.layout.signedin_layout);
+                Intent r = new Intent(LogInActivity.this, MenuActivity.class);
+                startActivity(r);
                 Toast.makeText(getApplicationContext(),"Log In success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG,"Log In Success");
             } else {
