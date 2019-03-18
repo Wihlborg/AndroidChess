@@ -34,7 +34,9 @@ public class ForgotActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgotpassword);
+
         //Set up layout
+        getSupportActionBar().hide();
         mLayoutForgot = findViewById(R.id.LinearForgot);
         mEmail = findViewById(R.id.email_from_forgot);
         mSendButton = findViewById(R.id.send_recovery_button);

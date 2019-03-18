@@ -38,6 +38,7 @@ public class LogInActivity  extends AppCompatActivity{
         setContentView(R.layout.activity_login);
 
         //Set up layout
+        getSupportActionBar().hide();
         mLayoutLogIn = findViewById(R.id.LinearLogin);
         // Set up the login form.
         mUsername = findViewById(R.id.username);

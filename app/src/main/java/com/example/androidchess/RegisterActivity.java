@@ -35,6 +35,7 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         //Set up layout
+        getSupportActionBar().hide();
         mLayoutRegister = findViewById(R.id.LinearRegister);
         mReturnButton = findViewById(R.id.return_button_from_register);
         mRegisterButton = findViewById(R.id.create_user_button);
