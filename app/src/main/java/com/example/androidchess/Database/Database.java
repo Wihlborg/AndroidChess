@@ -131,13 +131,21 @@ public class Database {
          return flag;
      }
 
-    public void updateElo(String usernameA, String usernameB, int winner){
+    public void updateElo(String usernameA, String usernameB, double winnerA){
          try {
              double eloA = getElo(usernameA), eloB = getElo(usernameB);
              Elo elo = new Elo();
 
-             double newEloA = elo.getNewRating(eloA, eloB, winner);
-             double newEloB = elo.getNewRating(eloB, eloA, winner);
+             double winnerB = 0;
+
+             if (winnerA == 0){
+                 winnerB = 1;
+             } else if (winnerA == (1/2)){
+                 winnerB = (1/2);
+             }
+
+             double newEloA = elo.getNewRating(eloA, eloB, winnerA);
+             double newEloB = elo.getNewRating(eloB, eloA, winnerB);
 
              Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 

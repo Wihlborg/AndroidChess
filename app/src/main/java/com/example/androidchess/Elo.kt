@@ -6,7 +6,7 @@ class Elo {
     private val kFactor = 20
 
 
-    fun getNewRating(eloA: Double, eloB: Double, winner: Int): Double{
+    fun getNewRating(eloA: Double, eloB: Double, winner: Double): Double{
         var newRatingA = eloA + kFactor * (winner - getLogisticCDF(eloA, eloB))
 
         return newRatingA
