@@ -1,4 +1,4 @@
-package com.example.androidchess
+package com.example.androidchess.Activities
 
 import android.content.Intent
 import android.net.Uri
@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.example.androidchess.R
+import com.example.androidchess.User
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 

@@ -10,16 +10,16 @@
             android:roundIcon="@drawable/qw"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".LogInActivity">
+        <activity android:name=".Activities.LogInActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".ForgotActivity"/>
-        <activity android:name=".MenuActivity"/>
+        <activity android:name=".Activities.RegisterActivity"/>
+        <activity android:name=".Activities.ForgotActivity"/>
+        <activity android:name=".Activities.MenuActivity"/>
         <meta-data android:name="com.facebook.sdk.ApplicationId" android:value="@string/facebook_app_id"/>
         <provider android:authorities="com.facebook.app.FacebookContentProvider1284930371655300"
                   android:name="com.facebook.FacebookContentProvider"

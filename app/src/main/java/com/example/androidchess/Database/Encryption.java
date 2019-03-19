@@ -1,4 +1,4 @@
-package com.example.androidchess;
+package com.example.androidchess.Database;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 

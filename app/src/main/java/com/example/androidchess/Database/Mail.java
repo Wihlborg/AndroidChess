@@ -1,4 +1,4 @@
-package com.example.androidchess;
+package com.example.androidchess.Database;
 
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;

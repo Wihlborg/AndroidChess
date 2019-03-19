@@ -1,17 +1,19 @@
-package com.example.androidchess;
+package com.example.androidchess.Database;
 
 import android.util.Log;
+import com.example.androidchess.Elo;
+
 import java.sql.*;
 import java.util.Random;
 
-class Database {
+public class Database {
     private static final String TAG = "Database";
     private static Database db = null;
     private Encryption encrypt = new Encryption();
     private Connection connect = null;
 
     //Singleton instance of Database
-     static Database getInstance(){
+    public static Database getInstance(){
         if (db == null){
             db = new Database();
         }
@@ -32,7 +34,7 @@ class Database {
     }
 
     //For registering user
-     boolean registerUser( String username,String email, String password, int account_id) {
+    public boolean registerUser( String username,String email, String password, int account_id) {
         boolean flag = false;
 
         String query = "INSERT INTO myshack.user (username, email, password, account_id)" + "VALUES (?, ?, ?, ?)";
@@ -56,7 +58,7 @@ class Database {
     }
 
     //For authentication of logging in into the app as a user
-     boolean authenticateUser(String username, String password){
+     public boolean authenticateUser(String username, String password){
         boolean flag = false;
         String query = "SELECT username, password FROM myshack.user WHERE username = ? AND password = ?";
         try(PreparedStatement preparedStmt = connect.prepareStatement(query)) {
@@ -101,7 +103,7 @@ class Database {
 
 
     //Forgot password using UPDATE query
-    boolean forgotPassword(String email, String username) {
+    public boolean forgotPassword(String email, String username) {
          boolean flag = false;
          String password = randomGenerated();
          String query = ("UPDATE myshack.user SET password = '" +
@@ -129,7 +131,7 @@ class Database {
          return flag;
      }
 
-     void updateElo(String usernameA, String usernameB, int winner){
+    public void updateElo(String usernameA, String usernameB, int winner){
          try {
              double eloA = getElo(usernameA), eloB = getElo(usernameB);
              Elo elo = new Elo();
@@ -151,7 +153,7 @@ class Database {
 
      }
 
-     double getElo(String username){
+    public double getElo(String username){
          try {
              PreparedStatement ps = connect.prepareStatement("SELECT elo_rating FROM myshack.user WHERE username = ?");
              ps.setString(1, username);

@@ -1,4 +1,4 @@
-package com.example.androidchess;
+package com.example.androidchess.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.TextInputEditText;
@@ -13,6 +13,8 @@ import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import com.example.androidchess.*;
+import com.example.androidchess.Database.Database;
 
 public class LogInActivity  extends AppCompatActivity{
     //Enables Log comments
