@@ -129,6 +129,40 @@ class Database {
          return flag;
      }
 
+     void updateElo(String usernameA, String usernameB, int winner){
+         try {
+             double eloA = getElo(usernameA), eloB = getElo(usernameB);
+             Elo elo = new Elo();
 
+             double newEloA = elo.getNewRating(eloA, eloB, winner);
+             double newEloB = elo.getNewRating(eloB, eloA, winner);
+
+             Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+
+             String stringA = String.format("UPDATE myshack.user WHERE username = %s SET elo_rating = %d", usernameA, newEloA);
+             String stringB = String.format("UPDATE myshack.user WHERE username = %s SET elo_rating = %d", usernameB, newEloB);
+             statement.addBatch(stringA);
+             statement.addBatch(stringB);
+             statement.executeBatch();
+
+         } catch (SQLException e){
+             e.printStackTrace();
+         }
+
+     }
+
+     double getElo(String username){
+         try {
+             PreparedStatement ps = connect.prepareStatement("SELECT elo_rating FROM myshack.user WHERE username = ?");
+             ps.setString(1, username);
+
+             ResultSet rs = ps.executeQuery();
+             return rs.getDouble("elo_rating");
+         } catch (SQLException e) {
+             e.printStackTrace();
+             return 1000;
+         }
+
+     }
 
 }
