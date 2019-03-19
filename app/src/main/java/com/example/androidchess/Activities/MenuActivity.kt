@@ -42,6 +42,8 @@ class MenuActivity : AppCompatActivity() {
 
     //TODO: implement intents for changing activity
     fun playMultiplayer(){
+        val intent = Intent(this, lobbyActivity::class.java)
+        startActivity(intent)
 
     }
 
