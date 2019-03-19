@@ -3,7 +3,7 @@ package com.example.androidchess
 import kotlin.math.pow
 
 class Elo {
-    val kFactor = 20
+    private val kFactor = 20
 
 
     fun getNewRating(eloA: Int, eloB: Int, winner: Int): Double{
