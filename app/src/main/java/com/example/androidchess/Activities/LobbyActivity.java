@@ -9,11 +9,12 @@ import com.example.androidchess.R;
 
 import java.util.ArrayList;
 
-public class lobbyActivity extends Activity {
-    private static final String TAG ="MainAcitivty";
+public class LobbyActivity extends Activity {
+    private static final String TAG = "MainAcitivty";
 
-    private ArrayList<String> mNames=new ArrayList<>();
-    private ArrayList<String> mImageUrls=new ArrayList<>();
+    private ArrayList<String> mNames = new ArrayList<>();
+    private ArrayList<String> mImageUrls = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +24,8 @@ public class lobbyActivity extends Activity {
 
 
     }
-    private void initImageBitmaps(){
+
+    private void initImageBitmaps() {
         Log.d(TAG, "initImageBitmaps: preparing bitmaps.");
 
         mImageUrls.add("https://upload.wikimedia.org/wikipedia/commons/9/9b/Chess_bishop_0970.jpg");
@@ -43,18 +45,15 @@ public class lobbyActivity extends Activity {
 
         initRecyclerView();
     }
-    private void initRecyclerView(){
-        Log.d(TAG,"initRecyclerView: init recyclerView. ");
+
+    private void initRecyclerView() {
+        Log.d(TAG, "initRecyclerView: init recyclerView. ");
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(this,mNames,mImageUrls);
+        RecycleViewAdapter adapter = new RecycleViewAdapter(this, mNames, mImageUrls);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
-
-
-
-
 
 
 }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.example.androidchess.Activities.MenuActivity;
 import com.example.androidchess.R;
 
-public class menuinLobby extends AppCompatActivity implements View.OnClickListener {
+public class MenuInLobby extends AppCompatActivity implements View.OnClickListener {
 
     private Button start;
     private Button returntoLobby;
@@ -24,11 +24,9 @@ public class menuinLobby extends AppCompatActivity implements View.OnClickListen
 
 
         returntoLobby = (Button) findViewById(R.id.ButtonReturn);
-        start=(Button) findViewById(R.id.buttonStart);
+        start = (Button) findViewById(R.id.buttonStart);
         returntoLobby.setOnClickListener(this);
         start.setOnClickListener(this);
-
-
 
 
     }
@@ -37,7 +35,7 @@ public class menuinLobby extends AppCompatActivity implements View.OnClickListen
     public void onClick(View view) {
 
         switch (view.getId()) {
-            case  R.id.buttonStart: {
+            case R.id.buttonStart: {
                 // do something for button 1 click
                 break;
             }

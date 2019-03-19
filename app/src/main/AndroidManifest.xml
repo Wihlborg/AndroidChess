@@ -11,9 +11,9 @@
             android:roundIcon="@drawable/qw"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".Activities.menuinLobby">
+        <activity android:name=".Activities.MenuInLobby">
         </activity>
-        <activity android:name=".Activities.lobbyActivity">
+        <activity android:name=".Activities.LobbyActivity">
         </activity>
         <activity android:name=".Activities.LogInActivity">
             <intent-filter>
