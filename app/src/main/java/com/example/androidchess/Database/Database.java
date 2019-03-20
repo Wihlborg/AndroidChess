@@ -12,8 +12,16 @@ public class Database {
     private Encryption encrypt = new Encryption();
     private Connection connect = null;
 
+    //
+    public static Database getInstance(){
+        if (db == null){
+            db = new Database();
+        }
+        return db;
+    }
+
     //Database constructor
-    public Database() {
+    private Database() {
 
         String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
         try {

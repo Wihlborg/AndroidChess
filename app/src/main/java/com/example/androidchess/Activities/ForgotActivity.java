@@ -137,9 +137,8 @@ public class ForgotActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            Database db = new Database();
-
-            return db.forgotPassword(email, user);
+            Database.getInstance().forgotPassword(email, user);
+            return true;
         }
 
         @Override
