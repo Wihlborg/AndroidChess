@@ -174,11 +174,15 @@ public class LogInActivity  extends AppCompatActivity{
         @Override
         protected Boolean doInBackground(Void... params) {
             //Database
-            Database db = new Database();
-            db.authenticateUser(mUsername, mPassword);
-            User user = User.INSTANCE;
-            user.setElo(db.getElo(mUsername));
-            return true;
+
+           Boolean check = Database.getInstance().authenticateUser(mUsername, mPassword);
+
+           if (check) {
+               User user = User.INSTANCE;
+               user.setElo(Database.getInstance().getElo(mUsername));
+           }
+
+           return check;
         }
 
         @Override
