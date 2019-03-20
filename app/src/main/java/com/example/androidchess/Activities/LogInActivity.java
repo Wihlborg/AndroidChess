@@ -193,6 +193,7 @@ public class LogInActivity  extends AppCompatActivity{
                 startActivity(r);
                 Toast.makeText(getApplicationContext(),"Log In success", Toast.LENGTH_SHORT).show();
                 Log.d(TAG,"Log In Success");
+
             } else {
                 Toast.makeText(getApplicationContext(),"Log In failed", Toast.LENGTH_SHORT).show();
                 mPasswordView.setError(getString(R.string.error_incorrect_login));

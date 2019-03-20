@@ -15,6 +15,7 @@ import com.facebook.share.widget.ShareDialog
 
 class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        User.elo = Database.getInstance().getElo(User.name)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
