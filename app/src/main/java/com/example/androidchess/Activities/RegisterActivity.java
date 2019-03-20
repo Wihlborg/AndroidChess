@@ -167,8 +167,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            Database.getInstance().registerUser(mUsername, mEmail, mPassword, mAccount_Id);
-            return true;
+            return Database.getInstance().registerUser(mUsername, mEmail, mPassword, mAccount_Id);
         }
         @Override
         protected void onPostExecute(Boolean success) {
