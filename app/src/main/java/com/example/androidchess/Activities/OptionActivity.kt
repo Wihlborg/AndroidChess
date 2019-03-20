@@ -29,6 +29,7 @@ class OptionActivity : AppCompatActivity() {
     fun saveOptions(){
         val editor = getSharedPreferences("chesspref", Context.MODE_PRIVATE).edit()
         editor.putBoolean("sounds", findViewById<Switch>(R.id.soundSwitch).isChecked)
+        User.sounds = findViewById<Switch>(R.id.soundSwitch).isChecked
         /*
         Put future options here
          */
