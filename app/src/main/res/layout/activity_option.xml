@@ -11,9 +11,17 @@
             android:text="Sound"
             android:layout_width="125dp"
             android:layout_height="34dp"
-            android:id="@+id/soundswitch" android:layout_marginEnd="251dp" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/soundSwitch"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="35dp"
             android:layout_marginTop="48dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="649dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:checked="true" tools:checked="true"/>
+    />
+    <Button
+            android:text="Apply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/applyButton" android:layout_marginEnd="56dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="48dp"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="635dp"
+            app:layout_constraintStart_toEndOf="@+id/soundSwitch" android:layout_marginStart="107dp"/>
 </android.support.constraint.ConstraintLayout>

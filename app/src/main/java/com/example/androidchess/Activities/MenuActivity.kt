@@ -1,5 +1,6 @@
 package com.example.androidchess.Activities
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -16,6 +17,8 @@ import com.facebook.share.widget.ShareDialog
 class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         User.elo = Database.getInstance().getElo(User.name)
+        val sharedPrefs = getSharedPreferences("chesspref", Context.MODE_PRIVATE)
+        User.sounds = sharedPrefs.getBoolean("sounds", false)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
@@ -55,7 +58,8 @@ class MenuActivity : AppCompatActivity() {
     }
 
     fun options(){
-
+        val intent = Intent(this, OptionActivity::class.java)
+        startActivity(intent)
     }
 
     fun logOut(){
