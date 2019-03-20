@@ -41,8 +41,7 @@ public class MenuInLobby extends AppCompatActivity implements View.OnClickListen
             }
 
             case R.id.ButtonReturn: {
-                Intent myIntent = new Intent(this, MenuActivity.class);
-                startActivity(myIntent);
+                super.onBackPressed();
                 break;
             }
 

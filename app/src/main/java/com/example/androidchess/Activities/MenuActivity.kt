@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.example.androidchess.Database.Database
 import com.example.androidchess.R
 import com.example.androidchess.User
 import com.facebook.share.model.ShareLinkContent
@@ -14,6 +15,8 @@ import com.facebook.share.widget.ShareDialog
 
 class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        User.elo = Database.getInstance().getElo(User.name)
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_menu)
         supportActionBar!!.hide()
@@ -56,8 +59,7 @@ class MenuActivity : AppCompatActivity() {
     }
 
     fun logOut(){
-        val intent = Intent(this, LogInActivity::class.java)
-        startActivity(intent)
+        super.onBackPressed()
     }
 
     fun share(){
