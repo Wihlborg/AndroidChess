@@ -12,16 +12,8 @@ public class Database {
     private Encryption encrypt = new Encryption();
     private Connection connect = null;
 
-    //Singleton instance of Database
-    public static Database getInstance(){
-        if (db == null){
-            db = new Database();
-        }
-
-        return db;
-    }
     //Database constructor
-    private Database() {
+    public Database() {
 
         String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
         try {
@@ -75,6 +67,7 @@ public class Database {
                 Log.d(TAG,"Authentication successful");
             }
 
+
         }catch (Exception e){
             e.printStackTrace();
             Log.d(TAG,"Failed authentication");
@@ -113,7 +106,6 @@ public class Database {
 
              preparedStatement.executeUpdate(query);
 
-             connect.close();
              flag = true;
              Log.d(TAG,"Recovery successful");
 
@@ -167,6 +159,7 @@ public class Database {
              ps.setString(1, username);
 
              ResultSet rs = ps.executeQuery();
+             rs.next();
              return rs.getDouble("elo_rating");
          } catch (SQLException e) {
              e.printStackTrace();

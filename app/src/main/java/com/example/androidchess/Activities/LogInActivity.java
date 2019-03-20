@@ -174,8 +174,11 @@ public class LogInActivity  extends AppCompatActivity{
         @Override
         protected Boolean doInBackground(Void... params) {
             //Database
-
-            return Database.getInstance().authenticateUser(mUsername, mPassword);
+            Database db = new Database();
+            db.authenticateUser(mUsername, mPassword);
+            User user = User.INSTANCE;
+            user.setElo(db.getElo(mUsername));
+            return true;
         }
 
         @Override
@@ -184,6 +187,7 @@ public class LogInActivity  extends AppCompatActivity{
 
             if (success) {
                 User user = User.INSTANCE;
+
                 user.setName(mUsername);
                 Intent r = new Intent(LogInActivity.this, MenuActivity.class);
                 startActivity(r);
