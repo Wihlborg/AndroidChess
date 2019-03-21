@@ -59,7 +59,7 @@ public class ImageAdapter extends BaseAdapter {
             img.setScaleType(ImageView.ScaleType.FIT_XY);
             img.setPadding(1, 1, 1, 1);
 
-            String fileName = img.getResources().getResourceName(pieceIds[position]);
+            //String fileName = img.getResources().getResourceName(pieceIds[position]);
             //fileName = fileName.charAt(fileName.length()-2) + "" + fileName.charAt(fileName.length()-1);
 
             if (currentCells < 64) {
@@ -71,8 +71,11 @@ public class ImageAdapter extends BaseAdapter {
             int y = position / 8;
             char c = 97;
 
-            img.setTag((c+x)+y);
-            //Log.d("cell" , ""+Character.toString(((char)(c+x)))+(y+1));
+            String str = "" + Character.toString(((char)(c+x))) + Integer.toString((y+1));
+            img.setTag(str);
+            //System.out.println(img.getTag().toString());
+            //Log.d("cell" , ""+Character.toString(((char)(c+x)))+Integer.toString((y+1)));
+            //System.out.println(str);
 
             //if (position > 15 && position < 48)
               //  img.setAlpha(0f);
@@ -81,6 +84,7 @@ public class ImageAdapter extends BaseAdapter {
         else {
             //Log.d("" ,  "converrtView");
             img = (ImageView) convertView;
+            //System.out.println(img.getTag().toString());
         }
 
         img.setImageResource(pieceIds[position]);
