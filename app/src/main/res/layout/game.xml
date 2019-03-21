@@ -5,7 +5,7 @@
     android:background="#22282f"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".chessboard.Game">
+    tools:context=".chessboard.GameActivity">
 
     <ImageView
             android:id="@+id/boardImg"

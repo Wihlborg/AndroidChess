@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import com.example.androidchess.R;
 import com.example.androidchess.chessboard.pieces.*;
 
-public class Game extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -264,6 +264,7 @@ public class Game extends AppCompatActivity {
                             swap(0, 3);
                             rookFlag[0] = true;
                         }
+                        findKings();
                     }
 
                     // castle with right rook
@@ -277,6 +278,7 @@ public class Game extends AppCompatActivity {
                             rookFlag[1] = true;
                         }
                     }
+                    findKings();
                  }
 
                 swap(firstPos, position);
@@ -610,7 +612,7 @@ public class Game extends AppCompatActivity {
         for (int n = 0; n < 8; n++) {
             String row = "";
             for (int i = 0; i < 8; i++) {
-                if (Game.possibleMoves[i + n * 8])
+                if (GameActivity.possibleMoves[i + n * 8])
                     row += "1";
 
                 else

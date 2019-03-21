@@ -2,16 +2,15 @@ package com.example.androidchess.chessboard;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
 import com.example.androidchess.R;
-import static com.example.androidchess.chessboard.Game.getCell;
-import static com.example.androidchess.chessboard.Game.getFilename;
-import static com.example.androidchess.chessboard.Game.possibleMoves;
+
+import static com.example.androidchess.chessboard.GameActivity.getFilename;
+
 public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;
@@ -91,7 +90,7 @@ public class ImageAdapter extends BaseAdapter {
         String fileName = img.getResources().getResourceName(pieceIds[position]);
         fileName = fileName.charAt(fileName.length()-2) + "" + fileName.charAt(fileName.length()-1);
 
-        if (fileName.charAt(0) == 't' && !Game.possibleMoves[position]) {
+        if (fileName.charAt(0) == 't' && !GameActivity.possibleMoves[position]) {
             img.setAlpha(0f);
         }
         else {

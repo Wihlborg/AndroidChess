@@ -2,7 +2,7 @@ package com.example.androidchess.chessboard.pieces;
 
 import com.example.androidchess.R;
 
-import static com.example.androidchess.chessboard.Game.*;
+import static com.example.androidchess.chessboard.GameActivity.*;
 
 public class King {
 
@@ -124,7 +124,7 @@ public class King {
 
         int i = x;
         int n = y;
-        int currentPos = i + 8 * n;
+        int currentPos;
 
         // castle check white king
         if (position == 60 && getFilename(position).charAt(1) == 'w') {
@@ -134,7 +134,7 @@ public class King {
             if (!rookFlag[3]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' && attackedSquares[currentPos] > 1) {
+                    if (getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
                         obstacle = true;
                     }
                     else {
@@ -148,7 +148,7 @@ public class King {
             if (!rookFlag[2]) {
                 while ((--i >= 0) && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' && attackedSquares[currentPos] > 1) {
+                    if (getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
                         obstacle = true;
                     }
                     else {
@@ -171,7 +171,7 @@ public class King {
                         obstacle = true;
                     }
                     else {
-                        if (i == 7)
+                        if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
                 }
@@ -185,7 +185,7 @@ public class King {
                         obstacle = true;
                     }
                     else {
-                        if (i == 0)
+                        if (i == 0 && kingSafety(currentPos, position))
                             possibleMoves[position - 2] = true;
                     }
                 }

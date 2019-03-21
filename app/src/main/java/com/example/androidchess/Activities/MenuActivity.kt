@@ -11,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.example.androidchess.R
 import com.example.androidchess.User
+import com.example.androidchess.chessboard.GameActivity
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 
@@ -71,7 +72,8 @@ class MenuActivity : AppCompatActivity() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
-
+        val intent = Intent(this, GameActivity::class.java)
+        startActivity(intent)
     }
 
     fun options(){

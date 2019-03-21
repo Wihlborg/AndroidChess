@@ -1,9 +1,8 @@
 package com.example.androidchess.chessboard.pieces;
 
-import android.util.Log;
 import com.example.androidchess.R;
 
-import static com.example.androidchess.chessboard.Game.*;
+import static com.example.androidchess.chessboard.GameActivity.*;
 
 public class Bishop {
 
