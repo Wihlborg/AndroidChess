@@ -9,6 +9,8 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/javax.mail" />
+            <option value="$PROJECT_DIR$/mysql-connector-java-5.1.28-bin" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

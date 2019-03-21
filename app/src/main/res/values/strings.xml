@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">AndroidChess</string>
+    <string name="player_name">default</string>
+    <string name="player_elo">1000</string>
+    <string name="facebook_app_id">1284930371655300</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_username">Username</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="action_sing_up">Sign up</string>
+    <string name="action_register_user">Register User</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_return_to_login">Return to Log In</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_username">This username is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_login">The username or password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="action_forgot_password">Forgot password</string>
+    <string name="action_recover_password">Recover password</string>
+
 </resources>
