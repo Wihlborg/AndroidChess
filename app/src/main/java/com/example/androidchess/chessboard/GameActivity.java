@@ -43,7 +43,7 @@ public class GameActivity extends AppCompatActivity {
         }
 
         kingPos[0] = 60;
-        kingPos[1] = 5;
+        kingPos[1] = 4;
 
         resetPossibleMoves();
         board = findViewById(R.id.board);
@@ -67,9 +67,6 @@ public class GameActivity extends AppCompatActivity {
                     resetAttackedSquares();
                     checkAttackedSquares('w');
                     king.checkMate(kingPos[0]);
-                    //printAttackedSquares();
-                    //System.out.println("black checkAttackedSquares");
-                    //Log.d("checkAttackedSquares","white king in checkAttackedSquares");
 
                 }
                 // true if black king is in checkAttackedSquares
@@ -77,9 +74,6 @@ public class GameActivity extends AppCompatActivity {
                     resetAttackedSquares();
                     checkAttackedSquares('b');
                     king.checkMate(kingPos[1]);
-                    //printAttackedSquares();
-                    //System.out.println("white checkAttackedSquares");
-                    //Log.d("checkAttackedSquares", "black king in checkAttackedSquares");
                 }
 
                 move(position);
@@ -89,19 +83,12 @@ public class GameActivity extends AppCompatActivity {
                     resetAttackedSquares();
                     checkAttackedSquares('w');
                     king.checkMate(kingPos[0]);
-                    //printAttackedSquares();
-                    //System.out.println("black checkAttackedSquares");
-                    //Log.d("checkAttackedSquares","white king in checkAttackedSquares");
-
                 }
                 // true if black king is in checkAttackedSquares
                 else if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3) && !king.colorKingCheck(kingPos[1], 'b')) {
                     resetAttackedSquares();
                     checkAttackedSquares('b');
                     king.checkMate(kingPos[1]);
-                    //printAttackedSquares();
-                    //System.out.println("white checkAttackedSquares");
-                    //Log.d("checkAttackedSquares", "black king in checkAttackedSquares");
                 }
 
                 if (checkMate) {
@@ -538,20 +525,28 @@ public class GameActivity extends AppCompatActivity {
             fenStr += " b ";
 
         // castle
+        boolean castleAvailable = false;
         if (kingPos[0] == 60) {
-            if (rookFlag[3]) {
+            if (!rookFlag[3]) {
                 fenStr += "K";
+                castleAvailable = true;
             }
-            if (rookFlag[2])
+            if (!rookFlag[2]) {
                 fenStr += "Q";
+                castleAvailable = true;
+            }
         }
-        else if (kingPos[1] == 4) {
-            if (rookFlag[1])
+        if (kingPos[1] == 4) {
+            if (!rookFlag[1]) {
                 fenStr += "k";
-            if (rookFlag[0])
+                castleAvailable = true;
+            }
+            if (!rookFlag[0]) {
                 fenStr += "q";
+                castleAvailable = true;
+            }
         }
-        else {
+        if (!castleAvailable) {
             fenStr += "-";
         }
 
