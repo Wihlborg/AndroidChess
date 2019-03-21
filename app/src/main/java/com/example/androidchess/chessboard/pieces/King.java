@@ -138,7 +138,7 @@ public class King {
                         obstacle = true;
                     }
                     else {
-                        if (i == 7)
+                        if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
                 }
@@ -152,7 +152,7 @@ public class King {
                         obstacle = true;
                     }
                     else {
-                        if (i == 0)
+                        if (i == 0 && kingSafety(currentPos, position))
                             possibleMoves[position - 2] = true;
                     }
                 }
@@ -167,7 +167,7 @@ public class King {
             if (!rookFlag[1]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' && (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
+                    if (getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
                     }
                     else {
@@ -181,7 +181,7 @@ public class King {
             if (!rookFlag[0]) {
                 while ((--i >= 0) && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' && (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
+                    if (getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
                     }
                     else {
