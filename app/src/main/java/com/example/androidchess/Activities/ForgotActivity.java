@@ -29,7 +29,6 @@ public class ForgotActivity extends AppCompatActivity {
     protected Button mReturnButton;
     private TextInputEditText mEmail;
     private TextInputEditText mUsername;
-    private ProgressBar mBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,8 +42,6 @@ public class ForgotActivity extends AppCompatActivity {
         mSendButton = findViewById(R.id.send_recovery_button);
         mUsername = findViewById(R.id.user_from_forgot);
         mReturnButton = findViewById(R.id.return_from_forgot);
-        //Might add animation of loading (optional)
-        mBar = findViewById(R.id.forgot_progress);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override

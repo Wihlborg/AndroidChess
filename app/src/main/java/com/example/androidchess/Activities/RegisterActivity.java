@@ -30,7 +30,6 @@ public class RegisterActivity extends AppCompatActivity {
     private TextInputEditText mEmailText;
     public TextInputEditText mPasswordText;
     public TextInputEditText mUsernameText;
-    private ProgressBar mBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,8 +43,7 @@ public class RegisterActivity extends AppCompatActivity {
         mEmailText = findViewById(R.id.email);
         mUsernameText = findViewById(R.id.username);
         mPasswordText = findViewById(R.id.password);
-        //Might add animation of loading (optional)
-        mBar = findViewById(R.id.register_progress);
+
 
         mReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
