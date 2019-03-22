@@ -32,7 +32,6 @@ public class LogInActivity  extends AppCompatActivity{
     protected Button mRegisterButton;
     protected Button mSignInButton;
     protected Button mForgotButton;
-    private ProgressBar mBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +46,6 @@ public class LogInActivity  extends AppCompatActivity{
         mPasswordView = findViewById(R.id.password);
         // Set up the register form
         mRegisterButton = findViewById(R.id.register_button_from_login);
-
-        //Might add animation of loading (optional)
-        mBar = findViewById(R.id.login_progress);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
