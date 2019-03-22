@@ -8,7 +8,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import com.example.androidchess.R;
+import com.example.androidchess.User;
 import com.example.androidchess.chessboard.pieces.*;
 
 public class GameActivity extends AppCompatActivity {
@@ -20,23 +22,33 @@ public class GameActivity extends AppCompatActivity {
 
     static GridView board;
     static ImageAdapter imageAdapter;
-    public static boolean whiteTurn = true;
-    public static boolean[] possibleMoves = new boolean[64];
-    public static int[] attackedSquares = new int[64];
-    public static int[] kingPos = new int[2];
-    public static boolean checkMate = false;
-    public static int lastMove = 0;
-    public static boolean[] kingAttacker = new boolean[64];
-    public static int enPassantPos = -1;
-    public static boolean[] rookFlag = new boolean[4];
-    int fullMoveCounter = 1;
+    public static boolean whiteTurn;
+    public static boolean[] possibleMoves;
+    public static int[] attackedSquares;
+    public static int[] kingPos;
+    public static boolean checkMate;
+    public static int lastMove;
+    public static boolean[] kingAttacker;
+    public static int enPassantPos;
+    public static boolean[] rookFlag;
+    int fullMoveCounter;
+    String winner;
+    String winCondition;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        super.onBackPressed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.game);
+        setContentView(R.layout.activity_game);
         getSupportActionBar().hide();
+
+        resetGame();
 
         for (int i = 0; i < rookFlag.length; i++) {
             rookFlag[i] = false;
@@ -45,6 +57,10 @@ public class GameActivity extends AppCompatActivity {
         kingPos[0] = 60;
         kingPos[1] = 4;
 
+        resetAttackedSquares();
+        for (int i=0; i<kingAttacker.length; i++) {
+            kingAttacker[i] = false;
+        }
         resetPossibleMoves();
         board = findViewById(R.id.board);
         imageAdapter = new ImageAdapter(this);
@@ -62,38 +78,17 @@ public class GameActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
 
-                // true if white king is in checkAttackedSquares
-                if (whiteTurn && attackedSquares[kingPos[0]] > 1 && !king.colorKingCheck(kingPos[0], 'w')) {
-                    resetAttackedSquares();
-                    checkAttackedSquares('w');
-                    king.checkMate(kingPos[0]);
-
-                }
-                // true if black king is in checkAttackedSquares
-                else if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3) && !king.colorKingCheck(kingPos[1], 'b')) {
-                    resetAttackedSquares();
-                    checkAttackedSquares('b');
-                    king.checkMate(kingPos[1]);
-                }
+                check();
 
                 move(position);
                 System.out.println(getFenNotation());
 
-                if (whiteTurn && attackedSquares[kingPos[0]] > 1 && !king.colorKingCheck(kingPos[0], 'w')) {
-                    resetAttackedSquares();
-                    checkAttackedSquares('w');
-                    king.checkMate(kingPos[0]);
-                }
-                // true if black king is in checkAttackedSquares
-                else if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3) && !king.colorKingCheck(kingPos[1], 'b')) {
-                    resetAttackedSquares();
-                    checkAttackedSquares('b');
-                    king.checkMate(kingPos[1]);
-                }
+                check();
 
                 if (checkMate) {
                     System.out.println("checkMate");
                     Log.d("checkAttackedSquares", "checkmate");
+                    winCondition = "checkmate";
                     endGame();
                 }
             }
@@ -101,6 +96,26 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void endGame() {
+        System.out.println("endGame()");
+        findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
+        findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
+
+        if (winner.equals("w")) {
+            ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName()+"\n"+Double.toString(User.INSTANCE.getElo()));
+
+            // TODO set elo difference
+            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+        }
+        else {
+            ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+        }
 
     }
 
@@ -311,6 +326,22 @@ public class GameActivity extends AppCompatActivity {
         imageAdapter.pieceIds[firstPos] = temp;
     }
 
+    public void check() {
+        // true if white king is in checkAttackedSquares
+        if (whiteTurn && attackedSquares[kingPos[0]] > 1 && !king.colorKingCheck(kingPos[0], 'w')) {
+
+            resetAttackedSquares();
+            checkAttackedSquares('w');
+            winner = king.checkMate(kingPos[0]);
+        }
+        // true if black king is in checkAttackedSquares
+        else if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3) && !king.colorKingCheck(kingPos[1], 'b')) {
+            resetAttackedSquares();
+            checkAttackedSquares('b');
+            winner = king.checkMate(kingPos[1]);
+        }
+    }
+
     public void promotion(int position) {
         // TODO promotion
         /*
@@ -514,6 +545,7 @@ public class GameActivity extends AppCompatActivity {
     public String getFenNotation() {
         // fen string example
         // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+        // board positions | whos turn | castle options | en passant | half move counter | full move counter
 
         // board positions
         String fenStr = imageAdapter.getBoardStr();
@@ -590,6 +622,20 @@ public class GameActivity extends AppCompatActivity {
         for (int i = 0; i < 64; i++) {
             possibleMoves[i] = false;
         }
+    }
+
+    public void resetGame() {
+        whiteTurn = true;
+        possibleMoves = new boolean[64];
+        attackedSquares = new int[64];
+        kingPos = new int[2];
+        checkMate = false;
+        lastMove = 0;
+        kingAttacker = new boolean[64];
+        enPassantPos = -1;
+        rookFlag = new boolean[4];
+        fullMoveCounter = 1;
+        winner = "";
     }
 
     public void printArray(ImageView[] pieces, String tag) {

@@ -14,7 +14,7 @@ public class King {
         }
     }
 
-    public void checkMate(int kingPos) {
+    public String checkMate(int kingPos) {
         System.out.println("entered checkmate");
         printAttackedSquares();
         int attackNr;
@@ -95,10 +95,18 @@ public class King {
         if (i >= 0 && n >= 0 && (attackedSquares[currentPos] == attackNr && kingAttacker[currentPos]))
             checkMate = true;
 
-        if (checkMate)
+        String winner = "";
+        if (checkMate) {
+            if (getFilename(kingPos).charAt(1) == 'b')
+                winner = "w";
+            else
+                winner = "b";
             System.out.println("cheeeeeeeckMAAAAATE");
+        }
 
         resetAttackedSquares();
+
+        return winner;
     }
 
     public boolean attackedCheck(int currentPos, char color) {
@@ -196,9 +204,9 @@ public class King {
         n = y - 1;
         currentPos = i + 8 * n;
         if (n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -208,9 +216,9 @@ public class King {
         n = y - 1;
         currentPos = i + 8 * n;
         if (i < 8 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -220,9 +228,9 @@ public class King {
         n = y;
         currentPos = i + 8 * n;
         if (i < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -232,9 +240,9 @@ public class King {
         n = y + 1;
         currentPos = i + 8 * n;
         if (i < 8 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -244,9 +252,9 @@ public class King {
         n = y + 1;
         currentPos = i + 8 * n;
         if (n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -256,9 +264,9 @@ public class King {
         n = y + 1;
         currentPos = i + 8 * n;
         if (i >= 0 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -268,9 +276,9 @@ public class King {
         n = y;
         currentPos = i + 8 * n;
         if (i >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
@@ -280,9 +288,9 @@ public class King {
         n = y - 1;
         currentPos = i + 8 * n;
         if (i >= 0 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
-            if (!getFilename(currentPos).equals("ts"))
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
             if (kingSafety(currentPos, position)) {
+                if (!getFilename(currentPos).equals("ts"))
+                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 possibleMoves[currentPos] = true;
                 possibleMove = true;
             }
