@@ -110,7 +110,7 @@ public class ImageAdapter extends BaseAdapter {
             String imgName = getFilename(i);
             n = i % 8;
 
-            // for empty rows
+            // at the start of a new row check if there was empty cells
             if (n == 0 && !fenString.isEmpty()) {
                 if (emptyCellCounter > 0) {
                     fenString += Integer.toString(emptyCellCounter);
@@ -132,7 +132,7 @@ public class ImageAdapter extends BaseAdapter {
                 }
             }
 
-            // for black pieces
+            // else black pieces
             else {
                 if (imgName.charAt(0) != 't') {
                     if (emptyCellCounter > 0)

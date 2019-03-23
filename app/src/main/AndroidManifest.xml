@@ -27,8 +27,7 @@
         <activity android:name=".Activities.RegisterActivity"/>
         <activity android:name=".Activities.ForgotActivity"/>
         <activity android:name=".Activities.MenuActivity"/>
-        <activity android:name=".chessboard.GameActivity"/>
-        <activity android:name=".Activities.NewPasswordActivity"/>
+        <activity android:name=".chessboard.GameActivity" android:noHistory="true"/>
 
         <meta-data
                 android:name="com.facebook.sdk.ApplicationId"
