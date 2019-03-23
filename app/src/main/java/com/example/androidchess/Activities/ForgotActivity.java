@@ -28,7 +28,6 @@ public class ForgotActivity extends AppCompatActivity {
     protected Button mSendButton;
     protected Button mReturnButton;
     private TextInputEditText mEmail;
-    private TextInputEditText mUsername;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,7 +39,6 @@ public class ForgotActivity extends AppCompatActivity {
         mLayoutForgot = findViewById(R.id.LinearForgot);
         mEmail = findViewById(R.id.email_from_forgot);
         mSendButton = findViewById(R.id.send_recovery_button);
-        mUsername = findViewById(R.id.user_from_forgot);
         mReturnButton = findViewById(R.id.return_from_forgot);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
@@ -78,9 +76,7 @@ public class ForgotActivity extends AppCompatActivity {
             return;
         }
         mEmail.setError(null);
-        mUsername.setError(null);
         String email = mEmail.getText().toString();
-        String user = mUsername.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -95,16 +91,7 @@ public class ForgotActivity extends AppCompatActivity {
             focusView = mEmail;
             cancel = true;
         }
-        // Check for a valid username.
-        if (TextUtils.isEmpty(mUsername.getText())) {
-            mUsername.setError(getString(R.string.error_field_required));
-            focusView = mUsername;
-            cancel = true;
-        } else if (!isUsernameValid(mUsername.getText().toString())) {
-            mUsername.setError(getString(R.string.error_invalid_username));
-            focusView = mUsername;
-            cancel = true;
-        }
+
 
         if (cancel) {
             // There was an error; don't attempt login and focus the first
@@ -113,7 +100,7 @@ public class ForgotActivity extends AppCompatActivity {
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            mAuthTask = new UserForgotPassword(email, user);
+            mAuthTask = new UserForgotPassword(email);
             mAuthTask.execute((Void) null);
         }
 
@@ -125,17 +112,15 @@ public class ForgotActivity extends AppCompatActivity {
      */
     class UserForgotPassword extends AsyncTask<Void, Void, Boolean> {
         String email;
-        String user;
 
 
-        UserForgotPassword(String recipientEmail, String username){
+        UserForgotPassword(String recipientEmail){
             email = recipientEmail;
-            user = username;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return Database.getInstance().forgotPassword(email, user);
+            return Database.getInstance().forgotPassword(email);
         }
 
         @Override

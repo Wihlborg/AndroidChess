@@ -136,31 +136,43 @@ public class Database {
 
 
     //Forgot password using UPDATE query
-    public boolean forgotPassword(String email, String username) {
-         boolean flag = false;
-         String password = randomGenerated();
-         String query = ("UPDATE myshack.user SET password = '" +
-                 encrypt.passwordEncryptor(username,password) +"' WHERE email = '"+ email +"'");
+    public boolean forgotPassword(String email) {
+        boolean flag = false;
+        String password = randomGenerated();
+        String fetchUser= "SELECT username FROM myshack.user WHERE email = ?";
+        try(PreparedStatement prp = connect.prepareStatement(fetchUser)){
+            prp.setString(1, email);
+            ResultSet resultSet = prp.executeQuery();
+            resultSet.next();
+            flag = true;
+            String username = resultSet.getString("username");
+            if (flag) {
 
-         try (Statement preparedStatement = connect.prepareStatement(query)) {
+                String query = ("UPDATE myshack.user SET password = '" +
+                        encrypt.passwordEncryptor(username, password) + "' WHERE email = '" + email + "'");
 
-             preparedStatement.executeUpdate(query);
+                try (Statement preparedStatement = connect.prepareStatement(query)) {
 
-             flag = true;
-             Log.d(TAG,"Recovery successful");
+                    preparedStatement.executeUpdate(query);
 
-         } catch (Exception e) {
+                    flag = true;
+                    Log.d(TAG, "Recovery successful");
 
-             e.printStackTrace();
-         }
+                } catch (Exception e) {
 
-         if (flag) {
-            Mail.getInstance().sendEmail(email, password, username);
-         }else{
-             Log.d(TAG,"Failed to send ");
-         }
+                    e.printStackTrace();
+                }
+            }
 
-         return flag;
+
+                Mail.getInstance().sendEmail(email, password, username);
+
+
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flag;
      }
 
     public void updateElo(String usernameA, String usernameB, double winnerA){
