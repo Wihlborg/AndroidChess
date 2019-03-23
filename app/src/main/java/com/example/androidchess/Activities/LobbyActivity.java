@@ -18,7 +18,7 @@ public class LobbyActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lobby2);
+        setContentView(R.layout.activity_lobby);
         Log.d(TAG, "onCreate: started.");
         initImageBitmaps();
 
