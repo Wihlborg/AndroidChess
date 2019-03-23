@@ -2,6 +2,7 @@ package com.example.androidchess.Database;
 
 import android.util.Log;
 import com.example.androidchess.Elo;
+import com.example.androidchess.User;
 
 import java.sql.*;
 import java.util.Random;
@@ -100,6 +101,37 @@ public class Database {
              randomStrings = String.valueOf(string);
 
          return randomStrings;
+     }
+
+     public boolean updatePassword( String password){
+        String username = User.INSTANCE.getName();
+        boolean flag = false;
+        String updatePassword = ("UPDATE myshack.user SET password = '"
+                + encrypt.passwordEncryptor(username,password) +"' WHERE username = '" + username +"'");
+
+        try(Statement prepared = connect.prepareStatement(updatePassword)){
+             prepared.executeUpdate(updatePassword);
+             flag = true;
+
+             if (flag){
+
+                 String fetchEmail = "SELECT email FROM myshack.user WHERE username = ?";
+                 try(PreparedStatement prp = connect.prepareStatement(fetchEmail)){
+                     prp.setString(1, username);
+                     ResultSet resultSet = prp.executeQuery();
+                     resultSet.next();
+                     String email = resultSet.getString("email");
+                     Mail.getInstance().sendEmail(email,password,username);
+                 }catch (Exception e){
+                     e.printStackTrace();
+                 }
+
+             }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flag;
      }
 
 

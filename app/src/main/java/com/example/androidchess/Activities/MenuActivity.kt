@@ -88,7 +88,9 @@ class MenuActivity : AppCompatActivity() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
-        super.onBackPressed()
+        finish()
+        val toLogIn = Intent(this, LogInActivity::class.java)
+        startActivity(toLogIn)
     }
 
     fun share(){

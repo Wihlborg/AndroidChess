@@ -75,6 +75,7 @@ public class LogInActivity  extends AppCompatActivity{
         mRegisterButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 Toast.makeText(getApplicationContext(),"Going to register!", Toast.LENGTH_SHORT).show();
 
                 Intent registerActivity = new Intent(LogInActivity.this, RegisterActivity.class);
@@ -86,6 +87,7 @@ public class LogInActivity  extends AppCompatActivity{
         mForgotButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 Intent forgot = new Intent(LogInActivity.this, ForgotActivity.class);
                 startActivity(forgot);
             }
@@ -189,6 +191,7 @@ public class LogInActivity  extends AppCompatActivity{
                 User user = User.INSTANCE;
 
                 user.setName(mUsername);
+                finish();
                 Intent r = new Intent(LogInActivity.this, MenuActivity.class);
                 startActivity(r);
                 Toast.makeText(getApplicationContext(),"Log In success", Toast.LENGTH_SHORT).show();

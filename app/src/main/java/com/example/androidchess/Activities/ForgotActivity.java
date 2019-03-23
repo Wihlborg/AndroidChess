@@ -59,6 +59,7 @@ public class ForgotActivity extends AppCompatActivity {
         mReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 Intent returnToLogin = new Intent(ForgotActivity.this, LogInActivity.class);
                 startActivity(returnToLogin);
 
@@ -141,6 +142,7 @@ public class ForgotActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
             mAuthTask = null;
             if (success) {
+                finish();
                 Intent returnTo = new Intent(ForgotActivity.this, LogInActivity.class);
                 Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
                 startActivity(returnTo);

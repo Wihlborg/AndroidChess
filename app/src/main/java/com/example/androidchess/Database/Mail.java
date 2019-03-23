@@ -1,5 +1,7 @@
 package com.example.androidchess.Database;
 
+import com.example.androidchess.User;
+
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -62,5 +64,6 @@ public class Mail {
             throw new RuntimeException(e);
         }
     }
+
 }
 

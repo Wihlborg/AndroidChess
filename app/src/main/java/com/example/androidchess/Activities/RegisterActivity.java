@@ -48,6 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         mReturnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                finish();
                 Toast.makeText(getApplicationContext(), "Returning to log in!", Toast.LENGTH_SHORT).show();
 
                 Intent returnActivity = new Intent(RegisterActivity.this, LogInActivity.class);
@@ -171,6 +172,7 @@ public class RegisterActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
             mAuthTask = null;
             if (success) {
+                finish();
                 Intent returnTo = new Intent(RegisterActivity.this, LogInActivity.class);
                 Toast.makeText(getApplicationContext(),"Registration success", Toast.LENGTH_SHORT).show();
                 startActivity(returnTo);
