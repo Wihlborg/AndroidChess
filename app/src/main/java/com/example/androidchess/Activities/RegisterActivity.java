@@ -25,27 +25,27 @@ public class RegisterActivity extends AppCompatActivity {
 
     // UI references.
     private LinearLayout mLayoutRegister;
-    protected Button mReturnButton;
+    protected TextView mReturnText;
     protected Button mRegisterButton;
-    private TextInputEditText mEmailText;
-    public TextInputEditText mPasswordText;
-    public TextInputEditText mUsernameText;
+    private EditText mEmailText;
+    public EditText mPasswordText;
+    public EditText mUsernameText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_signup);
         //Set up layout
         getSupportActionBar().hide();
         mLayoutRegister = findViewById(R.id.LinearRegister);
-        mReturnButton = findViewById(R.id.return_button_from_register);
+        mReturnText = findViewById(R.id.returnText);
         mRegisterButton = findViewById(R.id.create_user_button);
         mEmailText = findViewById(R.id.email);
         mUsernameText = findViewById(R.id.username);
         mPasswordText = findViewById(R.id.password);
 
 
-        mReturnButton.setOnClickListener(new View.OnClickListener() {
+        mReturnText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();

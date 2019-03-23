@@ -26,8 +26,8 @@ public class ForgotActivity extends AppCompatActivity {
     //UI
     private LinearLayout mLayoutForgot;
     protected Button mSendButton;
-    protected Button mReturnButton;
-    private TextInputEditText mEmail;
+    protected TextView mReturnButton;
+    private EditText mEmail;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

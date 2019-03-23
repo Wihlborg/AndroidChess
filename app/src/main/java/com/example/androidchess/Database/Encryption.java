@@ -5,11 +5,11 @@ import java.security.NoSuchAlgorithmException;
  class Encryption {
     private String generatedPassword = null;
 
-     String passwordEncryptor(String username, String password){
+     String passwordEncryptor(String email, String password){
 
         try{
             MessageDigest md =  MessageDigest.getInstance("MD5");
-            byte[] salt = username.getBytes();
+            byte[] salt = email.getBytes();
             md.update(salt);
             byte[] bytes = md.digest(password.getBytes());
             StringBuilder sb = new StringBuilder();

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#45515F">
+
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_keyboard_arrow_right_black_24dp"/>
+
+    <TextView
+        android:layout_width="201dp"
+        android:layout_height="47dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="104dp"
+        android:layout_marginTop="45dp"
+        android:text="Multiplayer lobby"
+        android:textAlignment="center"
+        android:textColor="#fff"
+        android:textSize="20dp" />
+
+    <View
+        android:layout_width="250dp"
+        android:layout_height="1dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="111dp"
+        android:layout_marginEnd="82dp"
+        android:background="#fff" />
+
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:gravity="center_horizontal"
+        android:layout_marginStart="100dp"
+        android:clickable="true"
+        android:layout_marginTop="175dp"
+        android:text="Lobby 1"
+        android:textColor="#fff"
+        android:textSize="35dp" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="57dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="167dp"
+        android:layout_marginEnd="-113dp"
+        android:src="@drawable/lobbyiconwhite" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="57dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="265dp"
+        android:layout_marginEnd="-113dp"
+        android:src="@drawable/lobbyiconwhite" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="273dp"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:text="Lobby 2"
+        android:textColor="#fff"
+        android:textSize="35dp" />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="60dp"
+        android:layout_height="57dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="352dp"
+        android:layout_marginEnd="-113dp"
+        android:src="@drawable/lobbyiconwhite" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="361dp"
+        android:text="Lobby 3"
+        android:clickable="true"
+        android:gravity="center_horizontal"
+        android:textColor="#fff"
+        android:textSize="35dp" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="57dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="439dp"
+        android:layout_marginEnd="-113dp"
+        android:src="@drawable/lobbyiconwhite" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="447dp"
+        android:text="Lobby 4"
+        android:gravity="center_horizontal"
+        android:textColor="#fff"
+        android:clickable="true"
+        android:textSize="35dp" />
+
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="57dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="526dp"
+        android:layout_marginEnd="-113dp"
+        android:src="@drawable/lobbyiconwhite" />
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="100dp"
+        android:clickable="true"
+        android:layout_marginTop="534dp"
+        android:gravity="center_horizontal"
+        android:text="Lobby 5"
+        android:textColor="#fff"
+        android:textSize="35dp" />
+
+
+</RelativeLayout>

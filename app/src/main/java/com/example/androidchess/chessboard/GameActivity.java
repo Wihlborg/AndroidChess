@@ -105,7 +105,10 @@ public class GameActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
             ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName()+"\n"+Double.toString(User.INSTANCE.getElo()));
 
-            // TODO set elo difference
+            // TODO set elo difference with elo calculation
+            // replace 12 with elo function
+            ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
             ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
             ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
         }
@@ -113,6 +116,10 @@ public class GameActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.winnerString)).setText("black wins");
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
 
+
+            // replace 12 with elo function
+            ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
             ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
             ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
         }

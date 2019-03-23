@@ -36,22 +36,22 @@ class MenuActivity : AppCompatActivity() {
 
         clickSound = soundPool.load(this, R.raw.move, 1)
 
-        val textField = findViewById<TextView>(R.id.textView)
-        textField.text = "Username: \n" + User.name
+        val userField = findViewById<TextView>(R.id.userView)
+        userField.text = "Username: \n" + User.name
 
         val eloField = findViewById<TextView>(R.id.eloView)
         eloField.text = "Elo: \n" + User.elo
 
-        val multiPlayerButton = findViewById<Button>(R.id.multiplayerbutton)
+        val multiPlayerButton = findViewById<ImageButton>(R.id.multiplayerbutton)
         multiPlayerButton.setOnClickListener { playMultiplayer() }
 
-        val aiButton = findViewById<Button>(R.id.aibutton)
+        val aiButton = findViewById<ImageButton>(R.id.aibutton)
         aiButton.setOnClickListener { playAI() }
 
-        val optionsButton = findViewById<Button>(R.id.optionbutton)
+        val optionsButton = findViewById<ImageButton>(R.id.optionbutton)
         optionsButton.setOnClickListener{ options() }
 
-        val logOutButton = findViewById<Button>(R.id.logoutbutton)
+        val logOutButton = findViewById<ImageButton>(R.id.logoutbutton)
         logOutButton.setOnClickListener { logOut() }
 
         val shareByte = findViewById<ImageButton>(R.id.shareButton)

@@ -27,11 +27,14 @@ public class LogInActivity  extends AppCompatActivity{
 
     // UI references.
     private LinearLayout mLayoutLogIn;
-    private TextInputEditText mUsername;
-    private TextInputEditText mPasswordView;
+    private EditText mUsername;
+    private EditText mPasswordView;
     protected Button mRegisterButton;
     protected Button mSignInButton;
-    protected Button mForgotButton;
+    protected TextView mForgotText;
+    CheckBox mRememberLogin;
+
+    // TODO add "remember me" function
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,7 @@ public class LogInActivity  extends AppCompatActivity{
         mUsername = findViewById(R.id.username);
         mPasswordView = findViewById(R.id.password);
         // Set up the register form
-        mRegisterButton = findViewById(R.id.register_button_from_login);
+        mRegisterButton = findViewById(R.id.registerButton);
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -58,7 +61,7 @@ public class LogInActivity  extends AppCompatActivity{
             }
         });
 
-        mSignInButton = findViewById(R.id.sign_in_button);
+        mSignInButton = findViewById(R.id.signInButton);
         mSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -83,8 +86,8 @@ public class LogInActivity  extends AppCompatActivity{
             }
         });
 
-        mForgotButton = findViewById(R.id.forgot_password_button);
-        mForgotButton.setOnClickListener(new OnClickListener() {
+        mForgotText = findViewById(R.id.forgotText);
+        mForgotText.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
