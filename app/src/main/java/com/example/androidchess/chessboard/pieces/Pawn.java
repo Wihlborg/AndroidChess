@@ -5,6 +5,7 @@ import com.example.androidchess.R;
 import java.util.ArrayList;
 
 import static com.example.androidchess.chessboard.GameActivity.*;
+import static com.example.androidchess.chessboard.pieces.King.kingSafety;
 
 public class Pawn {
 

@@ -43,7 +43,7 @@
                     android:maxLines="1"
                     android:padding="8dp"
                     android:textColor="#fff"
-                    android:textColorHint="#fff"/>
+                    android:textColorHint="#fff" android:text="admin"/>
 
             <View
                     android:layout_width="match_parent"
@@ -64,7 +64,7 @@
                     android:maxLines="1"
                     android:padding="8dp"
                     android:textColor="#fff"
-                    android:textColorHint="#fff"/>
+                    android:textColorHint="#fff" android:text="admin"/>
 
             <View
                     android:layout_width="match_parent"

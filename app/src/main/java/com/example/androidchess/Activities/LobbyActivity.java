@@ -21,8 +21,6 @@ public class LobbyActivity extends Activity {
         setContentView(R.layout.activity_lobby);
         Log.d(TAG, "onCreate: started.");
         initImageBitmaps();
-
-
     }
 
     private void initImageBitmaps() {
@@ -54,6 +52,4 @@ public class LobbyActivity extends Activity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
-
-
 }

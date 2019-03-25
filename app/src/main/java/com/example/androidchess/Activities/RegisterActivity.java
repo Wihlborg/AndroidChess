@@ -31,6 +31,7 @@ public class RegisterActivity extends AppCompatActivity {
     public EditText mPasswordText;
     public EditText mUsernameText;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

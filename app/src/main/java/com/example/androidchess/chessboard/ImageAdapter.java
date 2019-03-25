@@ -14,8 +14,6 @@ import static com.example.androidchess.chessboard.GameActivity.getFilename;
 public class ImageAdapter extends BaseAdapter {
 
     private final Context mContext;
-    public ImageView[] squares = new ImageView[64];
-    public int currentCells = 0;
 
     public ImageAdapter(Context mContext) {
         this.mContext = mContext;
@@ -30,8 +28,7 @@ public class ImageAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-
-        return squares[position];
+        return null;
     }
 
     @Override
@@ -60,11 +57,6 @@ public class ImageAdapter extends BaseAdapter {
 
             //String fileName = img.getResources().getResourceName(pieceIds[position]);
             //fileName = fileName.charAt(fileName.length()-2) + "" + fileName.charAt(fileName.length()-1);
-
-            if (currentCells < 64) {
-                squares[currentCells++] = img;
-                //piecesStr[currentCells++] = fileName;
-            }
 
             int x = position % 8;
             int y = position / 8;
