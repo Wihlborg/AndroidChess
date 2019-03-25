@@ -125,6 +125,90 @@ public class King {
         }
     }
 
+    public boolean possibleToMove(int position, char color) {
+        boolean possibleMove = false;
+        int x = position % 8;
+        int y = position / 8;
+
+        int i = x;
+        int n = y;
+        int currentPos;
+
+        i = x;
+        n = y - 1;
+        currentPos = i + 8 * n;
+        if (n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x + 1;
+        n = y - 1;
+        currentPos = i + 8 * n;
+        if (i < 8 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x + 1;
+        n = y;
+        currentPos = i + 8 * n;
+        if (i < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x + 1;
+        n = y + 1;
+        currentPos = i + 8 * n;
+        if (i < 8 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x;
+        n = y + 1;
+        currentPos = i + 8 * n;
+        if (n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x - 1;
+        n = y + 1;
+        currentPos = i + 8 * n;
+        if (i >= 0 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x - 1;
+        n = y;
+        currentPos = i + 8 * n;
+        if (i >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        i = x - 1;
+        n = y - 1;
+        currentPos = i + 8 * n;
+        if (i >= 0 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                possibleMove = true;
+            }
+        }
+
+        return possibleMove;
+    }
+
     public boolean colorKingCheck(int position, char color) {
         boolean possibleMove = false;
         int x = position % 8;
@@ -138,25 +222,30 @@ public class King {
         if (position == 60 && getFilename(position).charAt(1) == 'w') {
             boolean obstacle = false;
 
-            // right rook
+            // right white rook
+            System.out.println(rookFlag[3]);
             if (!rookFlag[3]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
+                    //System.out.println("i: " + i + ", squareValue: "+attackedSquares[currentPos]);
+                    if (i != 7 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
+                        //System.out.println(getFilename(currentPos));
+                        //System.out.println("obstacle true");
                         obstacle = true;
                     }
                     else {
+                        System.out.println("kingsafety: "+kingSafety(currentPos, position));
                         if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
                 }
             }
 
-            // left rook
+            // left white rook
             if (!rookFlag[2]) {
                 while ((--i >= 0) && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
+                    if (i != 0 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
                         obstacle = true;
                     }
                     else {
@@ -171,11 +260,11 @@ public class King {
         else if (position == 4 && getFilename(position).charAt(1) == 'b') {
             boolean obstacle = false;
 
-            // right rook
+            // right black rook
             if (!rookFlag[1]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
+                    if (i != 7 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
                     }
                     else {
@@ -185,11 +274,11 @@ public class King {
                 }
             }
 
-            // left rook
+            // left black rook
             if (!rookFlag[0]) {
                 while ((--i >= 0) && !obstacle) {
                     currentPos = i + (8 * n);
-                    if (getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
+                    if (i != 0 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
                     }
                     else {

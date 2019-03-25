@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#22282f"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".chessboard.GameActivity">
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:background="#22282f"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             tools:context=".chessboard.GameActivity" android:id="@+id/parent">
 
     <ImageView
             android:id="@+id/boardImg"
@@ -27,10 +27,70 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
     <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp" android:id="@+id/promotionblock"
+            android:clickable="true"
+            app:layout_constraintTop_toTopOf="@+id/board" app:layout_constraintBottom_toBottomOf="@+id/board"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone">
+
+        <android.support.constraint.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/winpopup"
+                android:id="@+id/promotionlayout"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+        >
+
+            <ImageView
+                    android:onClick="promotion"
+                    android:clickable="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" android:id="@+id/imgbishop"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"/>
+            <ImageView
+                    android:onClick="promotion"
+                    android:clickable="true"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp" android:id="@+id/imgrook"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toEndOf="@+id/imgbishop"
+                    android:layout_marginStart="16dp" android:layout_marginTop="16dp"/>
+            <ImageView
+                    android:onClick="promotion"
+                    android:clickable="true"
+                    android:layout_width="48dp"
+                    android:layout_height="50dp" android:id="@+id/imgknight"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/imgrook"
+                    android:layout_marginStart="16dp"/>
+            <ImageView
+                    android:clickable="true"
+                    android:onClick="promotion"
+                    android:layout_width="48dp"
+                    android:layout_height="50dp" android:id="@+id/imgqueen"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintStart_toEndOf="@+id/imgknight" android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+    <android.support.constraint.ConstraintLayout
             android:background="@drawable/winpopup"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="@+id/board" android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="@+id/board" android:visibility="gone"
             android:id="@+id/winContainer"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="30dp" android:layout_marginEnd="30dp"
