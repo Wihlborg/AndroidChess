@@ -15,8 +15,8 @@ public class King {
     }
 
     public String checkMate(int kingPos) {
-        System.out.println("entered checkmate");
-        printAttackedSquares();
+        //System.out.println("entered checkmate");
+        //printAttackedSquares();
         int attackNr;
         if (getFilename(kingPos).charAt(1) == 'w')
             attackNr = 2;
@@ -223,8 +223,8 @@ public class King {
             boolean obstacle = false;
 
             // right white rook
-            System.out.println(rookFlag[3]);
-            if (!rookFlag[3]) {
+            System.out.println(rookMoved[3]);
+            if (!rookMoved[3]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
                     //System.out.println("i: " + i + ", squareValue: "+attackedSquares[currentPos]);
@@ -242,7 +242,7 @@ public class King {
             }
 
             // left white rook
-            if (!rookFlag[2]) {
+            if (!rookMoved[2]) {
                 while ((--i >= 0) && !obstacle) {
                     currentPos = i + (8 * n);
                     if (i != 0 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
@@ -261,7 +261,7 @@ public class King {
             boolean obstacle = false;
 
             // right black rook
-            if (!rookFlag[1]) {
+            if (!rookMoved[1]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
                     if (i != 7 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
@@ -275,7 +275,7 @@ public class King {
             }
 
             // left black rook
-            if (!rookFlag[0]) {
+            if (!rookMoved[0]) {
                 while ((--i >= 0) && !obstacle) {
                     currentPos = i + (8 * n);
                     if (i != 0 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
@@ -460,6 +460,83 @@ public class King {
         currentPos = i + 8 * n;
         if (i >= 0 && n >= 0) {
             setSquareValue(currentPos, color);
+        }
+    }
+
+    public static boolean kingSafety(int currentPos, int sourcePos) {
+        boolean safe = true;
+        String imgName = getFilename(sourcePos);
+        int imgID = 0;
+
+        if (getFilename(currentPos).charAt(0) != 't') {
+            imgID = imageAdapter.pieceIds[currentPos];
+            //System.out.println(imgID);
+            //System.out.println(R.drawable.pw);
+            imageAdapter.pieceIds[currentPos] = R.drawable.ts;
+        }
+
+        swap(sourcePos, currentPos);
+        if (imgName.charAt(0) == 'k')
+            findKings();
+
+        resetAttackedSquares();
+        calcAttackedSquares();
+        //printAttackedSquares();
+
+        if (imgName.charAt(1) == 'w') {
+            if (whiteTurn && attackedSquares[kingPos[0]] > 1) {
+                safe = false;
+            }
+        } else if (imgName.charAt(1) == 'b') {
+            if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)) {
+                safe = false;
+            }
+        }
+
+        swap(sourcePos, currentPos);
+        if (imgName.charAt(0) == 'k')
+            findKings();
+
+        if (imgID != 0 && imageAdapter.pieceIds[currentPos] != imgID) {
+            imageAdapter.pieceIds[currentPos] = imgID;
+        }
+
+        resetAttackedSquares();
+        calcAttackedSquares();
+        //printAttackedSquares();
+
+        //System.out.println(safe);
+        return safe;
+    }
+
+    public void checkMateCheck() {
+        // true if white king is in checkAttackedSquares
+        if (whiteTurn && attackedSquares[kingPos[0]] > 1 && !king.possibleToMove(kingPos[0], 'w')) {
+
+            resetAttackedSquares();
+            checkAttackedSquares('w');
+            winner = king.checkMate(kingPos[0]);
+        }
+        // true if black king is in checkAttackedSquares
+        else if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3) && !king.possibleToMove(kingPos[1], 'b')) {
+            resetAttackedSquares();
+            checkAttackedSquares('b');
+            winner = king.checkMate(kingPos[1]);
+        }
+    }
+
+    public void check() {
+        // true if white king is in checkAttackedSquares
+        if (whiteTurn && attackedSquares[kingPos[0]] > 1 && !king.possibleToMove(kingPos[0], 'w')) {
+            resetAttackedSquares();
+            checkAttackedSquares('w');
+            winner = king.checkMate(kingPos[0]);
+        }
+        // true if black king is in checkAttackedSquares
+        else if (!whiteTurn && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3) && !king.possibleToMove(kingPos[1], 'b')) {
+            resetAttackedSquares();
+            checkAttackedSquares('b');
+            winner = king.checkMate(kingPos[1]);
         }
     }
 }
