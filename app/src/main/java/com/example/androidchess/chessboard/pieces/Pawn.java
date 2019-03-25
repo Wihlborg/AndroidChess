@@ -2,6 +2,8 @@ package com.example.androidchess.chessboard.pieces;
 
 import com.example.androidchess.R;
 
+import java.util.ArrayList;
+
 import static com.example.androidchess.chessboard.GameActivity.*;
 
 public class Pawn {
@@ -9,7 +11,7 @@ public class Pawn {
     public void pawnCheck(int position) {
         if (getFilename(position).charAt(1) == 'w' && whiteTurn) {
             pawnCheckWhite(position);
-        } else if (getFilename(position).charAt(1) == 'b' && !whiteTurn){
+        } else if (getFilename(position).charAt(1) == 'b' && !whiteTurn) {
             pawnCheckBlack(position);
         }
     }
@@ -105,7 +107,7 @@ public class Pawn {
             i = x - 1;
             n = y + 1;
             currentPos = i + 8 * n;
-            if (n < 8 && i >=0 && getFilename(currentPos).charAt(1) == 'w') {
+            if (n < 8 && i >= 0 && getFilename(currentPos).charAt(1) == 'w') {
                 if (kingSafety(currentPos, position))
                     possibleMoves[currentPos] = true;
                 getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
@@ -128,7 +130,7 @@ public class Pawn {
             i = x - 1;
             n = y + 1;
             currentPos = i + 8 * n;
-            if (n < 8 && i >=0 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
+            if (n < 8 && i >= 0 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
                 if (kingSafety(currentPos, position))
                     possibleMoves[currentPos] = true;
                 getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
@@ -142,8 +144,7 @@ public class Pawn {
                 attackedSquares[currentPos] = 1;
             else if (attackedSquares[currentPos] == 2)
                 attackedSquares[currentPos] = 3;
-        }
-        else {
+        } else {
             if (attackedSquares[currentPos] == 0)
                 attackedSquares[currentPos] = 2;
             else if (attackedSquares[currentPos] == 1)
@@ -216,11 +217,130 @@ public class Pawn {
         if (kx < sx) {
             x--;
             kingAttacker[x + (8 * y)] = true;
-        }
-        else {
+        } else {
             x++;
             kingAttacker[x + (8 * y)] = true;
         }
     }
 
+    public ArrayList<Integer> getPossibleMoves(int position, char color) {
+        ArrayList<Integer> theMoves = new ArrayList<>();
+        if (color == 'w') {
+
+            int x = position % 8;
+            int y = position / 8;
+
+            int i = x;
+            int n = y - 1;
+            int currentPos;
+            if (y == 6) {
+                boolean obstacle = false;
+                while (n >= 4 && !obstacle) {
+                    currentPos = i + 8 * n;
+                    if (getFilename(currentPos).charAt(0) != 't') {
+
+                        obstacle = true;
+                    }
+                    if (getFilename(currentPos).charAt(0) == 't') {
+                        theMoves.add(currentPos);
+                    }
+                    n--;
+                }
+                i = x - 1;
+                n = y - 1;
+                currentPos = i + 8 * n;
+                if (n >= 0 && i >= 0 && getFilename(currentPos).charAt(1) == 'b') {
+                    theMoves.add(currentPos);
+                }
+                i = x + 1;
+                n = y - 1;
+                currentPos = i + 8 * n;
+                if (n >= 0 && i < 8 && getFilename(currentPos).charAt(1) == 'b') {
+                    theMoves.add(currentPos);
+                }
+            } else {
+
+                currentPos = i + 8 * n;
+
+                // 1 step forward
+                if (n >= 0 && getFilename(currentPos).charAt(0) == 't') {
+                    theMoves.add(currentPos);
+                }
+                i = x - 1;
+                n = y - 1;
+                currentPos = i + 8 * n;
+                if (n >= 0 && i >= 0 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
+                    theMoves.add(currentPos);
+                }
+                i = x + 1;
+                n = y - 1;
+                currentPos = i + 8 * n;
+                if (n >= 0 && i < 8 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
+                    theMoves.add(currentPos);
+                }
+            }
+        } else if (color == 'b') {
+
+            int x = position % 8;
+            int y = position / 8;
+
+            int i = x;
+            int n = y + 1;
+            int currentPos;
+            if (y == 1) {
+                boolean obstacle = false;
+                while (n <= 3 && !obstacle) {
+                    currentPos = i + 8 * n;
+                    if (getFilename(currentPos).charAt(0) != 't') {
+
+                        obstacle = true;
+                    }
+                    if (getFilename(currentPos).charAt(0) == 't') {
+                        if (kingSafety(currentPos, position))
+                            theMoves.add(currentPos);
+                    }
+                    n++;
+                }
+                i = x + 1;
+                n = y + 1;
+                currentPos = i + 8 * n;
+                if (n < 8 && i < 8 && getFilename(currentPos).charAt(1) == 'w') {
+                    if (kingSafety(currentPos, position))
+                        theMoves.add(currentPos);
+                }
+                i = x - 1;
+                n = y + 1;
+                currentPos = i + 8 * n;
+                if (n < 8 && i >= 0 && getFilename(currentPos).charAt(1) == 'w') {
+                    if (kingSafety(currentPos, position))
+                        theMoves.add(currentPos);
+                }
+            } else {
+                currentPos = i + 8 * n;
+                if (n < 8 && getFilename(currentPos).charAt(0) == 't') {
+                    if (kingSafety(currentPos, position))
+                        theMoves.add(currentPos);
+                }
+
+                i = x + 1;
+                n = y + 1;
+                currentPos = i + 8 * n;
+                if (n < 8 && i < 8 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
+                    if (kingSafety(currentPos, position))
+                        theMoves.add(currentPos);
+                }
+                i = x - 1;
+                n = y + 1;
+                currentPos = i + 8 * n;
+                if (n < 8 && i >= 0 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
+                    if (kingSafety(currentPos, position))
+                        theMoves.add(currentPos);
+                }
+
+
+            }
+        }
+        return theMoves;
+    }
 }
+

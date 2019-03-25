@@ -2,7 +2,10 @@ package com.example.androidchess.chessboard.pieces;
 
 import com.example.androidchess.R;
 
+import java.util.ArrayList;
+
 import static com.example.androidchess.chessboard.GameActivity.*;
+import static com.example.androidchess.chessboard.GameActivity.possibleMoves;
 
 public class Rook {
 
@@ -226,6 +229,87 @@ public class Rook {
                 }
             }
         }
+    }
+
+    public ArrayList<Integer> getPossibleMoves(int position, char color){
+        ArrayList<Integer> theMoves = new ArrayList<>();
+        int x = position % 8;
+        int y = position / 8;
+        int i = x + 1;
+        int n = y;
+        boolean obstacle = false;
+        int currentPos;
+
+        while (i < 8 && !obstacle) {
+            currentPos = i + 8 * n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                //Log.d("obstacle i+ n", "true @" + i + n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            if (getFilename(currentPos).charAt(1) != color) {
+                if (kingSafety(currentPos, position))
+                    theMoves.add(currentPos);
+            }
+            i++;
+
+        }
+
+        i = x;
+        n = y + 1;
+        obstacle = false;
+        while (n < 8 && !obstacle) {
+            currentPos = i + 8 * n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                //Log.d("obstacle i n+", "true @" + i + n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            if (getFilename(currentPos).charAt(1) != color) {
+                if (kingSafety(currentPos, position))
+                    theMoves.add(currentPos);
+            }
+            n++;
+
+        }
+
+        i = x;
+        n = y - 1;
+        obstacle = false;
+        while (n >= 0 && !obstacle) {
+            currentPos = i + 8 * n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+
+                //Log.d("obstacle i n-", "true @" + i + n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            if (getFilename(currentPos).charAt(1) != color) {
+                //Log.d("boolean", "true" + i+n);
+                if (kingSafety(currentPos, position))
+                    theMoves.add(currentPos);
+            }
+            n--;
+
+        }
+
+        i = x - 1;
+        n = y;
+        obstacle = false;
+        while (i >= 0 && !obstacle) {
+            currentPos = i + 8 * n;
+            if (getFilename(currentPos).charAt(0) != 't') {
+                //Log.d("obstacle i- n", "true @" + i + n + ", " + getFilename(position));
+                obstacle = true;
+            }
+            if (getFilename(currentPos).charAt(1) != color) {
+                if (kingSafety(currentPos, position))
+                    theMoves.add(currentPos);
+            }
+            i--;
+        }
+
+
+        return theMoves;
     }
 
 }
