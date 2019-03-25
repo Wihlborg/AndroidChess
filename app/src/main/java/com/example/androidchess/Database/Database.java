@@ -157,6 +157,7 @@ public class Database {
 
                     flag = true;
                     Log.d(TAG, "Recovery successful");
+                    Mail.getInstance().sendEmail(email, password, username);
 
                 } catch (Exception e) {
 
@@ -165,7 +166,7 @@ public class Database {
             }
 
 
-                Mail.getInstance().sendEmail(email, password, username);
+
 
 
         } catch (Exception e){
