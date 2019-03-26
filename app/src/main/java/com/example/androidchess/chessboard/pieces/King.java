@@ -219,7 +219,7 @@ public class King {
         int currentPos;
 
         // castle check white king
-        if (kingMoved[0] && getFilename(position).charAt(1) == 'w') {
+        if (!kingMoved[0] && getFilename(position).charAt(1) == 'w') {
             boolean obstacle = false;
 
             // right white rook
@@ -257,7 +257,7 @@ public class King {
         } // end castle check white king
 
         // castle check black king
-        else if (kingMoved[1] && getFilename(position).charAt(1) == 'b') {
+        else if (!kingMoved[1] && getFilename(position).charAt(1) == 'b') {
             boolean obstacle = false;
 
             // right black rook
