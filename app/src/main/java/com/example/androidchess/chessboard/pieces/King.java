@@ -2,6 +2,8 @@ package com.example.androidchess.chessboard.pieces;
 
 import com.example.androidchess.R;
 
+import java.util.ArrayList;
+
 import static com.example.androidchess.chessboard.GameActivity.*;
 
 public class King {
@@ -232,9 +234,8 @@ public class King {
                         //System.out.println(getFilename(currentPos));
                         //System.out.println("obstacle true");
                         obstacle = true;
-                    }
-                    else {
-                        System.out.println("kingsafety: "+kingSafety(currentPos, position));
+                    } else {
+                        System.out.println("kingsafety: " + kingSafety(currentPos, position));
                         if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
@@ -247,8 +248,7 @@ public class King {
                     currentPos = i + (8 * n);
                     if (i != 0 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
                         obstacle = true;
-                    }
-                    else {
+                    } else {
                         if (i == 0 && kingSafety(currentPos, position))
                             possibleMoves[position - 2] = true;
                     }
@@ -266,8 +266,7 @@ public class King {
                     currentPos = i + (8 * n);
                     if (i != 7 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
-                    }
-                    else {
+                    } else {
                         if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
@@ -280,8 +279,7 @@ public class King {
                     currentPos = i + (8 * n);
                     if (i != 0 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
-                    }
-                    else {
+                    } else {
                         if (i == 0 && kingSafety(currentPos, position))
                             possibleMoves[position - 2] = true;
                     }
@@ -538,5 +536,166 @@ public class King {
             checkAttackedSquares('b');
             winner = king.checkMate(kingPos[1]);
         }
+    }
+
+    public ArrayList<Integer> getPossibleMoves(int position, char color) {
+        ArrayList<Integer> theMoves = new ArrayList<>();
+
+
+        int x = position % 8;
+        int y = position / 8;
+
+        int i = x;
+        int n = y;
+        int currentPos;
+
+        // castle check white king
+        if (!kingMoved[0] && getFilename(position).charAt(1) == 'w') {
+            boolean obstacle = false;
+
+            // right white rook
+            //System.out.println(rookMoved[3]);
+            if (!rookMoved[3]) {
+                while (++i < 8 && !obstacle) {
+                    currentPos = i + (8 * n);
+                    //System.out.println("i: " + i + ", squareValue: "+attackedSquares[currentPos]);
+                    if (i != 7 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
+                        //System.out.println(getFilename(currentPos));
+                        //System.out.println("obstacle true");
+                        obstacle = true;
+                    } else {
+                        System.out.println("kingsafety: " + kingSafety(currentPos, position));
+                        if (i == 7 && kingSafety(currentPos, position))
+                            theMoves.add(position + 2);
+                    }
+                }
+            }
+
+            // left white rook
+            if (!rookMoved[2]) {
+                while ((--i >= 0) && !obstacle) {
+                    currentPos = i + (8 * n);
+                    if (i != 0 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
+                        obstacle = true;
+                    } else {
+                        if (i == 0 && kingSafety(currentPos, position))
+                            theMoves.add(position - 2);
+                    }
+                }
+            }
+        } // end castle check white king
+
+        // castle check black king
+        else if (!kingMoved[1] && getFilename(position).charAt(1) == 'b') {
+            boolean obstacle = false;
+
+            // right black rook
+            if (!rookMoved[1]) {
+                while (++i < 8 && !obstacle) {
+                    currentPos = i + (8 * n);
+                    if (i != 7 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
+                        obstacle = true;
+                    } else {
+                        if (i == 7 && kingSafety(currentPos, position))
+                            theMoves.add(position + 2);
+                    }
+                }
+            }
+
+            // left black rook
+            if (!rookMoved[0]) {
+                while ((--i >= 0) && !obstacle) {
+                    currentPos = i + (8 * n);
+                    if (i != 0 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
+                        obstacle = true;
+                    } else {
+                        if (i == 0 && kingSafety(currentPos, position))
+                            theMoves.add(position - 2);
+                    }
+                }
+            }
+        } // end of castle check black
+
+        i = x;
+        n = y - 1;
+        currentPos = i + 8 * n;
+        if (n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                theMoves.add(currentPos);
+                possibleMoves[currentPos] = true;
+            }
+        }
+
+        i = x + 1;
+        n = y - 1;
+        currentPos = i + 8 * n;
+        if (i < 8 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                theMoves.add(currentPos);
+                possibleMoves[currentPos] = true;
+            }
+        }
+
+        i = x + 1;
+        n = y;
+        currentPos = i + 8 * n;
+        if (i < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+            if (kingSafety(currentPos, position)) {
+                theMoves.add(currentPos);
+                possibleMoves[currentPos] = true;
+            }
+
+            i = x + 1;
+            n = y + 1;
+            currentPos = i + 8 * n;
+            if (i < 8 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+                if (kingSafety(currentPos, position)) {
+                    theMoves.add(currentPos);
+                    possibleMoves[currentPos] = true;
+                }
+            }
+
+            i = x;
+            n = y + 1;
+            currentPos = i + 8 * n;
+            if (n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+                if (kingSafety(currentPos, position)) {
+                    theMoves.add(currentPos);
+                    possibleMoves[currentPos] = true;
+                }
+            }
+
+            i = x - 1;
+            n = y + 1;
+            currentPos = i + 8 * n;
+            if (i >= 0 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+                if (kingSafety(currentPos, position)) {
+                    theMoves.add(currentPos);
+                    possibleMoves[currentPos] = true;
+                }
+            }
+
+            i = x - 1;
+            n = y;
+            currentPos = i + 8 * n;
+            if (i >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+                if (kingSafety(currentPos, position)) {
+                    theMoves.add(currentPos);
+                    possibleMoves[currentPos] = true;
+                }
+            }
+
+            i = x - 1;
+            n = y - 1;
+            currentPos = i + 8 * n;
+            if (i >= 0 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
+                if (kingSafety(currentPos, position)) {
+                    theMoves.add(currentPos);
+                    possibleMoves[currentPos] = true;
+                }
+            }
+
+        }
+        return theMoves;
     }
 }

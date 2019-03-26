@@ -1,7 +1,7 @@
 package com.example.androidchess.Activities;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.TextInputEditText;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -50,6 +50,12 @@ public class LogInActivity  extends AppCompatActivity{
         // Set up the register form
         mRegisterButton = findViewById(R.id.registerButton);
 
+        mRememberLogin = findViewById(R.id.rememberLogin);
+
+        SharedPreferences sp = getSharedPreferences("chesspref", Context.MODE_PRIVATE);
+        mUsername.setText(sp.getString("username", ""));
+        mPasswordView.setText(sp.getString("password", ""));
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -66,6 +72,12 @@ public class LogInActivity  extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 try {
+                    if (mRememberLogin.isChecked()) {
+                        SharedPreferences.Editor sharedPreferences = getSharedPreferences("chesspref", Context.MODE_PRIVATE).edit();
+                        sharedPreferences.putString("username", mUsername.getText().toString());
+                        sharedPreferences.putString("password", mPasswordView.getText().toString());
+                        sharedPreferences.apply();
+                    }
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(mLayoutLogIn.getWindowToken(), 0);
                 } catch (Exception e){

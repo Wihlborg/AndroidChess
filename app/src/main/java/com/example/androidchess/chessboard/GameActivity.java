@@ -842,7 +842,7 @@ public class GameActivity extends AppCompatActivity {
         int chosenPiece;
         do {
             chosenPiece = myPieces.get(random.nextInt(myPieces.size()));
-
+            myPieces.remove((Object)chosenPiece);
             switch (getFilename(chosenPiece).charAt(0)) {
                 // queen
                 case 'q':
@@ -851,7 +851,7 @@ public class GameActivity extends AppCompatActivity {
                     break;
                 // king
                 case 'k':
-                    //TODO fix king moves when castling is 100% fixed
+                    moves = king.getPossibleMoves(chosenPiece, 'b');
                     break;
                 // rook
                 case 'r':
@@ -870,13 +870,20 @@ public class GameActivity extends AppCompatActivity {
                     moves = pawn.getPossibleMoves(chosenPiece, 'b');
                     break;
             }
-        } while (getFilename(chosenPiece).charAt(0) == 'k' || moves.size() == 0);
+            System.out.println("Chosen piece: " + chosenPiece);
+            System.out.println("Which is a: " + getFilename(chosenPiece).charAt(0));
+            System.out.println("Possible moves");
 
-        king.check();
+            for (int move: moves){
+                System.out.println(move);
+            }
+        } while (moves.size() == 0);
+
+        //king.check();
         move(chosenPiece);
-        king.check();
+        //king.check();
         move(moves.get(random.nextInt(moves.size())));
-        king.checkMateCheck();
+        //king.checkMateCheck();
     }
 
 }
