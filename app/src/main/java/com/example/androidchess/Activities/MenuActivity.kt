@@ -5,10 +5,12 @@ import android.media.AudioAttributes
 import android.media.SoundPool
 import android.net.Uri
 import android.os.Bundle
+import android.support.constraint.ConstraintLayout
 import android.support.v7.app.AppCompatActivity
-import android.widget.Button
+import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import com.example.androidchess.GameMode
 import com.example.androidchess.R
 import com.example.androidchess.User
 import com.example.androidchess.chessboard.GameActivity
@@ -43,7 +45,13 @@ class MenuActivity : AppCompatActivity() {
         eloField.text = "Elo: \n" + User.elo
 
         val multiPlayerButton = findViewById<ImageButton>(R.id.multiplayerbutton)
-        multiPlayerButton.setOnClickListener { playMultiplayer() }
+        multiPlayerButton.setOnClickListener { multiplayerChoice() }
+
+        val localGameButton = findViewById<ImageButton>(R.id.localgame)
+        localGameButton.setOnClickListener { playLocal() }
+
+        val wifiGameButton = findViewById<ImageButton>(R.id.onlinegame)
+        wifiGameButton.setOnClickListener { playMultiplayer() }
 
         val aiButton = findViewById<ImageButton>(R.id.aibutton)
         aiButton.setOnClickListener { playAI() }
@@ -56,6 +64,31 @@ class MenuActivity : AppCompatActivity() {
 
         val shareByte = findViewById<ImageButton>(R.id.shareButton)
         shareByte.setOnClickListener{share()}
+    }
+
+    override fun onBackPressed() {
+        val layout = findViewById<ConstraintLayout>(R.id.mutliplayerlayout)
+        if (layout.visibility == View.VISIBLE)
+            layout.visibility = View.GONE
+        else
+            super.onBackPressed()
+    }
+
+    fun multiplayerChoice() {
+        if (User.sounds) {
+            soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
+        }
+        val layout = findViewById<ConstraintLayout>(R.id.mutliplayerlayout)
+        layout.visibility = View.VISIBLE
+    }
+
+    fun playLocal(){
+        if (User.sounds) {
+            soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
+        }
+        GameMode.mode = "Local"
+        val intent = Intent(this, GameActivity::class.java)
+        startActivity(intent)
     }
 
     //TODO: implement intents for changing activity
@@ -72,6 +105,7 @@ class MenuActivity : AppCompatActivity() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
+        GameMode.mode = "AI"
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
     }

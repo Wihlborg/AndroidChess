@@ -9,6 +9,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.example.androidchess.GameMode;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
 import com.example.androidchess.chessboard.pieces.*;
@@ -95,7 +96,7 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
-                }else if (!fen.equals(getFenNotation())){
+                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())){
                     makeRandomComputerMove();
                 }
             }
@@ -838,6 +839,8 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
+        king.check();
+
         ArrayList<Integer> moves = new ArrayList<>();
         int chosenPiece;
         do {
@@ -852,6 +855,7 @@ public class GameActivity extends AppCompatActivity {
                 // king
                 case 'k':
                     moves = king.getPossibleMoves(chosenPiece, 'b');
+                    printAttackedSquares();
                     break;
                 // rook
                 case 'r':

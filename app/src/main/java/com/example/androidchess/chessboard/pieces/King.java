@@ -234,8 +234,9 @@ public class King {
                         //System.out.println(getFilename(currentPos));
                         //System.out.println("obstacle true");
                         obstacle = true;
-                    } else {
-                        System.out.println("kingsafety: " + kingSafety(currentPos, position));
+                    }
+                    else {
+                        System.out.println("kingsafety: "+kingSafety(currentPos, position));
                         if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
@@ -248,7 +249,8 @@ public class King {
                     currentPos = i + (8 * n);
                     if (i != 0 && getFilename(currentPos).charAt(0) != 't' || attackedSquares[currentPos] > 1) {
                         obstacle = true;
-                    } else {
+                    }
+                    else {
                         if (i == 0 && kingSafety(currentPos, position))
                             possibleMoves[position - 2] = true;
                     }
@@ -266,7 +268,8 @@ public class King {
                     currentPos = i + (8 * n);
                     if (i != 7 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
-                    } else {
+                    }
+                    else {
                         if (i == 7 && kingSafety(currentPos, position))
                             possibleMoves[position + 2] = true;
                     }
@@ -279,7 +282,8 @@ public class King {
                     currentPos = i + (8 * n);
                     if (i != 0 && getFilename(currentPos).charAt(0) != 't' || (attackedSquares[currentPos] == 1 || attackedSquares[currentPos] == 3)) {
                         obstacle = true;
-                    } else {
+                    }
+                    else {
                         if (i == 0 && kingSafety(currentPos, position))
                             possibleMoves[position - 2] = true;
                     }
@@ -541,7 +545,6 @@ public class King {
     public ArrayList<Integer> getPossibleMoves(int position, char color) {
         ArrayList<Integer> theMoves = new ArrayList<>();
 
-
         int x = position % 8;
         int y = position / 8;
 
@@ -622,7 +625,6 @@ public class King {
         if (n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
             if (kingSafety(currentPos, position)) {
                 theMoves.add(currentPos);
-                possibleMoves[currentPos] = true;
             }
         }
 
@@ -632,7 +634,6 @@ public class King {
         if (i < 8 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
             if (kingSafety(currentPos, position)) {
                 theMoves.add(currentPos);
-                possibleMoves[currentPos] = true;
             }
         }
 
@@ -642,16 +643,14 @@ public class King {
         if (i < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
             if (kingSafety(currentPos, position)) {
                 theMoves.add(currentPos);
-                possibleMoves[currentPos] = true;
             }
-
+        }
             i = x + 1;
             n = y + 1;
             currentPos = i + 8 * n;
             if (i < 8 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
                 if (kingSafety(currentPos, position)) {
                     theMoves.add(currentPos);
-                    possibleMoves[currentPos] = true;
                 }
             }
 
@@ -661,7 +660,6 @@ public class King {
             if (n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
                 if (kingSafety(currentPos, position)) {
                     theMoves.add(currentPos);
-                    possibleMoves[currentPos] = true;
                 }
             }
 
@@ -671,7 +669,6 @@ public class King {
             if (i >= 0 && n < 8 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
                 if (kingSafety(currentPos, position)) {
                     theMoves.add(currentPos);
-                    possibleMoves[currentPos] = true;
                 }
             }
 
@@ -681,7 +678,6 @@ public class King {
             if (i >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
                 if (kingSafety(currentPos, position)) {
                     theMoves.add(currentPos);
-                    possibleMoves[currentPos] = true;
                 }
             }
 
@@ -691,11 +687,9 @@ public class King {
             if (i >= 0 && n >= 0 && getFilename(currentPos).charAt(1) != color && attackedCheck(currentPos, color)) {
                 if (kingSafety(currentPos, position)) {
                     theMoves.add(currentPos);
-                    possibleMoves[currentPos] = true;
                 }
             }
 
-        }
         return theMoves;
     }
 }
