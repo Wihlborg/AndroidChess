@@ -49,7 +49,7 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         getSupportActionBar().hide();
 
-        resetGame();
+        resetVariables();
 
         for (int i = 0; i < rookMoved.length; i++) {
             rookMoved[i] = false;
@@ -119,7 +119,6 @@ public class GameActivity extends AppCompatActivity {
         else {
             ((TextView) findViewById(R.id.winnerString)).setText("black wins");
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-
 
             // replace 12 with elo function
             ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
@@ -311,7 +310,6 @@ public class GameActivity extends AppCompatActivity {
 
     int promotionPos;
     public void promotionUI(int position) {
-        // TODO promotionUI
         findViewById(R.id.promotionblock).setVisibility(View.VISIBLE);
         ImageView imgBishop = findViewById(R.id.imgbishop);
         ImageView imgRook = findViewById(R.id.imgrook);
@@ -597,8 +595,6 @@ public class GameActivity extends AppCompatActivity {
         return fenStr;
     }
 
-
-    // TODO finish
     public void setBoardGameState(String fenNotation) {
         // fen string example
         // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
@@ -756,11 +752,12 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public void resetGame() {
+    public void resetVariables() {
         whiteTurn = true;
         possibleMoves = new boolean[64];
         attackedSquares = new int[64];
         kingPos = new int[2];
+        kingMoved = new boolean[2];
         checkMate = false;
         lastMove = 0;
         kingAttacker = new boolean[64];

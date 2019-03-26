@@ -219,11 +219,11 @@ public class King {
         int currentPos;
 
         // castle check white king
-        if (position == 60 && getFilename(position).charAt(1) == 'w') {
+        if (kingMoved[0] && getFilename(position).charAt(1) == 'w') {
             boolean obstacle = false;
 
             // right white rook
-            System.out.println(rookMoved[3]);
+            //System.out.println(rookMoved[3]);
             if (!rookMoved[3]) {
                 while (++i < 8 && !obstacle) {
                     currentPos = i + (8 * n);
@@ -257,7 +257,7 @@ public class King {
         } // end castle check white king
 
         // castle check black king
-        else if (position == 4 && getFilename(position).charAt(1) == 'b') {
+        else if (kingMoved[1] && getFilename(position).charAt(1) == 'b') {
             boolean obstacle = false;
 
             // right black rook
