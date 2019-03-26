@@ -13,6 +13,9 @@ import com.example.androidchess.R;
 import com.example.androidchess.User;
 import com.example.androidchess.chessboard.pieces.*;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
+
 public class GameActivity extends AppCompatActivity {
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
@@ -32,10 +35,11 @@ public class GameActivity extends AppCompatActivity {
     public static boolean[] kingAttacker;
     public static int enPassantPos;
     public static boolean[] rookMoved;
+    private SecureRandom random = new SecureRandom();
     int fullMoveCounter;
     public static String winner;
     String winCondition;
-    //public static Map<Integer, Boolean> rookMoved = new HashMap<>();
+    //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
 
     @Override
     public void onBackPressed() {
@@ -78,13 +82,11 @@ public class GameActivity extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-
+                String fen = getFenNotation();
                 king.check();
 
                 move(position);
-
-                //printPossibleMoves();
-                //System.out.println(getFenNotation());
+                System.out.println(getFenNotation());
 
                 king.checkMateCheck();
 
@@ -93,10 +95,11 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
+                }else if (!fen.equals(getFenNotation())){
+                    makeRandomComputerMove();
                 }
             }
         });
-
     }
 
     public void endGame() {
@@ -176,6 +179,18 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
 
+            if (getFilename(firstPos).charAt(0) == 'k') {
+                switch(firstPos) {
+                    case 4:
+                        // black king
+                        kingMoved[1] = true;
+                        break;
+                    case 60:
+                        // white king
+                        kingMoved[0] = true;
+                        break;
+                }
+            }
             if (getFilename(firstPos).charAt(0) == 'k') {
                 switch(firstPos) {
                     case 4:
@@ -813,6 +828,55 @@ public class GameActivity extends AppCompatActivity {
         fileName = fileName.charAt(fileName.length() - 2) + "" + fileName.charAt(fileName.length() - 1);
         //Log.d("filename", fileName);
         return fileName;
+    }
+
+    void makeRandomComputerMove(){
+        ArrayList<Integer> myPieces = new ArrayList<>();
+        for (int i = 0; i < 64; i++){
+            if(getFilename(i).charAt(1) == 'b'){
+                myPieces.add(i);
+            }
+        }
+
+        ArrayList<Integer> moves = new ArrayList<>();
+        int chosenPiece;
+        do {
+            chosenPiece = myPieces.get(random.nextInt(myPieces.size()));
+
+            switch (getFilename(chosenPiece).charAt(0)) {
+                // queen
+                case 'q':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    moves.addAll(rook.getPossibleMoves(chosenPiece, 'b'));
+                    break;
+                // king
+                case 'k':
+                    //TODO fix king moves when castling is 100% fixed
+                    break;
+                // rook
+                case 'r':
+                    moves = rook.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // knight
+                case 'n':
+                    moves = knight.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // bishop
+                case 'b':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // pawn
+                case 'p':
+                    moves = pawn.getPossibleMoves(chosenPiece, 'b');
+                    break;
+            }
+        } while (getFilename(chosenPiece).charAt(0) == 'k' || moves.size() == 0);
+
+        king.check();
+        move(chosenPiece);
+        king.check();
+        move(moves.get(random.nextInt(moves.size())));
+        king.checkMateCheck();
     }
 
 }
