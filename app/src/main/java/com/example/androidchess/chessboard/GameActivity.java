@@ -209,6 +209,14 @@ public class GameActivity extends AppCompatActivity {
             if (getFilename(firstPos).charAt(1) != getFilename(position).charAt(1) && !getFilename(position).equals("ts")) {
                 imageAdapter.pieceIds[position] = R.drawable.ts;
 
+                if (getFilename(firstPos).charAt(0) == 'p') {
+
+                    if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        promotionUI(firstPos);
+                        promotionPos = position;
+                    }
+                }
+
                 swap(firstPos, position);
 
                 lastMove = position;
