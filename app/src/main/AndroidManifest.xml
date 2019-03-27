@@ -21,7 +21,7 @@
             android:theme="@style/AppTheme">
         <activity android:name=".Activities.OptionActivity">
         </activity>
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".Activities.LobbyActivity">
         </activity>
         <activity android:name=".Activities.LogInActivity">
             <intent-filter>
