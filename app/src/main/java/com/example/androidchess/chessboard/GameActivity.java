@@ -1,20 +1,24 @@
 package com.example.androidchess.chessboard;
 
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.example.androidchess.GameMode;
 import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
+import com.example.androidchess.Utils;
 import com.example.androidchess.chessboard.pieces.*;
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareMediaContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -130,13 +134,20 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
 
+        ((ImageButton) findViewById(R.id.shareButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareImage();
+            }
+        });
+
         if (!GameMode.INSTANCE.equals("online")) {
             // LOCAL OR VS AI
             if (winner.equals("w")) {
                 ((TextView) findViewById(R.id.winnerString)).setText("White wins");
                 ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
                 ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
-                ((TextView) findViewById(R.id.elotextblack)).setText(0);
+                ((TextView) findViewById(R.id.elotextblack)).setText("Computer\n1337");
                 // TODO set elo difference with elo calculation
                 // replace 12 with elo function
                 ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 0);
@@ -1061,6 +1072,15 @@ public class GameActivity extends AppCompatActivity {
             }
         } while (pieces.size() > 0);
         endGame();
+    }
+
+    private void shareImage(){
+        Bitmap image = Utils.takeScreenShot(this);
+        SharePhoto photo = new SharePhoto.Builder().setBitmap(image).build();
+
+        ShareContent shareContent = new ShareMediaContent.Builder().addMedium(photo).build();
+        new ShareDialog(this).show(shareContent, ShareDialog.Mode.AUTOMATIC);
+
     }
 
     class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
