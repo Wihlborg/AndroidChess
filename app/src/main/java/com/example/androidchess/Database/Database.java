@@ -14,7 +14,7 @@ public class Database {
     private Encryption encrypt = new Encryption();
     private Connection connect = null;
 
-    //
+    //Singleton of Database
     public static Database getInstance(){
         if (db == null){
             db = new Database();

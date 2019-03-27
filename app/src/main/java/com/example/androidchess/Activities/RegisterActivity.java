@@ -31,6 +31,12 @@ public class RegisterActivity extends AppCompatActivity {
     public EditText mPasswordText;
     public EditText mUsernameText;
 
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        returnMethod();
+        super.onBackPressed();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,9 +57,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 finish();
                 Toast.makeText(getApplicationContext(), "Returning to log in!", Toast.LENGTH_SHORT).show();
-
-                Intent returnActivity = new Intent(RegisterActivity.this, LogInActivity.class);
-                startActivity(returnActivity);
+                returnMethod();
             }
         });
 
@@ -71,6 +75,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    //To make return with ''triangel'' button possible.
+    private void returnMethod(){
+        Intent returnActivity = new Intent(RegisterActivity.this, LogInActivity.class);
+        startActivity(returnActivity);
     }
 
     /**

@@ -30,6 +30,13 @@ public class ForgotActivity extends AppCompatActivity {
     private EditText mEmail;
 
     @Override
+    public void onBackPressed() {
+        this.finish();
+        returnMethod();
+        super.onBackPressed();
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgotpassword);
@@ -58,12 +65,18 @@ public class ForgotActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                Intent returnToLogin = new Intent(ForgotActivity.this, LogInActivity.class);
-                startActivity(returnToLogin);
+                returnMethod();
 
             }
         });
     }
+
+    //To make onBackPressed override possible for that ''triangel'' shape button.
+    private void returnMethod(){
+        Intent returnToLogin = new Intent(ForgotActivity.this, LogInActivity.class);
+        startActivity(returnToLogin);
+    }
+
     private boolean isEmailValid(String email) {
         return email.length() > 4 && email.contains("@");
     }
