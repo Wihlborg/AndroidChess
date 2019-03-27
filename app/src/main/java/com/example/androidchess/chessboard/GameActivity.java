@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard;
 
 import android.graphics.Bitmap;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -51,6 +53,8 @@ public class GameActivity extends AppCompatActivity {
     int fullMoveCounter;
     boolean popup = false;
     public static String winner;
+    private SoundPool soundPool;
+    private int moveSound, checkMateSound;
     String winCondition;
     ChessClock blackClock;
     ChessClock whiteClock;
@@ -105,6 +109,19 @@ public class GameActivity extends AppCompatActivity {
 
         }
 
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(6)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        moveSound = soundPool.load(this, R.raw.move, 1);
+        checkMateSound = soundPool.load(this, R.raw.gameover, 1);
+
         board.setAdapter(imageAdapter);
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
@@ -116,6 +133,9 @@ public class GameActivity extends AppCompatActivity {
                 System.out.println(getFenNotation());
                 checkDraw(whiteTurn);
                 king.checkMateCheck();
+                if (!fen.equals(getFenNotation()) && User.INSTANCE.getSounds()){
+                    soundPool.play(moveSound, (float)1.0, (float)1.0, 0, 0, (float)1.0);
+                }
 
                 if (checkMate) {
                     System.out.println("checkMate");
@@ -130,6 +150,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void endGame() {
+        soundPool.play(checkMateSound, (float)1.0, (float)1.0, 0, 0, (float)1.0);
         System.out.println("endGame()");
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
