@@ -1,5 +1,6 @@
 package com.example.androidchess.Database;
 
+import android.os.StrictMode;
 import android.util.Log;
 import com.example.androidchess.Elo;
 import com.example.androidchess.User;
@@ -205,6 +206,29 @@ public class Database {
          }
 
      }
+
+    public void addWins(){
+
+        String username = User.INSTANCE.getName();
+        String fetchWinner = "UPDATE myshack.user WHERE username = " + username + " SET wins = 1";
+        try(Statement ps = connect.prepareStatement(fetchWinner)){
+            ps.executeUpdate(fetchWinner);
+
+        }catch (Exception e){
+            e.printStackTrace();
+
+        }
+    }
+
+    public void addLosses(){
+        String username = User.INSTANCE.getName();
+        String fetchLoser = "UPDATE myshack.user WHERE username = " + username + " SET loses = 1";
+        try(Statement ps = connect.prepareStatement(fetchLoser)){
+            ps.executeUpdate(fetchLoser);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 
     public double getElo(String username){
          try {
