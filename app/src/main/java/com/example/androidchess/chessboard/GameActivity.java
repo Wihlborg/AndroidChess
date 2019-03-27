@@ -151,7 +151,7 @@ public class GameActivity extends AppCompatActivity {
 
         move(position);
         System.out.println(getFenNotation());
-
+        checkDraw(whiteTurn);
         king.checkMateCheck();
     }
 
@@ -1139,6 +1139,7 @@ public class GameActivity extends AppCompatActivity {
                 return;
             }
         } while (pieces.size() > 0);
+        winner = "d";
         endGame();
     }
 
