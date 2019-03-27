@@ -134,7 +134,7 @@ class MenuActivity : AppCompatActivity() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
-        val intent = Intent(this, LobbyActivity::class.java)
+        val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
 
     }

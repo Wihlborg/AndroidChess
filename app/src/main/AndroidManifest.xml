@@ -3,6 +3,14 @@
           package="com.example.androidchess">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
 
     <application
             android:allowBackup="true"
@@ -13,9 +21,7 @@
             android:theme="@style/AppTheme">
         <activity android:name=".Activities.OptionActivity">
         </activity>
-        <activity android:name=".Activities.MenuInLobby">
-        </activity>
-        <activity android:name=".Activities.LobbyActivity">
+        <activity android:name=".Activities.MainActivity">
         </activity>
         <activity android:name=".Activities.LogInActivity">
             <intent-filter>
@@ -27,7 +33,9 @@
         <activity android:name=".Activities.RegisterActivity"/>
         <activity android:name=".Activities.ForgotActivity"/>
         <activity android:name=".Activities.MenuActivity"/>
-        <activity android:name=".chessboard.GameActivity" android:noHistory="true"/>
+        <activity
+                android:name=".chessboard.GameActivity"
+                android:noHistory="true"/>
         <activity android:name=".Activities.NewPasswordActivity"/>
 
         <meta-data

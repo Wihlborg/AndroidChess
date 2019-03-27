@@ -60,14 +60,14 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
         viewHolder.parentLayout.setOnClickListener(new View.OnClickListener() {
                                                        @Override
-                                                       public void onClick(View view) {
-                                                           Log.d(TAG, "onClick: clicked on: " + mImageNames.get(position));
-                                                           Toast.makeText(mContext, mImageNames.get(position), Toast.LENGTH_SHORT).show();
+              public void onClick(View view) {
+              Log.d(TAG, "onClick: clicked on: " + mImageNames.get(position));
+              Toast.makeText(mContext, mImageNames.get(position), Toast.LENGTH_SHORT).show();
 
-                                                           if (mImageNames.get(position) == "Lobby 1") {
+              if (mImageNames.get(position) == "Lobby 1") {
 
-                                                               Intent intent = new Intent(view.getContext(), MenuInLobby.class);
-                                                               view.getContext().startActivity(intent);
+              Intent intent = new Intent(view.getContext(), MainActivity.class);
+              view.getContext().startActivity(intent);
                                                            }
                                                        }
                                                    }

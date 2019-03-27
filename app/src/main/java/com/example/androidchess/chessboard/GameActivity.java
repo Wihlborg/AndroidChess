@@ -10,6 +10,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
+import com.example.androidchess.Activities.MainActivity;
+import com.example.androidchess.Activities.WifiConnection;
 import com.example.androidchess.GameMode;
 import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
@@ -31,6 +33,8 @@ public class GameActivity extends AppCompatActivity {
     protected UserWinsTask mAuthWinTask = null;
     protected UserLossesTask mAuthLoseTask = null;
 
+
+
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -50,7 +54,7 @@ public class GameActivity extends AppCompatActivity {
     public static int enPassantPos;
     public static boolean[] rookMoved;
     private SecureRandom random = new SecureRandom();
-    int fullMoveCounter;
+    public static int fullMoveCounter;
     boolean popup = false;
     public static String winner;
     public static String winCondition;
@@ -58,7 +62,10 @@ public class GameActivity extends AppCompatActivity {
     private int moveSound, checkMateSound;
     ChessClock blackClock;
     ChessClock whiteClock;
+    WifiConnection wifi;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
+
+
 
     @Override
     public void onBackPressed() {
@@ -150,7 +157,7 @@ public class GameActivity extends AppCompatActivity {
         king.check();
 
         move(position);
-        System.out.println(getFenNotation());
+        //System.out.println(getFenNotation());
 
         king.checkMateCheck();
     }
@@ -168,6 +175,7 @@ public class GameActivity extends AppCompatActivity {
             winCondition = "checkmate";
             endGame();
         }
+        WifiConnection.getInstance().send(getFenNotation());
     }
 
     public void vsAIMove(int position) {
@@ -796,10 +804,12 @@ public class GameActivity extends AppCompatActivity {
         return fenStr;
     }
 
-    public void setBoardGameState(String fenNotation) {
+    public static void setBoardGameState(String fenNotation) {
         // fen string example
         // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
         // board positions | who's turn | castle options | en passant | half move counter | full move counter
+
+        System.out.println(fenNotation);
 
         boolean stop = false;
         int charPos = 0;
@@ -924,8 +934,9 @@ public class GameActivity extends AppCompatActivity {
         // half time clock inbetween
 
         //fenNotation.length()-1
-        fullMoveCounter = Character.getNumericValue(fenNotation.charAt(charPos));
+        fullMoveCounter = Character.getNumericValue(fenNotation.charAt(fenNotation.length()-1));
 
+        refreshViews();
     }
 
     public boolean legalMove(int position) {
@@ -942,7 +953,7 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public void refreshViews() {
+    public static void refreshViews() {
         imageAdapter.notifyDataSetChanged();
         board.invalidateViews();
     }
