@@ -14,6 +14,7 @@ import com.example.androidchess.GameMode
 import com.example.androidchess.R
 import com.example.androidchess.User
 import com.example.androidchess.chessboard.GameActivity
+import com.example.androidchess.chessboard.TimerInfo
 import com.facebook.share.model.ShareLinkContent
 import com.facebook.share.widget.ShareDialog
 
@@ -48,41 +49,78 @@ class MenuActivity : AppCompatActivity() {
         multiPlayerButton.setOnClickListener { multiplayerChoice() }
 
         val localGameButton = findViewById<ImageButton>(R.id.localgame)
-        localGameButton.setOnClickListener { playLocal() }
+        localGameButton.setOnClickListener { timerChoice() }
 
         val wifiGameButton = findViewById<ImageButton>(R.id.onlinegame)
         wifiGameButton.setOnClickListener { playMultiplayer() }
+
+        val timerButton = findViewById<ImageButton>(R.id.timerbutton)
+        timerButton.setOnClickListener {
+            TimerInfo.enable = true
+            playLocal()
+        }
+
+        val classicButton = findViewById<ImageButton>(R.id.classicbutton)
+        classicButton.setOnClickListener {
+            TimerInfo.enable = false
+            playLocal()
+        }
 
         val aiButton = findViewById<ImageButton>(R.id.aibutton)
         aiButton.setOnClickListener { playAI() }
 
         val optionsButton = findViewById<ImageButton>(R.id.optionbutton)
-        optionsButton.setOnClickListener{ options() }
+        optionsButton.setOnClickListener { options() }
 
         val logOutButton = findViewById<ImageButton>(R.id.logoutbutton)
         logOutButton.setOnClickListener { logOut() }
 
         val shareByte = findViewById<ImageButton>(R.id.shareButton)
-        shareByte.setOnClickListener{share()}
+        shareByte.setOnClickListener { share() }
     }
 
     override fun onBackPressed() {
-        val layout = findViewById<ConstraintLayout>(R.id.mutliplayerlayout)
-        if (layout.visibility == View.VISIBLE)
+        val layout = findViewById<ConstraintLayout>(R.id.multiplayerlayout)
+
+        if (layout.visibility == View.VISIBLE) {
             layout.visibility = View.GONE
-        else
+            val localLayout = findViewById<ConstraintLayout>(R.id.localwifi)
+            localLayout.visibility = View.VISIBLE
+            val timerLayout = findViewById<ConstraintLayout>(R.id.timeroption)
+            timerLayout.visibility = View.GONE
+        } else
             super.onBackPressed()
+    }
+
+    override fun onResume() {
+        val layout = findViewById<ConstraintLayout>(R.id.multiplayerlayout)
+        layout.visibility = View.GONE
+        val localLayout = findViewById<ConstraintLayout>(R.id.localwifi)
+        localLayout.visibility = View.VISIBLE
+        val timerLayout = findViewById<ConstraintLayout>(R.id.timeroption)
+        timerLayout.visibility = View.GONE
+        super.onResume()
+    }
+
+    fun timerChoice() {
+        if (User.sounds) {
+            soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
+        }
+        val layout = findViewById<ConstraintLayout>(R.id.localwifi)
+        layout.visibility = View.GONE
+        val timerLayout = findViewById<ConstraintLayout>(R.id.timeroption)
+        timerLayout.visibility = View.VISIBLE
     }
 
     fun multiplayerChoice() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
-        val layout = findViewById<ConstraintLayout>(R.id.mutliplayerlayout)
+        val layout = findViewById<ConstraintLayout>(R.id.multiplayerlayout)
         layout.visibility = View.VISIBLE
     }
 
-    fun playLocal(){
+    fun playLocal() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
@@ -92,16 +130,16 @@ class MenuActivity : AppCompatActivity() {
     }
 
     //TODO: implement intents for changing activity
-    fun playMultiplayer(){
+    fun playMultiplayer() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
-    }
+        }
         val intent = Intent(this, LobbyActivity::class.java)
         startActivity(intent)
 
     }
 
-    fun playAI(){
+    fun playAI() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
@@ -110,7 +148,7 @@ class MenuActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun options(){
+    fun options() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
@@ -118,7 +156,7 @@ class MenuActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun logOut(){
+    fun logOut() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
@@ -127,9 +165,10 @@ class MenuActivity : AppCompatActivity() {
         startActivity(toLogIn)
     }
 
-    fun share(){
-        val content = ShareLinkContent.Builder().setContentUrl(Uri.parse("https://www.facebook.com/AndroidChess-592467867902828/")).
-            setQuote("Join me on AndroidChess").build()
+    fun share() {
+        val content = ShareLinkContent.Builder()
+            .setContentUrl(Uri.parse("https://www.facebook.com/AndroidChess-592467867902828/"))
+            .setQuote("Join me on AndroidChess").build()
         ShareDialog(this).show(content)
     }
 }

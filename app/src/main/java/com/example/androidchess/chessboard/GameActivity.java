@@ -40,6 +40,8 @@ public class GameActivity extends AppCompatActivity {
     int fullMoveCounter;
     public static String winner;
     String winCondition;
+    ChessClock blackClock;
+    ChessClock whiteClock;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
 
     @Override
@@ -64,7 +66,7 @@ public class GameActivity extends AppCompatActivity {
         kingPos[1] = 4;
 
         resetAttackedSquares();
-        for (int i=0; i<kingAttacker.length; i++) {
+        for (int i = 0; i < kingAttacker.length; i++) {
             kingAttacker[i] = false;
         }
         resetPossibleMoves();
@@ -78,6 +80,18 @@ public class GameActivity extends AppCompatActivity {
         ImageView boardImg = findViewById(R.id.boardImg);
         boardImg.getLayoutParams().width = width;
         boardImg.getLayoutParams().height = width;
+
+        if (TimerInfo.INSTANCE.getEnable()) {
+            TextView bt = findViewById(R.id.timerblack);
+            TextView wt = findViewById(R.id.timerwhite);
+
+            bt.setVisibility(View.VISIBLE);
+            wt.setVisibility(View.VISIBLE);
+
+            blackClock = new ChessClock(0, 5, 0, bt);
+            whiteClock = new ChessClock(0, 5, 0, wt);
+
+        }
 
         board.setAdapter(imageAdapter);
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -96,7 +110,7 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
-                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())){
+                } else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())) {
                     makeRandomComputerMove();
                 }
             }
@@ -111,7 +125,7 @@ public class GameActivity extends AppCompatActivity {
         if (winner.equals("w")) {
             ((TextView) findViewById(R.id.winnerString)).setText("White wins");
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName()+"\n"+Double.toString(User.INSTANCE.getElo()));
+            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
 
             // TODO set elo difference with elo calculation
             // replace 12 with elo function
@@ -119,8 +133,7 @@ public class GameActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
             ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
             ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
-        }
-        else {
+        } else {
             ((TextView) findViewById(R.id.winnerString)).setText("black wins");
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
 
@@ -141,7 +154,6 @@ public class GameActivity extends AppCompatActivity {
         else
             return false;
     }
-
 
 
     int swapCounter = 0;
@@ -181,7 +193,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
             if (getFilename(firstPos).charAt(0) == 'k') {
-                switch(firstPos) {
+                switch (firstPos) {
                     case 4:
                         // black king
                         kingMoved[1] = true;
@@ -193,7 +205,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
             if (getFilename(firstPos).charAt(0) == 'k') {
-                switch(firstPos) {
+                switch (firstPos) {
                     case 4:
                         // black king
                         kingMoved[1] = true;
@@ -210,10 +222,13 @@ public class GameActivity extends AppCompatActivity {
                 imageAdapter.pieceIds[position] = R.drawable.ts;
 
                 if (getFilename(firstPos).charAt(0) == 'p') {
-
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
-                        promotionUI(firstPos);
-                        promotionPos = position;
+                        if (GameMode.INSTANCE.getMode().equals("AI") && getFilename(firstPos).charAt(1) == 'b') {
+                            imageAdapter.pieceIds[firstPos] = R.drawable.qb;
+                        } else {
+                            promotionUI(firstPos);
+                            promotionPos = position;
+                        }
                     }
                 }
 
@@ -260,15 +275,14 @@ public class GameActivity extends AppCompatActivity {
 
                 // castling check
                 if (getFilename(firstPos).charAt(0) == 'k') {
-                    int difference = firstPos-position;
+                    int difference = firstPos - position;
 
                     // castle with left rook
                     if (difference == 2) {
                         if (getFilename(firstPos).charAt(1) == 'w') {
                             swap(56, 59);
                             rookMoved[2] = true;
-                        }
-                        else {
+                        } else {
                             swap(0, 3);
                             rookMoved[0] = true;
                         }
@@ -280,14 +294,13 @@ public class GameActivity extends AppCompatActivity {
                         if (getFilename(firstPos).charAt(1) == 'w') {
                             swap(63, 61);
                             rookMoved[3] = true;
-                        }
-                        else {
+                        } else {
                             swap(7, 5);
                             rookMoved[1] = true;
                         }
                     }
                     findKings();
-                 }
+                }
 
                 swap(firstPos, position);
 
@@ -333,6 +346,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     int promotionPos;
+
     public void promotionUI(int position) {
         findViewById(R.id.promotionblock).setVisibility(View.VISIBLE);
         ImageView imgBishop = findViewById(R.id.imgbishop);
@@ -348,8 +362,7 @@ public class GameActivity extends AppCompatActivity {
             imgKnight.setTag("nw");
             imgQueen.setImageResource(R.drawable.qw);
             imgQueen.setTag("qw");
-        }
-        else {
+        } else {
             imgBishop.setImageResource(R.drawable.bb);
             imgBishop.setTag("bb");
             imgRook.setImageResource(R.drawable.rb);
@@ -394,10 +407,21 @@ public class GameActivity extends AppCompatActivity {
         }
         findViewById(R.id.promotionblock).setVisibility(View.GONE);
         refreshViews();
+
+        king.check();
+
+        king.checkMateCheck();
+
+        if (checkMate) {
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+        }
     }
 
+
     public static void findKings() {
-        int k = 0;
         for (int i = 0; i < 64; i++) {
             if (getFilename(i).charAt(0) == 'k') {
                 if (getFilename(i).charAt(1) == 'w') {
@@ -523,11 +547,25 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void swapTurn() {
-        if (whiteTurn)
+        if (whiteTurn) {
             whiteTurn = false;
-        else {
+            if (TimerInfo.INSTANCE.getEnable()) {
+                whiteClock.stopTimer();
+                if (!blackClock.isAlive()) {
+                    blackClock = new ChessClock((TextView) findViewById(R.id.timerblack));
+                }
+                blackClock.startTimer();
+            }
+        } else {
             whiteTurn = true;
             fullMoveCounter++;
+            if (TimerInfo.INSTANCE.getEnable()) {
+                blackClock.stopTimer();
+                if (!whiteClock.isAlive()) {
+                    whiteClock = new ChessClock((TextView) findViewById(R.id.timerwhite));
+                }
+                whiteClock.startTimer();
+            }
         }
     }
 
@@ -625,16 +663,16 @@ public class GameActivity extends AppCompatActivity {
         // board positions | who's turn | castle options | en passant | half move counter | full move counter
 
         boolean stop = false;
-        int charPos=0;
-        int gridPos=0;
-        while(!stop) {
+        int charPos = 0;
+        int gridPos = 0;
+        while (!stop) {
             /*
             System.out.println("-----------");
             System.out.println("c:"+fenNotation.charAt(charPos));
             System.out.println("n:"+gridPos);
             */
 
-            switch(fenNotation.charAt(charPos)) {
+            switch (fenNotation.charAt(charPos)) {
                 case 'q':
                     imageAdapter.pieceIds[gridPos] = R.drawable.qb;
                     break;
@@ -678,7 +716,7 @@ public class GameActivity extends AppCompatActivity {
                     gridPos--;
                     break;
                 default:
-                    for (int t=0; t<Character.getNumericValue(fenNotation.charAt(charPos)); t++) {
+                    for (int t = 0; t < Character.getNumericValue(fenNotation.charAt(charPos)); t++) {
                         /*
                         System.out.println("t:"+t);
                         System.out.println("n:"+gridPos);
@@ -738,7 +776,7 @@ public class GameActivity extends AppCompatActivity {
             int x = fenNotation.charAt(charPos);
             int y = fenNotation.charAt(++charPos);
             x = x - 48;
-            enPassantPos = x+(8*y);
+            enPassantPos = x + (8 * y);
         }
 
         //setBoardGameState("pppppppp/kqbbnnrr/8/8/8/8/PPPPPPPP/RNBQKBNR b - e6 0 2");
@@ -789,6 +827,7 @@ public class GameActivity extends AppCompatActivity {
         rookMoved = new boolean[4];
         fullMoveCounter = 1;
         winner = "";
+        winCondition = "";
     }
 
     public void printArray(ImageView[] pieces, String tag) {
@@ -839,10 +878,10 @@ public class GameActivity extends AppCompatActivity {
         return fileName;
     }
 
-    void makeRandomComputerMove(){
+    void makeRandomComputerMove() {
         ArrayList<Integer> myPieces = new ArrayList<>();
-        for (int i = 0; i < 64; i++){
-            if(getFilename(i).charAt(1) == 'b'){
+        for (int i = 0; i < 64; i++) {
+            if (getFilename(i).charAt(1) == 'b') {
                 myPieces.add(i);
             }
         }
@@ -853,7 +892,7 @@ public class GameActivity extends AppCompatActivity {
         int chosenPiece;
         do {
             chosenPiece = myPieces.get(random.nextInt(myPieces.size()));
-            myPieces.remove((Object)chosenPiece);
+            myPieces.remove((Object) chosenPiece);
             switch (getFilename(chosenPiece).charAt(0)) {
                 // queen
                 case 'q':
@@ -886,7 +925,7 @@ public class GameActivity extends AppCompatActivity {
             System.out.println("Which is a: " + getFilename(chosenPiece).charAt(0));
             System.out.println("Possible moves");
 
-            for (int move: moves){
+            for (int move : moves) {
                 System.out.println(move);
             }
         } while (moves.size() == 0);

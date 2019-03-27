@@ -16,7 +16,7 @@ public class Rook {
 
         if (getFilename(currentPos).charAt(1) == 'w' && whiteTurn) {
             colorRookCheck(position, 'w');
-        } else if (getFilename(currentPos).charAt(1) == 'b' && !whiteTurn){
+        } else if (getFilename(currentPos).charAt(1) == 'b' && !whiteTurn) {
             colorRookCheck(position, 'b');
         }
     }
@@ -35,13 +35,14 @@ public class Rook {
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 //Log.d("obstacle i+ n", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             i++;
 
@@ -55,13 +56,14 @@ public class Rook {
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 //Log.d("obstacle i n+", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             n++;
 
@@ -75,14 +77,15 @@ public class Rook {
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 //Log.d("obstacle i n-", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
                 //Log.d("boolean", "true" + i+n);
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             n--;
 
@@ -95,13 +98,14 @@ public class Rook {
             currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
                 //Log.d("obstacle i- n", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             i--;
         }
@@ -113,8 +117,7 @@ public class Rook {
                 attackedSquares[currentPos] = 1;
             else if (attackedSquares[currentPos] == 2)
                 attackedSquares[currentPos] = 3;
-        }
-        else {
+        } else {
             if (attackedSquares[currentPos] == 0)
                 attackedSquares[currentPos] = 2;
             else if (attackedSquares[currentPos] == 1)
@@ -200,14 +203,13 @@ public class Rook {
             if (sy > ky) {
                 y--;
                 while (y >= 0 && y > ky) {
-                    kingAttacker[x+(8*y)] = true;
+                    kingAttacker[x + (8 * y)] = true;
                     y--;
                 }
-            }
-            else {
+            } else {
                 y++;
                 while (y < 8 && y < ky) {
-                    kingAttacker[x+(8*y)] = true;
+                    kingAttacker[x + (8 * y)] = true;
                     y++;
                 }
             }
@@ -217,21 +219,20 @@ public class Rook {
             if (sx > kx) {
                 x--;
                 while (x >= 0 && x > kx) {
-                    kingAttacker[x+(8*y)] = true;
+                    kingAttacker[x + (8 * y)] = true;
                     x--;
                 }
-            }
-            else {
+            } else {
                 x++;
                 while (x < 8 && x < kx) {
-                    kingAttacker[x+(8*y)] = true;
+                    kingAttacker[x + (8 * y)] = true;
                     x++;
                 }
             }
         }
     }
 
-    public ArrayList<Integer> getPossibleMoves(int position, char color){
+    public ArrayList<Integer> getPossibleMoves(int position, char color) {
         ArrayList<Integer> theMoves = new ArrayList<>();
         int x = position % 8;
         int y = position / 8;
