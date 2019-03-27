@@ -1,24 +1,36 @@
 package com.example.androidchess.chessboard;
 
+import android.graphics.Bitmap;
+import android.media.AudioAttributes;
+import android.media.SoundPool;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 import com.example.androidchess.GameMode;
+import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
+import com.example.androidchess.Utils;
 import com.example.androidchess.chessboard.pieces.*;
+import com.facebook.share.model.ShareContent;
+import com.facebook.share.model.ShareMediaContent;
+import com.facebook.share.model.SharePhoto;
+import com.facebook.share.model.SharePhotoContent;
+import com.facebook.share.widget.ShareDialog;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
+
+    //Objects of AsyncTask subclasses set to null
+    protected UserWinsTask mAuthWinTask = null;
+    protected UserLossesTask mAuthLoseTask = null;
+
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -39,8 +51,11 @@ public class GameActivity extends AppCompatActivity {
     public static boolean[] rookMoved;
     private SecureRandom random = new SecureRandom();
     int fullMoveCounter;
+    boolean popup = false;
     public static String winner;
     public static String winCondition;
+    private SoundPool soundPool;
+    private int moveSound, checkMateSound;
     ChessClock blackClock;
     ChessClock whiteClock;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
@@ -93,6 +108,19 @@ public class GameActivity extends AppCompatActivity {
             whiteClock = new ChessClock(0, 5, 0, wt, this);
 
         }
+
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(6)
+                .setAudioAttributes(audioAttributes)
+                .build();
+
+        moveSound = soundPool.load(this, R.raw.move, 1);
+        checkMateSound = soundPool.load(this, R.raw.gameover, 1);
 
         board.setAdapter(imageAdapter);
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -159,30 +187,87 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void endGame() {
+        soundPool.play(checkMateSound, (float)1.0, (float)1.0, 0, 0, (float)1.0);
         System.out.println("endGame()");
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
 
-        if (winner.equals("w")) {
-            ((TextView) findViewById(R.id.winnerString)).setText("White wins");
-            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+        ((ImageButton) findViewById(R.id.shareButton)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                shareImage();
+            }
+        });
 
-            // TODO set elo difference with elo calculation
-            // replace 12 with elo function
-            ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
-            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+        if (!GameMode.INSTANCE.equals("online")) {
+            // LOCAL OR VS AI
+            if (winner.equals("w")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+                ((TextView) findViewById(R.id.elotextblack)).setText("Computer\n1337");
+                // TODO set elo difference with elo calculation
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+
+            } else if (winner.equals("b")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            } else {
+                ((TextView) findViewById(R.id.winnerString)).setText("Draw");
+                ((TextView) findViewById(R.id.winCondition)).setText("Draw by stalemate");
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            }
         } else {
-            ((TextView) findViewById(R.id.winnerString)).setText("black wins");
-            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+            //ONLINE GAME
+            if (winner.equals("w")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
 
-            // replace 12 with elo function
-            ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
-            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                // TODO set elo difference with elo calculation
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+                mAuthWinTask = new UserWinsTask();
+            } else if (winner.equals("b")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            } else {
+                ((TextView) findViewById(R.id.winnerString)).setText("Draw");
+                ((TextView) findViewById(R.id.winCondition)).setText("Draw by stalemate");
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+            }
         }
 
     }
@@ -195,7 +280,6 @@ public class GameActivity extends AppCompatActivity {
         else
             return false;
     }
-
 
     int swapCounter = 0;
     int firstPos;
@@ -267,6 +351,7 @@ public class GameActivity extends AppCompatActivity {
                         if (GameMode.INSTANCE.getMode().equals("AI") && getFilename(firstPos).charAt(1) == 'b') {
                             imageAdapter.pieceIds[firstPos] = R.drawable.qb;
                         } else {
+                            popup = true;
                             promotionUI(firstPos);
                             promotionPos = position;
                         }
@@ -309,6 +394,7 @@ public class GameActivity extends AppCompatActivity {
 
                     // promotionUI check
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        popup = true;
                         promotionUI(firstPos);
                         promotionPos = position;
                     }
@@ -448,6 +534,10 @@ public class GameActivity extends AppCompatActivity {
         }
         findViewById(R.id.promotionblock).setVisibility(View.GONE);
         refreshViews();
+        popup = false;
+        if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
+            makeRandomComputerMove();
+        }
 
         king.check();
 
@@ -969,14 +1059,150 @@ public class GameActivity extends AppCompatActivity {
             for (int move : moves) {
                 System.out.println(move);
             }
-        } while (moves.size() == 0);
+        } while (moves.size() == 0 && myPieces.size() > 0);
 
-        //king.check();
+        if (myPieces.size() == 0 && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)) {
+            //checkmate
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+            return;
+        } else if (myPieces.size() == 0 && !(attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)) {
+            winCondition = "draw";
+            endGame();
+            return;
+        }
+        king.check();
         move(chosenPiece);
-        //king.check();
+        king.checkMateCheck();
+        king.check();
         move(moves.get(random.nextInt(moves.size())));
-        //king.checkMateCheck();
+        king.checkMateCheck();
+    }
+
+    private void checkDraw(boolean isWhite) {
+        ArrayList<Integer> pieces = new ArrayList<>();
+        char color = isWhite ? 'w' : 'b';
+        for (int i = 0; i < 64; i++) {
+            if (getFilename(i).charAt(1) == color) {
+                pieces.add(i);
+            }
+        }
+
+        do {
+            int chosenPiece = pieces.get(0);
+            pieces.remove(0);
+            ArrayList moves = new ArrayList();
+            switch (getFilename(chosenPiece).charAt(0)) {
+                // queen
+                case 'q':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    moves.addAll(rook.getPossibleMoves(chosenPiece, 'b'));
+                    break;
+                // king
+                case 'k':
+                    moves = king.getPossibleMoves(chosenPiece, 'b');
+                    printAttackedSquares();
+                    break;
+                // rook
+                case 'r':
+                    moves = rook.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // knight
+                case 'n':
+                    moves = knight.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // bishop
+                case 'b':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // pawn
+                case 'p':
+                    moves = pawn.getPossibleMoves(chosenPiece, 'b');
+                    break;
+            }
+            if (!moves.isEmpty()) {
+                return;
+            }
+        } while (pieces.size() > 0);
+        endGame();
+    }
+
+    private void shareImage(){
+        Bitmap image = Utils.takeScreenShot(this);
+        SharePhoto photo = new SharePhoto.Builder().setBitmap(image).build();
+
+        ShareContent shareContent = new ShareMediaContent.Builder().addMedium(photo).build();
+        new ShareDialog(this).show(shareContent, ShareDialog.Mode.AUTOMATIC);
+
+    }
+
+    class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Database.getInstance().addWins();
+            Database.getInstance().getElo(User.INSTANCE.getName());
+            //Need to figure what to do about second user
+            String secondUser = "second user";
+            Database.getInstance().updateElo(User.INSTANCE.getName(), secondUser, User.INSTANCE.getElo());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthWinTask = null;
+            if (success) {
+                //finish();
+                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
+                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                //startActivity(returnTo);
+            } else {
+                // Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthWinTask = null;
+        }
+    }
+
+    class UserLossesTask extends AsyncTask<Void, Void, Boolean> {
+
+        UserLossesTask() {
+
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Database.getInstance().addLosses();
+            //String holder
+            String secondUser = "second user";
+            Database.getInstance().updateElo(secondUser, User.INSTANCE.getName(), User.INSTANCE.getElo());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthLoseTask = null;
+            if (success) {
+                //finish();
+                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
+                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                //startActivity(returnTo);
+            } else {
+                //Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthLoseTask = null;
+        }
     }
 
 }
-
