@@ -1,6 +1,5 @@
 package com.example.androidchess.chessboard;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -11,7 +10,6 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.androidchess.GameMode;
-import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
 import com.example.androidchess.chessboard.pieces.*;
@@ -20,11 +18,6 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
-
-    //Objects of AsyncTask subclasses set to null
-    protected UserWinsTask mAuthWinTask = null;
-    protected UserLossesTask mAuthLoseTask = null;
-
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -115,58 +108,27 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
 
-        if (!GameMode.INSTANCE.equals("online")) {
+        if (winner.equals("w")) {
+            ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName()+"\n"+Double.toString(User.INSTANCE.getElo()));
 
-            if (winner.equals("w")) {
-                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
-                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
-                ((TextView) findViewById(R.id.elotextblack)).setText(0);
-                // TODO set elo difference with elo calculation
-                // replace 12 with elo function
-                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 0);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 0);
-                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+            // TODO set elo difference with elo calculation
+            // replace 12 with elo function
+            ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
+            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+        }
+        else {
+            ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
 
-            } else if (winner.equals("b")) {
-                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
-                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-
-                // replace 12 with elo function
-                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
-                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
-                mAuthWinTask = new UserWinsTask();
-            }
-        }else{
-
-            if (winner.equals("w")) {
-                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
-                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
-
-                // TODO set elo difference with elo calculation
-                // replace 12 with elo function
-                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
-                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
-                mAuthWinTask = new UserWinsTask();
-            } else if (winner.equals("b")) {
-                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
-                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-
-                // replace 12 with elo function
-                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
-                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
-                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
-                mAuthWinTask = new UserWinsTask();
-            } else {
-                mAuthLoseTask = new UserLossesTask();
-            }
+            // replace 12 with elo function
+            ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
+            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
         }
 
     }
@@ -934,73 +896,6 @@ public class GameActivity extends AppCompatActivity {
         //king.check();
         move(moves.get(random.nextInt(moves.size())));
         //king.checkMateCheck();
-    }
-
-    class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
-
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Database.getInstance().addWins();
-            Database.getInstance().getElo(User.INSTANCE.getName());
-            //Need to figure what to do about second user
-            String secondUser = "second user";
-            Database.getInstance().updateElo(User.INSTANCE.getName(),secondUser,User.INSTANCE.getElo());
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            mAuthWinTask = null;
-            if (success) {
-                //finish();
-                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
-                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
-                //startActivity(returnTo);
-            } else {
-                // Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthWinTask= null;
-        }
-    }
-
-    class UserLossesTask extends AsyncTask<Void, Void, Boolean> {
-
-        UserLossesTask(){
-
-
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            Database.getInstance().addLosses();
-            //String holder
-            String secondUser = "second user";
-            Database.getInstance().updateElo(secondUser,User.INSTANCE.getName(),User.INSTANCE.getElo());
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(Boolean success) {
-            mAuthLoseTask = null;
-            if (success) {
-                //finish();
-                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
-                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
-                //startActivity(returnTo);
-            } else {
-                //Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthLoseTask = null;
-        }
     }
 
 }
