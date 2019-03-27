@@ -1,7 +1,10 @@
 package com.example.androidchess.chessboard;
 
 import android.os.Handler;
+import android.support.constraint.ConstraintLayout;
+import android.view.View;
 import android.widget.TextView;
+import com.example.androidchess.R;
 
 import static com.example.androidchess.chessboard.GameActivity.*;
 
@@ -9,13 +12,15 @@ import java.util.ArrayList;
 
 public class ChessClock extends Thread {
 
+    private GameActivity game;
     private int sec;
     private int min;
     private int hour;
     private TextView txt;
     private Handler handler = new Handler();
 
-    public ChessClock(int sec, int min, int hour, TextView txt) {
+    public ChessClock(int sec, int min, int hour, TextView txt, GameActivity game) {
+        this.game = game;
         this.sec = sec;
         this.min = min;
         this.hour = hour;
@@ -23,7 +28,8 @@ public class ChessClock extends Thread {
         updateTime();
     }
 
-    public ChessClock(TextView txt) {
+    public ChessClock(TextView txt, GameActivity game) {
+        this.game = game;
         this.txt = txt;
         getTime();
     }
@@ -36,18 +42,35 @@ public class ChessClock extends Thread {
     public void run() {
         try {
             for (int i = (sec + (60 * min) + (60 * 60 * hour)); i > 0; i--) {
-                this.sleep(1000);
+                System.out.println(i);
+                this.sleep(10);
                 sec--;
-                if (sec <= 0) {
-                    min--;
+                if (sec < 0) {
+                    if (min > 0)
+                        min--;
                     sec = 59;
                 }
-                if (min <= 0) {
-                    hour--;
+                if (min < 0) {
+                    if (hour > 0)
+                        hour--;
                     min = 59;
                 }
                 updateTime();
             }
+            if (txt.getTag().toString().equals("white")) {
+                winner = "b";
+            }
+            else {
+                winner = "w";
+            }
+            winCondition = "timer running out";
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    game.endGame();
+                }
+            });
+
         } catch (InterruptedException ex) {
             ex.printStackTrace();
         }

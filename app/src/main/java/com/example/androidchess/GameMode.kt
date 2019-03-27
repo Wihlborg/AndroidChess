@@ -1,5 +1,7 @@
 package com.example.androidchess
 
- object GameMode{
+import com.example.androidchess.chessboard.GameActivity
+
+object GameMode{
      var mode: String =""
 }

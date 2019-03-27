@@ -1,6 +1,7 @@
 package com.example.androidchess.chessboard;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -39,7 +40,7 @@ public class GameActivity extends AppCompatActivity {
     private SecureRandom random = new SecureRandom();
     int fullMoveCounter;
     public static String winner;
-    String winCondition;
+    public static String winCondition;
     ChessClock blackClock;
     ChessClock whiteClock;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
@@ -84,12 +85,13 @@ public class GameActivity extends AppCompatActivity {
         if (TimerInfo.INSTANCE.getEnable()) {
             TextView bt = findViewById(R.id.timerblack);
             TextView wt = findViewById(R.id.timerwhite);
+            ConstraintLayout winContainer = findViewById(R.id.winContainer);
 
             bt.setVisibility(View.VISIBLE);
             wt.setVisibility(View.VISIBLE);
 
-            blackClock = new ChessClock(0, 5, 0, bt);
-            whiteClock = new ChessClock(0, 5, 0, wt);
+            blackClock = new ChessClock(0, 5, 0, bt, this);
+            whiteClock = new ChessClock(0, 5, 0, wt, this);
 
         }
 
@@ -552,7 +554,7 @@ public class GameActivity extends AppCompatActivity {
             if (TimerInfo.INSTANCE.getEnable()) {
                 whiteClock.stopTimer();
                 if (!blackClock.isAlive()) {
-                    blackClock = new ChessClock((TextView) findViewById(R.id.timerblack));
+                    blackClock = new ChessClock((TextView) findViewById(R.id.timerblack), this);
                 }
                 blackClock.startTimer();
             }
@@ -562,7 +564,7 @@ public class GameActivity extends AppCompatActivity {
             if (TimerInfo.INSTANCE.getEnable()) {
                 blackClock.stopTimer();
                 if (!whiteClock.isAlive()) {
-                    whiteClock = new ChessClock((TextView) findViewById(R.id.timerwhite));
+                    whiteClock = new ChessClock((TextView) findViewById(R.id.timerwhite), this);
                 }
                 whiteClock.startTimer();
             }
