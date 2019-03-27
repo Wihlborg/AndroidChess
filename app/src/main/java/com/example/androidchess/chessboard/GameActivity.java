@@ -178,7 +178,7 @@ public class GameActivity extends AppCompatActivity {
             Log.d("checkAttackedSquares", "checkmate");
             winCondition = "checkmate";
             endGame();
-        } else if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI && !fen.equals(getFenNotation())) {
+        } else if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI && !fen.equals(getFenNotation()) && !popup) {
             makeRandomComputerMove();
         }
     }
