@@ -37,6 +37,7 @@ public class GameActivity extends AppCompatActivity {
     public static int enPassantPos;
     public static boolean[] rookMoved;
     private SecureRandom random = new SecureRandom();
+    boolean popup = false;
     int fullMoveCounter;
     public static String winner;
     String winCondition;
@@ -90,13 +91,14 @@ public class GameActivity extends AppCompatActivity {
                 System.out.println(getFenNotation());
 
                 king.checkMateCheck();
+                checkDraw(whiteTurn);
 
                 if (checkMate) {
                     System.out.println("checkMate");
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
-                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())){
+                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation()) && !popup){
                     makeRandomComputerMove();
                 }
             }
@@ -120,9 +122,17 @@ public class GameActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
             ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
         }
-        else {
+        else if (winner.equals('b')){
             ((TextView) findViewById(R.id.winnerString)).setText("black wins");
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+            // replace 12 with elo function
+            ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
+            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+        } else {
+            ((TextView) findViewById(R.id.winnerString)).setText("Draw");
 
             // replace 12 with elo function
             ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
@@ -212,6 +222,7 @@ public class GameActivity extends AppCompatActivity {
                 if (getFilename(firstPos).charAt(0) == 'p') {
 
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        popup = true;
                         promotionUI(firstPos);
                         promotionPos = position;
                     }
@@ -253,6 +264,7 @@ public class GameActivity extends AppCompatActivity {
 
                     // promotionUI check
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        popup = true;
                         promotionUI(firstPos);
                         promotionPos = position;
                     }
@@ -394,6 +406,10 @@ public class GameActivity extends AppCompatActivity {
         }
         findViewById(R.id.promotionblock).setVisibility(View.GONE);
         refreshViews();
+        popup = false;
+        if (GameMode.INSTANCE.getMode() == "AI") {
+            makeRandomComputerMove();
+        }
     }
 
     public static void findKings() {
@@ -847,8 +863,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        king.check();
-
         ArrayList<Integer> moves = new ArrayList<>();
         int chosenPiece;
         do {
@@ -889,13 +903,75 @@ public class GameActivity extends AppCompatActivity {
             for (int move: moves){
                 System.out.println(move);
             }
-        } while (moves.size() == 0);
+        } while (moves.size() == 0 && myPieces.size() > 0);
 
-        //king.check();
+        if (myPieces.size() == 0 && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)){
+            //checkmate
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+            return;
+        } else if (myPieces.size() == 0 && !(attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)){
+            winCondition = "draw";
+            endGame();
+            return;
+        }
+
+        king.check();
         move(chosenPiece);
-        //king.check();
+        king.checkMateCheck();
+        king.check();
         move(moves.get(random.nextInt(moves.size())));
-        //king.checkMateCheck();
+        king.checkMateCheck();
+    }
+
+    private void checkDraw(boolean isWhite){
+        ArrayList<Integer> pieces = new ArrayList<>();
+        char color = isWhite ? 'w' : 'b';
+        for (int i = 0; i < 64; i++){
+            if(getFilename(i).charAt(1) == color){
+                pieces.add(i);
+            }
+        }
+
+        do {
+            int chosenPiece = pieces.get(0);
+            pieces.remove(0);
+            ArrayList moves = new ArrayList();
+            switch (getFilename(chosenPiece).charAt(0)) {
+                // queen
+                case 'q':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    moves.addAll(rook.getPossibleMoves(chosenPiece, 'b'));
+                    break;
+                // king
+                case 'k':
+                    moves = king.getPossibleMoves(chosenPiece, 'b');
+                    printAttackedSquares();
+                    break;
+                // rook
+                case 'r':
+                    moves = rook.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // knight
+                case 'n':
+                    moves = knight.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // bishop
+                case 'b':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // pawn
+                case 'p':
+                    moves = pawn.getPossibleMoves(chosenPiece, 'b');
+                    break;
+            }
+            if (!moves.isEmpty()){
+                return;
+            }
+        } while (pieces.size() > 0);
+            endGame();
     }
 
 }
