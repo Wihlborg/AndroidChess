@@ -1,5 +1,6 @@
 package com.example.androidchess.chessboard;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
@@ -10,6 +11,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.androidchess.GameMode;
+import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
 import com.example.androidchess.chessboard.pieces.*;
@@ -18,6 +20,11 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
+
+    //Objects of AsyncTask subclasses set to null
+    protected UserWinsTask mAuthWinTask = null;
+    protected UserLossesTask mAuthLoseTask = null;
+
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -38,6 +45,7 @@ public class GameActivity extends AppCompatActivity {
     public static boolean[] rookMoved;
     private SecureRandom random = new SecureRandom();
     int fullMoveCounter;
+    boolean popup = false;
     public static String winner;
     String winCondition;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
@@ -64,7 +72,7 @@ public class GameActivity extends AppCompatActivity {
         kingPos[1] = 4;
 
         resetAttackedSquares();
-        for (int i=0; i<kingAttacker.length; i++) {
+        for (int i = 0; i < kingAttacker.length; i++) {
             kingAttacker[i] = false;
         }
         resetPossibleMoves();
@@ -88,7 +96,7 @@ public class GameActivity extends AppCompatActivity {
 
                 move(position);
                 System.out.println(getFenNotation());
-
+                checkDraw(whiteTurn);
                 king.checkMateCheck();
 
                 if (checkMate) {
@@ -96,7 +104,7 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
-                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())){
+                } else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation()) && !popup) {
                     makeRandomComputerMove();
                 }
             }
@@ -108,27 +116,75 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
 
-        if (winner.equals("w")) {
-            ((TextView) findViewById(R.id.winnerString)).setText("White wins");
-            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName()+"\n"+Double.toString(User.INSTANCE.getElo()));
+        if (!GameMode.INSTANCE.equals("online")) {
+            // LOCAL OR VS AI
+            if (winner.equals("w")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+                ((TextView) findViewById(R.id.elotextblack)).setText(0);
+                // TODO set elo difference with elo calculation
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
 
-            // TODO set elo difference with elo calculation
-            // replace 12 with elo function
-            ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
-            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
-        }
-        else {
-            ((TextView) findViewById(R.id.winnerString)).setText("black wins");
-            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+            } else if (winner.equals("b")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
 
-            // replace 12 with elo function
-            ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
-            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            } else {
+                ((TextView) findViewById(R.id.winnerString)).setText("Draw");
+                ((TextView) findViewById(R.id.winCondition)).setText("Draw by stalemate");
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            }
+        } else {
+            //ONLINE GAME
+            if (winner.equals("w")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+
+                // TODO set elo difference with elo calculation
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+                mAuthWinTask = new UserWinsTask();
+            } else if (winner.equals("b")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            } else {
+                ((TextView) findViewById(R.id.winnerString)).setText("Draw");
+                ((TextView) findViewById(R.id.winCondition)).setText("Draw by stalemate");
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+            }
         }
 
     }
@@ -141,7 +197,6 @@ public class GameActivity extends AppCompatActivity {
         else
             return false;
     }
-
 
 
     int swapCounter = 0;
@@ -181,7 +236,7 @@ public class GameActivity extends AppCompatActivity {
             }
 
             if (getFilename(firstPos).charAt(0) == 'k') {
-                switch(firstPos) {
+                switch (firstPos) {
                     case 4:
                         // black king
                         kingMoved[1] = true;
@@ -193,7 +248,7 @@ public class GameActivity extends AppCompatActivity {
                 }
             }
             if (getFilename(firstPos).charAt(0) == 'k') {
-                switch(firstPos) {
+                switch (firstPos) {
                     case 4:
                         // black king
                         kingMoved[1] = true;
@@ -212,6 +267,7 @@ public class GameActivity extends AppCompatActivity {
                 if (getFilename(firstPos).charAt(0) == 'p') {
 
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        popup = true;
                         promotionUI(firstPos);
                         promotionPos = position;
                     }
@@ -253,6 +309,7 @@ public class GameActivity extends AppCompatActivity {
 
                     // promotionUI check
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        popup = true;
                         promotionUI(firstPos);
                         promotionPos = position;
                     }
@@ -260,15 +317,14 @@ public class GameActivity extends AppCompatActivity {
 
                 // castling check
                 if (getFilename(firstPos).charAt(0) == 'k') {
-                    int difference = firstPos-position;
+                    int difference = firstPos - position;
 
                     // castle with left rook
                     if (difference == 2) {
                         if (getFilename(firstPos).charAt(1) == 'w') {
                             swap(56, 59);
                             rookMoved[2] = true;
-                        }
-                        else {
+                        } else {
                             swap(0, 3);
                             rookMoved[0] = true;
                         }
@@ -280,14 +336,13 @@ public class GameActivity extends AppCompatActivity {
                         if (getFilename(firstPos).charAt(1) == 'w') {
                             swap(63, 61);
                             rookMoved[3] = true;
-                        }
-                        else {
+                        } else {
                             swap(7, 5);
                             rookMoved[1] = true;
                         }
                     }
                     findKings();
-                 }
+                }
 
                 swap(firstPos, position);
 
@@ -333,6 +388,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     int promotionPos;
+
     public void promotionUI(int position) {
         findViewById(R.id.promotionblock).setVisibility(View.VISIBLE);
         ImageView imgBishop = findViewById(R.id.imgbishop);
@@ -348,8 +404,7 @@ public class GameActivity extends AppCompatActivity {
             imgKnight.setTag("nw");
             imgQueen.setImageResource(R.drawable.qw);
             imgQueen.setTag("qw");
-        }
-        else {
+        } else {
             imgBishop.setImageResource(R.drawable.bb);
             imgBishop.setTag("bb");
             imgRook.setImageResource(R.drawable.rb);
@@ -394,6 +449,10 @@ public class GameActivity extends AppCompatActivity {
         }
         findViewById(R.id.promotionblock).setVisibility(View.GONE);
         refreshViews();
+        popup = false;
+        if (GameMode.INSTANCE.getMode() == "AI") {
+            makeRandomComputerMove();
+        }
     }
 
     public static void findKings() {
@@ -625,16 +684,16 @@ public class GameActivity extends AppCompatActivity {
         // board positions | who's turn | castle options | en passant | half move counter | full move counter
 
         boolean stop = false;
-        int charPos=0;
-        int gridPos=0;
-        while(!stop) {
+        int charPos = 0;
+        int gridPos = 0;
+        while (!stop) {
             /*
             System.out.println("-----------");
             System.out.println("c:"+fenNotation.charAt(charPos));
             System.out.println("n:"+gridPos);
             */
 
-            switch(fenNotation.charAt(charPos)) {
+            switch (fenNotation.charAt(charPos)) {
                 case 'q':
                     imageAdapter.pieceIds[gridPos] = R.drawable.qb;
                     break;
@@ -678,7 +737,7 @@ public class GameActivity extends AppCompatActivity {
                     gridPos--;
                     break;
                 default:
-                    for (int t=0; t<Character.getNumericValue(fenNotation.charAt(charPos)); t++) {
+                    for (int t = 0; t < Character.getNumericValue(fenNotation.charAt(charPos)); t++) {
                         /*
                         System.out.println("t:"+t);
                         System.out.println("n:"+gridPos);
@@ -738,7 +797,7 @@ public class GameActivity extends AppCompatActivity {
             int x = fenNotation.charAt(charPos);
             int y = fenNotation.charAt(++charPos);
             x = x - 48;
-            enPassantPos = x+(8*y);
+            enPassantPos = x + (8 * y);
         }
 
         //setBoardGameState("pppppppp/kqbbnnrr/8/8/8/8/PPPPPPPP/RNBQKBNR b - e6 0 2");
@@ -839,10 +898,10 @@ public class GameActivity extends AppCompatActivity {
         return fileName;
     }
 
-    void makeRandomComputerMove(){
+    void makeRandomComputerMove() {
         ArrayList<Integer> myPieces = new ArrayList<>();
-        for (int i = 0; i < 64; i++){
-            if(getFilename(i).charAt(1) == 'b'){
+        for (int i = 0; i < 64; i++) {
+            if (getFilename(i).charAt(1) == 'b') {
                 myPieces.add(i);
             }
         }
@@ -853,7 +912,7 @@ public class GameActivity extends AppCompatActivity {
         int chosenPiece;
         do {
             chosenPiece = myPieces.get(random.nextInt(myPieces.size()));
-            myPieces.remove((Object)chosenPiece);
+            myPieces.remove((Object) chosenPiece);
             switch (getFilename(chosenPiece).charAt(0)) {
                 // queen
                 case 'q':
@@ -886,17 +945,144 @@ public class GameActivity extends AppCompatActivity {
             System.out.println("Which is a: " + getFilename(chosenPiece).charAt(0));
             System.out.println("Possible moves");
 
-            for (int move: moves){
+            for (int move : moves) {
                 System.out.println(move);
             }
-        } while (moves.size() == 0);
+        } while (moves.size() == 0 && myPieces.size() > 0);
 
-        //king.check();
+        if (myPieces.size() == 0 && (attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)) {
+            //checkmate
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+            return;
+        } else if (myPieces.size() == 0 && !(attackedSquares[kingPos[1]] == 1 || attackedSquares[kingPos[1]] == 3)) {
+            winCondition = "draw";
+            endGame();
+            return;
+        }
+        king.check();
         move(chosenPiece);
-        //king.check();
+        king.checkMateCheck();
+        king.check();
         move(moves.get(random.nextInt(moves.size())));
-        //king.checkMateCheck();
+        king.checkMateCheck();
+    }
+
+    private void checkDraw(boolean isWhite) {
+        ArrayList<Integer> pieces = new ArrayList<>();
+        char color = isWhite ? 'w' : 'b';
+        for (int i = 0; i < 64; i++) {
+            if (getFilename(i).charAt(1) == color) {
+                pieces.add(i);
+            }
+        }
+
+        do {
+            int chosenPiece = pieces.get(0);
+            pieces.remove(0);
+            ArrayList moves = new ArrayList();
+            switch (getFilename(chosenPiece).charAt(0)) {
+                // queen
+                case 'q':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    moves.addAll(rook.getPossibleMoves(chosenPiece, 'b'));
+                    break;
+                // king
+                case 'k':
+                    moves = king.getPossibleMoves(chosenPiece, 'b');
+                    printAttackedSquares();
+                    break;
+                // rook
+                case 'r':
+                    moves = rook.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // knight
+                case 'n':
+                    moves = knight.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // bishop
+                case 'b':
+                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    break;
+                // pawn
+                case 'p':
+                    moves = pawn.getPossibleMoves(chosenPiece, 'b');
+                    break;
+            }
+            if (!moves.isEmpty()) {
+                return;
+            }
+        } while (pieces.size() > 0);
+        endGame();
+    }
+
+    class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Database.getInstance().addWins();
+            Database.getInstance().getElo(User.INSTANCE.getName());
+            //Need to figure what to do about second user
+            String secondUser = "second user";
+            Database.getInstance().updateElo(User.INSTANCE.getName(), secondUser, User.INSTANCE.getElo());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthWinTask = null;
+            if (success) {
+                //finish();
+                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
+                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                //startActivity(returnTo);
+            } else {
+                // Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthWinTask = null;
+        }
+    }
+
+    class UserLossesTask extends AsyncTask<Void, Void, Boolean> {
+
+        UserLossesTask() {
+
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Database.getInstance().addLosses();
+            //String holder
+            String secondUser = "second user";
+            Database.getInstance().updateElo(secondUser, User.INSTANCE.getName(), User.INSTANCE.getElo());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthLoseTask = null;
+            if (success) {
+                //finish();
+                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
+                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                //startActivity(returnTo);
+            } else {
+                //Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthLoseTask = null;
+        }
     }
 
 }
-
