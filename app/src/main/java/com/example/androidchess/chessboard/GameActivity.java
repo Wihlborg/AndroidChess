@@ -130,6 +130,7 @@ public class GameActivity extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                String fen = getFenNotation();
                 if (GameMode.INSTANCE.getMode() == GameMode.Mode.Online) {
                     onlineMove(position);
                 }
@@ -139,7 +140,7 @@ public class GameActivity extends AppCompatActivity {
                 else {
                     vsAIMove(position);
                 }
-                if (User.INSTANCE.getSounds())
+                if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
             }
         });
