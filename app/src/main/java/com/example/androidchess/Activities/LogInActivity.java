@@ -55,6 +55,7 @@ public class LogInActivity  extends AppCompatActivity{
         SharedPreferences sp = getSharedPreferences("chesspref", Context.MODE_PRIVATE);
         mUsername.setText(sp.getString("username", ""));
         mPasswordView.setText(sp.getString("password", ""));
+        User.INSTANCE.setSounds(sp.getBoolean("sounds", true));
 
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

@@ -139,6 +139,8 @@ public class GameActivity extends AppCompatActivity {
                 else {
                     vsAIMove(position);
                 }
+                if (User.INSTANCE.getSounds())
+                soundPool.play(moveSound, 1, 1, 2, 0, 1);
             }
         });
     }
@@ -191,6 +193,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void endGame() {
+        if (User.INSTANCE.getSounds())
         soundPool.play(checkMateSound, (float)1.0, (float)1.0, 0, 0, (float)1.0);
         System.out.println("endGame()");
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
