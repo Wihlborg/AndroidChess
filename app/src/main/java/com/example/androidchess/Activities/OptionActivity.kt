@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.Switch
+import android.widget.TextView
 import com.example.androidchess.*
 
 class OptionActivity : AppCompatActivity() {
@@ -17,9 +18,7 @@ class OptionActivity : AppCompatActivity() {
 
         supportActionBar!!.hide()
 
-        val applyButton = findViewById<Button>(R.id.applyButton)
-        val updateButton = findViewById<Button>(R.id.options_password_button)
-        applyButton.setOnClickListener { saveOptions() }
+        val updateButton = findViewById<ImageButton>(R.id.options_password_button)
         updateButton.setOnClickListener { val goTo = Intent(this,NewPasswordActivity::class.java)
          startActivity(goTo)}
 
@@ -29,6 +28,11 @@ class OptionActivity : AppCompatActivity() {
         /*
         Put future switches here
          */
+    }
+
+    override fun onBackPressed() {
+        saveOptions()
+        super.onBackPressed()
     }
 
     fun saveOptions(){

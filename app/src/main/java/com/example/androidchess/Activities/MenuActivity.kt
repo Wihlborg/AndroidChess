@@ -124,7 +124,7 @@ class MenuActivity : AppCompatActivity() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
-        GameMode.mode = "Local"
+        GameMode.mode = GameMode.Mode.Local
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
     }
@@ -143,7 +143,7 @@ class MenuActivity : AppCompatActivity() {
         if (User.sounds) {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
-        GameMode.mode = "AI"
+        GameMode.mode = GameMode.Mode.AI
         val intent = Intent(this, GameActivity::class.java)
         startActivity(intent)
     }

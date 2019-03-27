@@ -85,7 +85,6 @@ public class GameActivity extends AppCompatActivity {
         if (TimerInfo.INSTANCE.getEnable()) {
             TextView bt = findViewById(R.id.timerblack);
             TextView wt = findViewById(R.id.timerwhite);
-            ConstraintLayout winContainer = findViewById(R.id.winContainer);
 
             bt.setVisibility(View.VISIBLE);
             wt.setVisibility(View.VISIBLE);
@@ -99,24 +98,64 @@ public class GameActivity extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                String fen = getFenNotation();
-                king.check();
-
-                move(position);
-                System.out.println(getFenNotation());
-
-                king.checkMateCheck();
-
-                if (checkMate) {
-                    System.out.println("checkMate");
-                    Log.d("checkAttackedSquares", "checkmate");
-                    winCondition = "checkmate";
-                    endGame();
-                } else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())) {
-                    makeRandomComputerMove();
+                if (GameMode.INSTANCE.getMode() == GameMode.Mode.Online) {
+                    onlineMove(position);
+                }
+                else if (GameMode.INSTANCE.getMode() == GameMode.Mode.Local){
+                    localMove(position);
+                }
+                else {
+                    vsAIMove(position);
                 }
             }
         });
+    }
+
+    public void basicMove(int position) {
+        king.check();
+
+        move(position);
+        System.out.println(getFenNotation());
+
+        king.checkMateCheck();
+    }
+
+    public void onlineMove(int position) {
+        if (GameMode.INSTANCE.getPlayer() == GameMode.Player.pOne && whiteTurn) {
+            basicMove(position);
+        }
+        else if(GameMode.INSTANCE.getPlayer() == GameMode.Player.pTwo && !whiteTurn) {
+            basicMove(position);
+        }
+        if (checkMate) {
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+        }
+    }
+
+    public void vsAIMove(int position) {
+        String fen = getFenNotation();
+        basicMove(position);
+        if (checkMate) {
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+        } else if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI && !fen.equals(getFenNotation())) {
+            makeRandomComputerMove();
+        }
+    }
+
+    public void localMove(int position) {
+        basicMove(position);
+        if (checkMate) {
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+        }
     }
 
     public void endGame() {

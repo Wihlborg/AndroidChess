@@ -43,7 +43,7 @@ public class ChessClock extends Thread {
         try {
             for (int i = (sec + (60 * min) + (60 * 60 * hour)); i > 0; i--) {
                 System.out.println(i);
-                this.sleep(10);
+                this.sleep(1000);
                 sec--;
                 if (sec < 0) {
                     if (min > 0)

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 import com.example.androidchess.Database.Database;
@@ -26,11 +27,14 @@ public class NewPasswordActivity extends AppCompatActivity {
     //UI
     private LinearLayout mLayoutNew;
     protected Button mSendButton;
-    protected Button mReturnButton;
-    private TextInputEditText mPassword;
-    private TextInputEditText mPasswordConfirm;
+    private EditText mPassword;
+    private EditText mPasswordConfirm;
 
-
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        super.onBackPressed();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,7 +47,6 @@ public class NewPasswordActivity extends AppCompatActivity {
         mPassword = findViewById(R.id.new_password_text);
         mSendButton = findViewById(R.id.send_update_button);
         mPasswordConfirm = findViewById(R.id.new_password_text2);
-        mReturnButton = findViewById(R.id.return_from_newpass);
 
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,15 +61,6 @@ public class NewPasswordActivity extends AppCompatActivity {
             }
         });
 
-        mReturnButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-                Intent returnToLogin = new Intent(NewPasswordActivity.this, MenuActivity.class);
-                startActivity(returnToLogin);
-
-            }
-        });
     }
 
     public void recoverPassword(){

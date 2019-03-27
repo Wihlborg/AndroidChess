@@ -1,7 +1,8 @@
 package com.example.androidchess
 
-import com.example.androidchess.chessboard.GameActivity
-
 object GameMode{
-     var mode: String =""
+     enum class Player { pOne, pTwo }
+     var player: Player = Player.pOne
+     enum class Mode { AI,Local,Online }
+     var mode: Mode = Mode.Local
 }
