@@ -81,7 +81,7 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         val layout = findViewById<ConstraintLayout>(R.id.multiplayerlayout)
-
+        returnMethod()
         if (layout.visibility == View.VISIBLE) {
             layout.visibility = View.GONE
             val localLayout = findViewById<ConstraintLayout>(R.id.localwifi)
@@ -161,6 +161,10 @@ class MenuActivity : AppCompatActivity() {
             soundPool.play(clickSound, 1.0F, 1.0F, 0, 0, 1.0F)
         }
         finish()
+        returnMethod()
+    }
+
+    fun returnMethod(){
         val toLogIn = Intent(this, LogInActivity::class.java)
         startActivity(toLogIn)
     }
