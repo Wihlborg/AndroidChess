@@ -1,15 +1,18 @@
 package com.example.androidchess.chessboard;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
-import com.example.androidchess.GameMode;
+import android.widget.*;
+import com.example.androidchess.Activities.ForgotActivity;
+import com.example.androidchess.Activities.LogInActivity;
+import com.example.androidchess.Activities.MenuActivity;
+import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
 import com.example.androidchess.chessboard.pieces.*;
@@ -18,6 +21,11 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 
 public class GameActivity extends AppCompatActivity {
+
+    //Objects of AsyncTask subclasses set to null
+    protected UserWinsTask mAuthWinTask = null;
+    protected UserLossesTask mAuthLoseTask = null;
+
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -96,7 +104,7 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
-                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())){
+                }else if (!fen.equals(getFenNotation())){
                     makeRandomComputerMove();
                 }
             }
@@ -119,8 +127,9 @@ public class GameActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
             ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
             ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+            mAuthWinTask = new UserWinsTask();
         }
-        else {
+        else if (winner.equals("b")){
             ((TextView) findViewById(R.id.winnerString)).setText("black wins");
             ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
 
@@ -129,6 +138,9 @@ public class GameActivity extends AppCompatActivity {
             ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
             ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
             ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+            mAuthWinTask = new UserWinsTask();
+        }else{
+            mAuthLoseTask = new UserLossesTask();
         }
 
     }
@@ -208,14 +220,6 @@ public class GameActivity extends AppCompatActivity {
             // checks if first piece has different name than the second clicked piece and if its not a empty piece
             if (getFilename(firstPos).charAt(1) != getFilename(position).charAt(1) && !getFilename(position).equals("ts")) {
                 imageAdapter.pieceIds[position] = R.drawable.ts;
-
-                if (getFilename(firstPos).charAt(0) == 'p') {
-
-                    if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
-                        promotionUI(firstPos);
-                        promotionPos = position;
-                    }
-                }
 
                 swap(firstPos, position);
 
@@ -847,8 +851,6 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
-        king.check();
-
         ArrayList<Integer> moves = new ArrayList<>();
         int chosenPiece;
         do {
@@ -863,7 +865,6 @@ public class GameActivity extends AppCompatActivity {
                 // king
                 case 'k':
                     moves = king.getPossibleMoves(chosenPiece, 'b');
-                    printAttackedSquares();
                     break;
                 // rook
                 case 'r':
@@ -896,6 +897,74 @@ public class GameActivity extends AppCompatActivity {
         //king.check();
         move(moves.get(random.nextInt(moves.size())));
         //king.checkMateCheck();
+    }
+
+
+    class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
+
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Database.getInstance().addWins();
+            Database.getInstance().getElo(User.INSTANCE.getName());
+            //Need to figure what to do about second user
+            String secondUser = "second user";
+            Database.getInstance().updateElo(User.INSTANCE.getName(),secondUser,User.INSTANCE.getElo());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthWinTask = null;
+            if (success) {
+                //finish();
+                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
+                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                //startActivity(returnTo);
+            } else {
+               // Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthWinTask= null;
+        }
+    }
+
+    class UserLossesTask extends AsyncTask<Void, Void, Boolean> {
+
+        UserLossesTask(){
+
+
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            Database.getInstance().addLosses();
+            //String holder
+            String secondUser = "second user";
+            Database.getInstance().updateElo(secondUser,User.INSTANCE.getName(),User.INSTANCE.getElo());
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean success) {
+            mAuthLoseTask = null;
+            if (success) {
+                //finish();
+                //Intent returnTo = new Intent(GameActivity.this, MenuActivity.class);
+                //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
+                //startActivity(returnTo);
+            } else {
+                //Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthLoseTask = null;
+        }
     }
 
 }
