@@ -63,8 +63,10 @@ public class GameActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         this.finish();
-        blackClock.stopTimer();
-        whiteClock.stopTimer();
+        if (blackClock != null)
+            blackClock.stopTimer();
+        if (whiteClock != null)
+            whiteClock.stopTimer();
         super.onBackPressed();
     }
 
