@@ -1,17 +1,16 @@
 package com.example.androidchess.chessboard;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
-import android.widget.*;
-import com.example.androidchess.Activities.ForgotActivity;
-import com.example.androidchess.Activities.LogInActivity;
-import com.example.androidchess.Activities.MenuActivity;
+import android.widget.AdapterView;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.example.androidchess.GameMode;
 import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 import com.example.androidchess.User;
@@ -104,7 +103,7 @@ public class GameActivity extends AppCompatActivity {
                     Log.d("checkAttackedSquares", "checkmate");
                     winCondition = "checkmate";
                     endGame();
-                }else if (!fen.equals(getFenNotation())){
+                }else if (GameMode.INSTANCE.getMode() == "AI" && !fen.equals(getFenNotation())){
                     makeRandomComputerMove();
                 }
             }
@@ -116,31 +115,58 @@ public class GameActivity extends AppCompatActivity {
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
 
-        if (winner.equals("w")) {
-            ((TextView) findViewById(R.id.winnerString)).setText("White wins");
-            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-            ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName()+"\n"+Double.toString(User.INSTANCE.getElo()));
+        if (!GameMode.INSTANCE.equals("online")) {
 
-            // TODO set elo difference with elo calculation
-            // replace 12 with elo function
-            ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
-            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
-            mAuthWinTask = new UserWinsTask();
-        }
-        else if (winner.equals("b")){
-            ((TextView) findViewById(R.id.winnerString)).setText("black wins");
-            ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+            if (winner.equals("w")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+                ((TextView) findViewById(R.id.elotextblack)).setText(0);
+                // TODO set elo difference with elo calculation
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
 
-            // replace 12 with elo function
-            ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
-            ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
-            ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
-            mAuthWinTask = new UserWinsTask();
+            } else if (winner.equals("b")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            }
         }else{
-            mAuthLoseTask = new UserLossesTask();
+
+            if (winner.equals("w")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("White wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+
+                // TODO set elo difference with elo calculation
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("+" + 12);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("-" + 12);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFF00CC00);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFFEE0000);
+                mAuthWinTask = new UserWinsTask();
+            } else if (winner.equals("b")) {
+                ((TextView) findViewById(R.id.winnerString)).setText("black wins");
+                ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
+
+                // replace 12 with elo function
+                ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 12);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 12);
+                ((TextView) findViewById(R.id.elodifferencewhite)).setTextColor(0xFFEE0000);
+                ((TextView) findViewById(R.id.elodifferenceblack)).setTextColor(0xFF00CC00);
+                mAuthWinTask = new UserWinsTask();
+            } else {
+                mAuthLoseTask = new UserLossesTask();
+            }
         }
 
     }
@@ -220,6 +246,14 @@ public class GameActivity extends AppCompatActivity {
             // checks if first piece has different name than the second clicked piece and if its not a empty piece
             if (getFilename(firstPos).charAt(1) != getFilename(position).charAt(1) && !getFilename(position).equals("ts")) {
                 imageAdapter.pieceIds[position] = R.drawable.ts;
+
+                if (getFilename(firstPos).charAt(0) == 'p') {
+
+                    if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
+                        promotionUI(firstPos);
+                        promotionPos = position;
+                    }
+                }
 
                 swap(firstPos, position);
 
@@ -851,6 +885,8 @@ public class GameActivity extends AppCompatActivity {
             }
         }
 
+        king.check();
+
         ArrayList<Integer> moves = new ArrayList<>();
         int chosenPiece;
         do {
@@ -865,6 +901,7 @@ public class GameActivity extends AppCompatActivity {
                 // king
                 case 'k':
                     moves = king.getPossibleMoves(chosenPiece, 'b');
+                    printAttackedSquares();
                     break;
                 // rook
                 case 'r':
@@ -899,7 +936,6 @@ public class GameActivity extends AppCompatActivity {
         //king.checkMateCheck();
     }
 
-
     class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
 
 
@@ -922,7 +958,7 @@ public class GameActivity extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(),"Recovery success", Toast.LENGTH_SHORT).show();
                 //startActivity(returnTo);
             } else {
-               // Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getApplicationContext(),"Recovery failed", Toast.LENGTH_SHORT).show();
             }
         }
 
