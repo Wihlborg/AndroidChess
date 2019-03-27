@@ -162,7 +162,7 @@
     <android.support.constraint.ConstraintLayout
             android:clickable="true"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" android:id="@+id/mutliplayerlayout" android:visibility="gone">
+            android:layout_height="match_parent" android:id="@+id/multiplayerlayout" android:visibility="gone">
 
         <android.support.constraint.ConstraintLayout
                 android:background="@drawable/multiplayeroption"
@@ -170,7 +170,66 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
+                app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/timeroption"
+                android:visibility="gone">
+
+            <ImageButton
+                    android:layout_width="70dp"
+                    android:background="@android:color/transparent"
+                    android:layout_height="70dp" app:srcCompat="@drawable/ic_timer_black_24dp"
+                    android:id="@+id/timerbutton" android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/timertxt"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="@+id/view3"/>
+            <ImageButton
+                    android:layout_width="70dp"
+                    android:background="@android:color/transparent"
+                    android:layout_height="70dp" app:srcCompat="@drawable/ic_timer_off_black_24dp"
+                    android:id="@+id/classicbutton"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/view3" android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toTopOf="@+id/classictxt" android:layout_marginTop="16dp"/>
+            <TextView
+                    android:text="timer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:id="@+id/timertxt" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="16dp" android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toStartOf="@+id/view3"
+                    android:layout_marginEnd="16dp"/>
+            <TextView
+                    android:text="classic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:id="@+id/classictxt"
+                    android:layout_marginBottom="16dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/view3" android:layout_marginStart="16dp"
+                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"/>
+            <View
+                    android:layout_width="1dp"
+                    android:layout_height="0dp"
+                    android:id="@+id/view3" android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+            />
+
+
+        </android.support.constraint.ConstraintLayout>
+        <android.support.constraint.ConstraintLayout
+                android:background="@drawable/multiplayeroption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" android:id="@+id/localwifi"
+                android:visibility="visible">
 
             <ImageButton
                     android:layout_width="70dp"

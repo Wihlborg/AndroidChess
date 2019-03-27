@@ -33,7 +33,8 @@ public class Pawn {
                     obstacle = true;
                 }
                 if (getFilename(currentPos).charAt(0) == 't') {
-                    possibleMoves[currentPos] = true;
+                    if (kingSafety(currentPos, position))
+                        possibleMoves[currentPos] = true;
                 }
                 n--;
             }
@@ -42,14 +43,16 @@ public class Pawn {
             currentPos = i + 8 * n;
             if (n >= 0 && i >= 0 && getFilename(currentPos).charAt(1) == 'b') {
                 getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                possibleMoves[currentPos] = true;
+                if (kingSafety(currentPos, position))
+                    possibleMoves[currentPos] = true;
             }
             i = x + 1;
             n = y - 1;
             currentPos = i + 8 * n;
             if (n >= 0 && i < 8 && getFilename(currentPos).charAt(1) == 'b') {
                 getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                possibleMoves[currentPos] = true;
+                if (kingSafety(currentPos, position))
+                    possibleMoves[currentPos] = true;
             }
         } else {
 
@@ -57,21 +60,24 @@ public class Pawn {
 
             // 1 step forward
             if (n >= 0 && getFilename(currentPos).charAt(0) == 't') {
-                possibleMoves[currentPos] = true;
+                if (kingSafety(currentPos, position))
+                    possibleMoves[currentPos] = true;
             }
             i = x - 1;
             n = y - 1;
             currentPos = i + 8 * n;
             if (n >= 0 && i >= 0 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
                 getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                possibleMoves[currentPos] = true;
+                if (kingSafety(currentPos, position))
+                    possibleMoves[currentPos] = true;
             }
             i = x + 1;
             n = y - 1;
             currentPos = i + 8 * n;
             if (n >= 0 && i < 8 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
                 getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                possibleMoves[currentPos] = true;
+                if (kingSafety(currentPos, position))
+                    possibleMoves[currentPos] = true;
             }
         }
     }

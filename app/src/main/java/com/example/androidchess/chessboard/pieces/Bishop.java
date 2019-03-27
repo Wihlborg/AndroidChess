@@ -33,13 +33,14 @@ public class Bishop {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
                 //Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             i++;
             n++;
@@ -57,13 +58,14 @@ public class Bishop {
 
             if (getFilename(currentPos).charAt(0) != 't') {
                 //Log.d("obstacle i- n-", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             i--;
             n--;
@@ -78,13 +80,14 @@ public class Bishop {
             if (getFilename(currentPos).charAt(0) != 't') {
 
                 //Log.d("obstacle i+ n-", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             i++;
             n--;
@@ -97,15 +100,15 @@ public class Bishop {
         while (i >= 0 && n < 8 && !obstacle) {
             int currentPos = i + 8 * n;
             if (getFilename(currentPos).charAt(0) != 't') {
-
                 //Log.d("obstacle i- n+", "true @" + i + n + ", " + getFilename(position));
-                if (getFilename(currentPos).charAt(1) != color)
-                    getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
                 obstacle = true;
             }
             if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
+                if (kingSafety(currentPos, position)) {
                     possibleMoves[currentPos] = true;
+                    if (getFilename(currentPos).charAt(0) != 't')
+                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                }
             }
             i--;
             n++;
@@ -241,7 +244,7 @@ public class Bishop {
         }
     }
 
-    public ArrayList<Integer> getPossibleMoves(int position, char color){
+    public ArrayList<Integer> getPossibleMoves(int position, char color) {
         ArrayList<Integer> theMoves = new ArrayList<>();
         int x = position % 8;
         int y = position / 8;

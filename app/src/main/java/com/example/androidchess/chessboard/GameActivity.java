@@ -48,6 +48,8 @@ public class GameActivity extends AppCompatActivity {
     boolean popup = false;
     public static String winner;
     String winCondition;
+    ChessClock blackClock;
+    ChessClock whiteClock;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
 
     @Override
@@ -86,6 +88,18 @@ public class GameActivity extends AppCompatActivity {
         ImageView boardImg = findViewById(R.id.boardImg);
         boardImg.getLayoutParams().width = width;
         boardImg.getLayoutParams().height = width;
+
+        if (TimerInfo.INSTANCE.getEnable()) {
+            TextView bt = findViewById(R.id.timerblack);
+            TextView wt = findViewById(R.id.timerwhite);
+
+            bt.setVisibility(View.VISIBLE);
+            wt.setVisibility(View.VISIBLE);
+
+            blackClock = new ChessClock(0, 5, 0, bt);
+            whiteClock = new ChessClock(0, 5, 0, wt);
+
+        }
 
         board.setAdapter(imageAdapter);
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -199,6 +213,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
+
     int swapCounter = 0;
     int firstPos;
 
@@ -267,9 +282,13 @@ public class GameActivity extends AppCompatActivity {
                 if (getFilename(firstPos).charAt(0) == 'p') {
 
                     if ((position / 8 == 0 && getFilename(firstPos).charAt(1) == 'w') || (position / 8 == 7 && getFilename(firstPos).charAt(1) == 'b')) {
-                        popup = true;
-                        promotionUI(firstPos);
-                        promotionPos = position;
+                        if (GameMode.INSTANCE.getMode().equals("AI") && getFilename(firstPos).charAt(1) == 'b') {
+                            imageAdapter.pieceIds[firstPos] = R.drawable.qb;
+                        } else {
+                            popup = true;
+                            promotionUI(firstPos);
+                            promotionPos = position;
+                        }
                     }
                 }
 
@@ -453,10 +472,21 @@ public class GameActivity extends AppCompatActivity {
         if (GameMode.INSTANCE.getMode() == "AI") {
             makeRandomComputerMove();
         }
+
+        king.check();
+
+        king.checkMateCheck();
+
+        if (checkMate) {
+            System.out.println("checkMate");
+            Log.d("checkAttackedSquares", "checkmate");
+            winCondition = "checkmate";
+            endGame();
+        }
     }
 
+
     public static void findKings() {
-        int k = 0;
         for (int i = 0; i < 64; i++) {
             if (getFilename(i).charAt(0) == 'k') {
                 if (getFilename(i).charAt(1) == 'w') {
@@ -582,11 +612,25 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void swapTurn() {
-        if (whiteTurn)
+        if (whiteTurn) {
             whiteTurn = false;
-        else {
+            if (TimerInfo.INSTANCE.getEnable()) {
+                whiteClock.stopTimer();
+                if (!blackClock.isAlive()) {
+                    blackClock = new ChessClock((TextView) findViewById(R.id.timerblack));
+                }
+                blackClock.startTimer();
+            }
+        } else {
             whiteTurn = true;
             fullMoveCounter++;
+            if (TimerInfo.INSTANCE.getEnable()) {
+                blackClock.stopTimer();
+                if (!whiteClock.isAlive()) {
+                    whiteClock = new ChessClock((TextView) findViewById(R.id.timerwhite));
+                }
+                whiteClock.startTimer();
+            }
         }
     }
 
@@ -848,6 +892,7 @@ public class GameActivity extends AppCompatActivity {
         rookMoved = new boolean[4];
         fullMoveCounter = 1;
         winner = "";
+        winCondition = "";
     }
 
     public void printArray(ImageView[] pieces, String tag) {
