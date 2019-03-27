@@ -10,10 +10,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Toast;
+import android.widget.*;
 import com.example.androidchess.Database.Database;
 import com.example.androidchess.R;
 
@@ -25,7 +22,7 @@ public class NewPasswordActivity extends AppCompatActivity {
     protected UserUpdatePassword mAuthTask = null;
 
     //UI
-    private LinearLayout mLayoutNew;
+    private RelativeLayout mLayoutNew;
     protected Button mSendButton;
     private EditText mPassword;
     private EditText mPasswordConfirm;
