@@ -33,8 +33,6 @@ public class GameActivity extends AppCompatActivity {
     protected UserWinsTask mAuthWinTask = null;
     protected UserLossesTask mAuthLoseTask = null;
 
-
-
     public static Rook rook = new Rook();
     public static Knight knight = new Knight();
     public static Pawn pawn = new Pawn();
@@ -62,7 +60,6 @@ public class GameActivity extends AppCompatActivity {
     private int moveSound, checkMateSound;
     ChessClock blackClock;
     ChessClock whiteClock;
-    WifiConnection wifi;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
 
 
@@ -159,6 +156,8 @@ public class GameActivity extends AppCompatActivity {
         move(position);
         //System.out.println(getFenNotation());
 
+        //System.out.println(getFenNotation());
+        checkDraw(whiteTurn);
         king.checkMateCheck();
     }
 
@@ -172,6 +171,7 @@ public class GameActivity extends AppCompatActivity {
         if (checkMate) {
             System.out.println("checkMate");
             Log.d("checkAttackedSquares", "checkmate");
+            winner = whiteTurn ? "b" : "w";
             winCondition = "checkmate";
             endGame();
         }
@@ -181,7 +181,9 @@ public class GameActivity extends AppCompatActivity {
     public void vsAIMove(int position) {
         String fen = getFenNotation();
         basicMove(position);
+        king.checkMateCheck();
         if (checkMate) {
+            winner = whiteTurn ? "b" : "w";
             System.out.println("checkMate");
             Log.d("checkAttackedSquares", "checkmate");
             winCondition = "checkmate";
@@ -207,6 +209,7 @@ public class GameActivity extends AppCompatActivity {
         System.out.println("endGame()");
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
+        System.out.println("Winner " + winner);
 
         ((ImageButton) findViewById(R.id.shareButton)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,7 +235,8 @@ public class GameActivity extends AppCompatActivity {
             } else if (winner.equals("b")) {
                 ((TextView) findViewById(R.id.winnerString)).setText("black wins");
                 ((TextView) findViewById(R.id.winCondition)).setText(User.INSTANCE.getName() + " wins by " + winCondition);
-
+                ((TextView) findViewById(R.id.elotxtwhite)).setText(User.INSTANCE.getName() + "\n" + Double.toString(User.INSTANCE.getElo()));
+                ((TextView) findViewById(R.id.elotextblack)).setText("Computer\n1337");
                 // replace 12 with elo function
                 ((TextView) findViewById(R.id.elodifferencewhite)).setText("-" + 0);
                 ((TextView) findViewById(R.id.elodifferenceblack)).setText("+" + 0);
@@ -1145,6 +1149,7 @@ public class GameActivity extends AppCompatActivity {
                 return;
             }
         } while (pieces.size() > 0);
+        winner = "d";
         endGame();
     }
 
