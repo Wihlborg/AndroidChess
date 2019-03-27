@@ -56,7 +56,6 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-                Toast.makeText(getApplicationContext(), "Returning to log in!", Toast.LENGTH_SHORT).show();
                 returnMethod();
             }
         });
