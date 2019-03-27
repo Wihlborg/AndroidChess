@@ -185,7 +185,6 @@ public class GameActivity extends AppCompatActivity {
             winCondition = "checkmate";
             endGame();
         }
-        WifiConnection.getInstance().send(getFenNotation());
     }
 
     public void vsAIMove(int position) {
@@ -400,6 +399,9 @@ public class GameActivity extends AppCompatActivity {
                 swapTurn();
                 resetAttackedSquares();
                 calcAttackedSquares();
+                if (GameMode.INSTANCE.getMode() == GameMode.Mode.Online) {
+                    WifiConnection.getInstance().send(getFenNotation());
+                }
             } else {
                 //Log.d("move", getFilename(firstPos) + ", " + getFilename(position));
 
@@ -481,6 +483,9 @@ public class GameActivity extends AppCompatActivity {
                         enPassantPos = (x + (8 * (sourceY - 1)));
                     else if ((sourceY - newY) == -2)
                         enPassantPos = (x + (8 * (sourceY + 1)));
+                }
+                if (GameMode.INSTANCE.getMode() == GameMode.Mode.Online) {
+                    WifiConnection.getInstance().send(getFenNotation());
                 }
             }
         } else {
