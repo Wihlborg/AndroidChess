@@ -154,7 +154,7 @@ public class GameActivity extends AppCompatActivity {
                 }
                 String fen = getFenNotation();
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
-                soundPool.play(moveSound, 1, 1, 2, 0, 1);
+                    soundPool.play(moveSound, 1, 1, 2, 0, 1);
             }
         });
 
@@ -167,8 +167,8 @@ public class GameActivity extends AppCompatActivity {
         //System.out.println(getFenNotation());
 
         //System.out.println(getFenNotation());
-        checkDraw(whiteTurn);
         king.checkMateCheck();
+        checkDraw(whiteTurn);
     }
 
     public void onlineMove(int position) {
@@ -1155,29 +1155,29 @@ public class GameActivity extends AppCompatActivity {
             switch (getFilename(chosenPiece).charAt(0)) {
                 // queen
                 case 'q':
-                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
-                    moves.addAll(rook.getPossibleMoves(chosenPiece, 'b'));
+                    moves = bishop.getPossibleMoves(chosenPiece, color);
+                    moves.addAll(rook.getPossibleMoves(chosenPiece, color));
                     break;
                 // king
                 case 'k':
-                    moves = king.getPossibleMoves(chosenPiece, 'b');
+                    moves = king.getPossibleMoves(chosenPiece, color);
                     printAttackedSquares();
                     break;
                 // rook
                 case 'r':
-                    moves = rook.getPossibleMoves(chosenPiece, 'b');
+                    moves = rook.getPossibleMoves(chosenPiece, color);
                     break;
                 // knight
                 case 'n':
-                    moves = knight.getPossibleMoves(chosenPiece, 'b');
+                    moves = knight.getPossibleMoves(chosenPiece, color);
                     break;
                 // bishop
                 case 'b':
-                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    moves = bishop.getPossibleMoves(chosenPiece, color);
                     break;
                 // pawn
                 case 'p':
-                    moves = pawn.getPossibleMoves(chosenPiece, 'b');
+                    moves = pawn.getPossibleMoves(chosenPiece, color);
                     break;
             }
             if (!moves.isEmpty()) {
