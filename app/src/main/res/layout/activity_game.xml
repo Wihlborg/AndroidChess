@@ -202,7 +202,7 @@
             android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/textview_shape"
+            android:background="@drawable/textview_shape2"
             android:id="@+id/timerblack" android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toTopOf="@+id/boardImg" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -214,7 +214,7 @@
             android:textSize="16dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/textview_shape"
+            android:background="@drawable/textview_shape2"
             android:id="@+id/timerwhite" android:layout_marginTop="16dp"
             app:layout_constraintTop_toBottomOf="@+id/board" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" android:visibility="gone" android:tag="white"/>
