@@ -26,6 +26,7 @@ import com.facebook.share.widget.ShareDialog;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -134,6 +135,7 @@ public class GameActivity extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                String fen = getFenNotation();
                 /*System.out.println("---------------");
                 //printChildren();
                 System.out.println("b: "+getFenNotation());
@@ -152,9 +154,21 @@ public class GameActivity extends AppCompatActivity {
                 else {
                     vsAIMove(position);
                 }
-                String fen = getFenNotation();
+
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
+
+                ArrayList<String> pieces = new ArrayList<>();
+                ArrayList<Integer> positions = new ArrayList<>();
+                for (int i = 0; i < 64; i++) {
+                    if (!getFilename(i).equals("ts")) {
+                        pieces.add(getFilename(i));
+                        positions.add(i);
+                    }
+                }
+                Toast toast = Toast.makeText(getApplicationContext(), Double.toString(BoardEvaluation.getEvaluation(pieces, positions)), Toast.LENGTH_SHORT);
+                toast.show();
+
             }
         });
 
@@ -1155,29 +1169,29 @@ public class GameActivity extends AppCompatActivity {
             switch (getFilename(chosenPiece).charAt(0)) {
                 // queen
                 case 'q':
-                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
-                    moves.addAll(rook.getPossibleMoves(chosenPiece, 'b'));
+                    moves = bishop.getPossibleMoves(chosenPiece, color);
+                    moves.addAll(rook.getPossibleMoves(chosenPiece, color));
                     break;
                 // king
                 case 'k':
-                    moves = king.getPossibleMoves(chosenPiece, 'b');
+                    moves = king.getPossibleMoves(chosenPiece, color);
                     printAttackedSquares();
                     break;
                 // rook
                 case 'r':
-                    moves = rook.getPossibleMoves(chosenPiece, 'b');
+                    moves = rook.getPossibleMoves(chosenPiece, color);
                     break;
                 // knight
                 case 'n':
-                    moves = knight.getPossibleMoves(chosenPiece, 'b');
+                    moves = knight.getPossibleMoves(chosenPiece, color);
                     break;
                 // bishop
                 case 'b':
-                    moves = bishop.getPossibleMoves(chosenPiece, 'b');
+                    moves = bishop.getPossibleMoves(chosenPiece, color);
                     break;
                 // pawn
                 case 'p':
-                    moves = pawn.getPossibleMoves(chosenPiece, 'b');
+                    moves = pawn.getPossibleMoves(chosenPiece, color);
                     break;
             }
             if (!moves.isEmpty()) {
