@@ -7,9 +7,9 @@ public class WifiConnection {
     private static WifiConnection wifiConnection;
 
 
-    public static MainActivity.ServerClass serverClass;
-    public static MainActivity.ClientClass clientClass;
-    public static MainActivity.SendReceive sendReceive;
+    public static LobbyActivity.ServerClass serverClass;
+    public static LobbyActivity.ClientClass clientClass;
+    public static LobbyActivity.SendReceive sendReceive;
     public static Handler handler;
 
     private WifiConnection() {
@@ -42,7 +42,7 @@ public class WifiConnection {
         }
     }
 
-    public void setWifiConnection(MainActivity.ServerClass serverClass, MainActivity.ClientClass clientClass, MainActivity.SendReceive sendReceive, Handler handler) {
+    public void setWifiConnection(LobbyActivity.ServerClass serverClass, LobbyActivity.ClientClass clientClass, LobbyActivity.SendReceive sendReceive, Handler handler) {
         this.serverClass = serverClass;
         this.clientClass = clientClass;
         this.sendReceive = sendReceive;

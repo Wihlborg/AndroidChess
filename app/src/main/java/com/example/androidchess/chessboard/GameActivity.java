@@ -26,7 +26,6 @@ import com.facebook.share.widget.ShareDialog;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -135,7 +134,6 @@ public class GameActivity extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                String fen = getFenNotation();
                 /*System.out.println("---------------");
                 //printChildren();
                 System.out.println("b: "+getFenNotation());
@@ -154,7 +152,7 @@ public class GameActivity extends AppCompatActivity {
                 else {
                     vsAIMove(position);
                 }
-
+                String fen = getFenNotation();
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
 
@@ -181,8 +179,8 @@ public class GameActivity extends AppCompatActivity {
         //System.out.println(getFenNotation());
 
         //System.out.println(getFenNotation());
-        checkDraw(whiteTurn);
         king.checkMateCheck();
+        checkDraw(whiteTurn);
     }
 
     public void onlineMove(int position) {
@@ -842,7 +840,7 @@ public class GameActivity extends AppCompatActivity {
         // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
         // board positions | who's turn | castle options | en passant | half move counter | full move counter
 
-        System.out.println("before calc"+fenNotation);
+        //System.out.println("before calc"+fenNotation);
 
         boolean stop = false;
         int charPos = 0;
@@ -914,8 +912,8 @@ public class GameActivity extends AppCompatActivity {
             gridPos++;
             //System.out.println("n++:"+gridPos);
         }
-        System.out.println("a board"+charPos);
-        System.out.println("dd"+fenNotation.charAt(charPos));
+        //System.out.println("a board"+charPos);
+        //System.out.println("dd"+fenNotation.charAt(charPos));
 
         if (fenNotation.charAt(charPos) == 'w')
             whiteTurn = true;
@@ -956,22 +954,22 @@ public class GameActivity extends AppCompatActivity {
         // rnbqkbnr/pppppppp/8/8/5P2/8/PPPPP1PP/RNBQKBNR b KQkq f6 0 1
         // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
-        System.out.println("innan fitta"+fenNotation.charAt(charPos));
+        //System.out.println("innan fitta"+fenNotation.charAt(charPos));
         if (fenNotation.charAt(charPos) == '-')
             enPassantPos = -1;
         else {
-            System.out.println("fitta"+Character.toString(fenNotation.charAt(charPos))+ "dsa"+charPos);
+            //System.out.println("fitta"+Character.toString(fenNotation.charAt(charPos))+ "dsa"+charPos);
             /*for (int i=(charPos-3); i <= (charPos+3); i++)
                 System.out.println("kkk "+i+": "+Character.toString(fenNotation.charAt(i)));*/
 
             int x = fenNotation.charAt(charPos);
             int y = Character.getNumericValue(fenNotation.charAt(++charPos));
-            System.out.println("x: "+x);
+            //System.out.println("x: "+x);
             x = x - 'a';
-            System.out.println("x: "+x);
-            System.out.println("y: "+y);
+            //System.out.println("x: "+x);
+            //System.out.println("y: "+y);
             enPassantPos = x + (8 * y);
-            System.out.println("inside setboard"+enPassantPos);
+            //System.out.println("inside setboard"+enPassantPos);
         }
 
         //setBoardGameState("pppppppp/kqbbnnrr/8/8/8/8/PPPPPPPP/RNBQKBNR b - e6 0 2");

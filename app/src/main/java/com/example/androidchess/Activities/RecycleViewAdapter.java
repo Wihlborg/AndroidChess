@@ -66,7 +66,7 @@ public class RecycleViewAdapter extends RecyclerView.Adapter<RecycleViewAdapter.
 
               if (mImageNames.get(position) == "Lobby 1") {
 
-              Intent intent = new Intent(view.getContext(), MainActivity.class);
+              Intent intent = new Intent(view.getContext(), LobbyActivity.class);
               view.getContext().startActivity(intent);
                                                            }
                                                        }
