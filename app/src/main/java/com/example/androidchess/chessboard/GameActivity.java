@@ -10,7 +10,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.*;
-import com.example.androidchess.Activities.MainActivity;
 import com.example.androidchess.Activities.WifiConnection;
 import com.example.androidchess.GameMode;
 import com.example.androidchess.Database.Database;
@@ -156,15 +155,11 @@ public class GameActivity extends AppCompatActivity {
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
 
-                ArrayList<String> pieces = new ArrayList<>();
-                ArrayList<Integer> positions = new ArrayList<>();
+                String[] board = new String[64];
                 for (int i = 0; i < 64; i++) {
-                    if (!getFilename(i).equals("ts")) {
-                        pieces.add(getFilename(i));
-                        positions.add(i);
-                    }
+                    board[i] = getFilename(i);
                 }
-                Toast toast = Toast.makeText(getApplicationContext(), Double.toString(BoardEvaluation.getEvaluation(pieces, positions)), Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), Double.toString(BoardEvaluation.getEvaluation(board)), Toast.LENGTH_SHORT);
                 toast.show();
 
             }

@@ -84,12 +84,12 @@ public class BoardEvaluation {
     Hashmaps är teoretiskt bättre men funkade inte som förväntat
     Bör ändras beroende på ändring av pos till 2d-array
      */
-    public static double getEvaluation(ArrayList<String> pieces, ArrayList<Integer> positions){
+    public static double getEvaluation(String[] pieces){
         double evaluation = 0;
-        for (int i = 0; i < pieces.size(); i++) {
-            boolean isWhite = pieces.get(i).charAt(1) == 'w';
-            int pos = positions.get(i);
-            switch (pieces.get(i).charAt(0)){
+        for (int i = 0; i < 64; i++) {
+            boolean isWhite = pieces[i].charAt(1) == 'w';
+            int pos = i;
+            switch (pieces[i].charAt(0)){
                 case 'q':
                     evaluation += isWhite ? QUEEN : -QUEEN;
 
