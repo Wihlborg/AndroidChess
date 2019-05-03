@@ -35,6 +35,7 @@
         <activity android:name=".Activities.MenuActivity"/>
         <activity
                 android:name=".chessboard.GameActivity"
+                android:screenOrientation="portrait"
                 android:noHistory="true"/>
         <activity android:name=".Activities.NewPasswordActivity"/>
 
