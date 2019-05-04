@@ -1,332 +1,199 @@
-package com.example.androidchess.chessboard.pieces;
+package com.example.androidchess.chessboard.Pieces;
 
+import android.graphics.Color;
 import com.example.androidchess.R;
+import com.example.androidchess.chessboard.*;
 
-import java.util.ArrayList;
 
-import static com.example.androidchess.chessboard.GameActivity.*;
-import static com.example.androidchess.chessboard.pieces.King.kingSafety;
+public class Bishop extends Piece {
 
-public class Bishop {
-
-    public void bishopCheck(int position) {
-        int x = position % 8;
-        int y = position / 8;
-        int currentPos = x + 8 * y;
-
-        if (getFilename(currentPos).charAt(1) == 'w' && whiteTurn) {
-            colorBishopCheck(position, 'w');
-        } else if (getFilename(currentPos).charAt(1) == 'b' && !whiteTurn) {
-            colorBishopCheck(position, 'b');
+    public Bishop(boolean isWhite) {
+        this.setWhite(isWhite);
+        if (isWhite) {
+            this.setID(R.drawable.bw);
+        }
+        else {
+            this.setID(R.drawable.bb);
         }
     }
 
-    public void colorBishopCheck(int position, char color) {
-        int x = position % 8;
-        int y = position / 8;
+    private boolean findPossibleMove(YX currentPos, YX sourcePos) {
+        boolean obstacle = false;
+        Board board = GameInfo.get().board;
+        // found a piece = cant search further in the same direction
+        if (board.getSquare(currentPos).hasPiece()) {
+            obstacle = true;
+            if ((this.isWhite() != board.getSquare(currentPos).getPiece().isWhite())) {
+                if (this.kingSafety(currentPos, sourcePos)) {
+                    GameInfo.get().possibleToMove(currentPos);
+                    board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#00FFFF"));
+                }
+            }
+        }
+        else {
+            if (this.kingSafety(currentPos, sourcePos)) {
+                GameInfo.get().possibleToMove(currentPos);
+            }
+        }
+        return obstacle;
+    }
+
+    private boolean calcAttackSquare(YX currentPos, YX sourcePos) {
+        boolean obstacle = false;
+        Board board = GameInfo.get().board;
+        // found a piece = cant search further in the same direction
+        if (board.getSquare(currentPos).hasPiece()) {
+            obstacle = true;
+            if ((this.isWhite() != board.getSquare(currentPos).getPiece().isWhite())) {
+                if (this.kingSafety(currentPos, sourcePos)) {
+                    this.setSquareAttackValue(currentPos);
+                }
+            }
+        }
+        else {
+            if (this.kingSafety(currentPos, sourcePos)) {
+                this.setSquareAttackValue(currentPos);
+            }
+        }
+        return obstacle;
+    }
+
+    @Override
+    public void calcPossibleMoves(YX sourcePos) {
+        int sourceY = sourcePos.y;
+        int sourceX = sourcePos.x;
 
         // diagonal towards bottom right
-        int i = x + 1;
-        int n = y + 1;
+        int y = sourceY + 1;
+        int x = sourceX + 1;
         boolean obstacle = false;
-        while (i < 8 && n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position)) {
-                    possibleMoves[currentPos] = true;
-                    if (getFilename(currentPos).charAt(0) != 't')
-                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                }
-            }
-            i++;
-            n++;
+        YX currentPos = new YX(y ,x);
+        while (x < 8 && y < 8 && !obstacle) {
+            currentPos.y = y;
+            currentPos.x = x;
 
-        }
+            obstacle = findPossibleMove(currentPos, sourcePos);
 
-        // diagonal towards top left
-        i = x - 1;
-        n = y - 1;
-        obstacle = false;
-        while (i >= 0 && n >= 0 && !obstacle) {
-
-            // position in array currently getting looked at
-            int currentPos = i + 8 * n;
-
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i- n-", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position)) {
-                    possibleMoves[currentPos] = true;
-                    if (getFilename(currentPos).charAt(0) != 't')
-                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                }
-            }
-            i--;
-            n--;
-        }
-
-        // diagonal towards top right
-        i = x + 1;
-        n = y - 1;
-        obstacle = false;
-        while (i < 8 && n >= 0 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-
-                //Log.d("obstacle i+ n-", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position)) {
-                    possibleMoves[currentPos] = true;
-                    if (getFilename(currentPos).charAt(0) != 't')
-                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                }
-            }
-            i++;
-            n--;
-        }
-
-        // diagonal toward bottom left
-        i = x - 1;
-        n = y + 1;
-        obstacle = false;
-        while (i >= 0 && n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i- n+", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position)) {
-                    possibleMoves[currentPos] = true;
-                    if (getFilename(currentPos).charAt(0) != 't')
-                        getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                }
-            }
-            i--;
-            n++;
-        }
-    }
-
-    public void setSquareValue(int currentPos, char color) {
-        if (color == 'w') {
-            if (attackedSquares[currentPos] == 0)
-                attackedSquares[currentPos] = 1;
-            else if (attackedSquares[currentPos] == 2)
-                attackedSquares[currentPos] = 3;
-        } else {
-            if (attackedSquares[currentPos] == 0)
-                attackedSquares[currentPos] = 2;
-            else if (attackedSquares[currentPos] == 1)
-                attackedSquares[currentPos] = 3;
-        }
-    }
-
-    public void setAttackingSquares(int position, char color) {
-        int x = position % 8;
-        int y = position / 8;
-
-        // diagonal towards bottom right
-        int i = x + 1;
-        int n = y + 1;
-        boolean obstacle = false;
-        while (i < 8 && n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            setSquareValue(currentPos, color);
-            i++;
-            n++;
-
-        }
-
-        // diagonal towards top left
-        i = x - 1;
-        n = y - 1;
-        obstacle = false;
-        while (i >= 0 && n >= 0 && !obstacle) {
-
-            // position in array currently getting looked at
-            int currentPos = i + 8 * n;
-
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i- n-", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            setSquareValue(currentPos, color);
-            i--;
-            n--;
-        }
-
-        // diagonal towards top right
-        i = x + 1;
-        n = y - 1;
-        obstacle = false;
-        while (i < 8 && n >= 0 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i+ n-", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            setSquareValue(currentPos, color);
-            i++;
-            n--;
-        }
-
-        // diagonal toward bottom left
-        i = x - 1;
-        n = y + 1;
-        obstacle = false;
-        while (i >= 0 && n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i- n+", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            setSquareValue(currentPos, color);
-            i--;
-            n++;
-        }
-    }
-
-    public void checkMateAttackSquares(int kingPos, int sourcePos) {
-        int kx = kingPos % 8;
-        int ky = kingPos / 8;
-
-        int sx = sourcePos % 8;
-        int sy = sourcePos / 8;
-
-        int x = sourcePos % 8;
-        int y = sourcePos / 8;
-        kingAttacker[x + (8 * y)] = true;
-
-        if (kx < sx && ky < sy) {
-            x--;
-            y--;
-            while (x >= 0 && y >= 0 && x > kx && y > ky) {
-                kingAttacker[x + (8 * y)] = true;
-                x--;
-                y--;
-            }
-        } else if (kx > sx && ky < sy) {
-            x++;
-            y--;
-            while (x < 8 && y >= 0 && x < kx && y > ky) {
-                kingAttacker[x + (8 * y)] = true;
-                x++;
-                y--;
-            }
-        } else if (kx > sx && ky > sy) {
             x++;
             y++;
-            while (x < 8 && y < 8 && x < kx && y < ky) {
-                kingAttacker[x + (8 * y)] = true;
-                x++;
-                y++;
-            }
-        } else if (kx < sx && ky > sy) {
-            x--;
-            y++;
-            while (x >= 0 && y < 8 && x > kx && y < ky) {
-                kingAttacker[x + (8 * y)] = true;
-                x--;
-                y++;
-            }
-        }
-    }
-
-    public ArrayList<Integer> getPossibleMoves(int position, char color) {
-        ArrayList<Integer> theMoves = new ArrayList<>();
-        int x = position % 8;
-        int y = position / 8;
-
-        // diagonal towards bottom right
-        int i = x + 1;
-        int n = y + 1;
-        boolean obstacle = false;
-        while (i < 8 && n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i+ n+", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
-                    theMoves.add(currentPos);
-            }
-            i++;
-            n++;
 
         }
 
         // diagonal towards top left
-        i = x - 1;
-        n = y - 1;
+        x = sourceX - 1;
+        y = sourceY - 1;
         obstacle = false;
-        while (i >= 0 && n >= 0 && !obstacle) {
+        while (x >= 0 && y >= 0 && !obstacle) {
 
             // position in array currently getting looked at
-            int currentPos = i + 8 * n;
+            currentPos.y = y;
+            currentPos.x = x;
 
-            if (getFilename(currentPos).charAt(0) != 't') {
-                //Log.d("obstacle i- n-", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
-                    theMoves.add(currentPos);
-            }
-            i--;
-            n--;
+            obstacle = findPossibleMove(currentPos, sourcePos);
+
+            x--;
+            y--;
         }
 
         // diagonal towards top right
-        i = x + 1;
-        n = y - 1;
+        x = sourceX + 1;
+        y = sourceY - 1;
         obstacle = false;
-        while (i < 8 && n >= 0 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
+        while (x < 8 && y >= 0 && !obstacle) {
+            currentPos.y = y;
+            currentPos.x = x;
 
-                //Log.d("obstacle i+ n-", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
-                    theMoves.add(currentPos);
-            }
-            i++;
-            n--;
+            obstacle = findPossibleMove(currentPos, sourcePos);
+
+            x++;
+            y--;
         }
 
-        // diagonal toward bottom left
-        i = x - 1;
-        n = y + 1;
+        // diagonal towards bottom left
+        x = sourceX - 1;
+        y = sourceY + 1;
         obstacle = false;
-        while (i >= 0 && n < 8 && !obstacle) {
-            int currentPos = i + 8 * n;
-            if (getFilename(currentPos).charAt(0) != 't') {
+        while (x >= 0 && y < 8 && !obstacle) {
+            currentPos.y = y;
+            currentPos.x = x;
 
-                //Log.d("obstacle i- n+", "true @" + i + n + ", " + getFilename(position));
-                obstacle = true;
-            }
-            if (getFilename(currentPos).charAt(1) != color) {
-                if (kingSafety(currentPos, position))
-                    theMoves.add(currentPos);
-            }
-            i--;
-            n++;
+            obstacle = findPossibleMove(currentPos, sourcePos);
+
+            x--;
+            y++;
         }
-        return theMoves;
     }
+
+    @Override
+    public void calcAttackedSquares(YX sourcePos) {
+        int sourceY = sourcePos.y;
+        int sourceX = sourcePos.x;
+
+        // diagonal towards bottom right
+        int y = sourceY + 1;
+        int x = sourceX + 1;
+        boolean obstacle = false;
+        YX currentPos = new YX(y ,x);
+        while (x < 8 && y < 8 && !obstacle) {
+            currentPos.y = y;
+            currentPos.x = x;
+
+            obstacle = calcAttackSquare(currentPos, sourcePos);
+
+            x++;
+            y++;
+
+        }
+
+        // diagonal towards top left
+        x = sourceX - 1;
+        y = sourceY - 1;
+        obstacle = false;
+        while (x >= 0 && y >= 0 && !obstacle) {
+
+            // position in array currently getting looked at
+            currentPos.y = y;
+            currentPos.x = x;
+
+            obstacle = calcAttackSquare(currentPos, sourcePos);
+
+            x--;
+            y--;
+        }
+
+        // diagonal towards top right
+        x = sourceX + 1;
+        y = sourceY - 1;
+        obstacle = false;
+        while (x < 8 && y >= 0 && !obstacle) {
+            currentPos.y = y;
+            currentPos.x = x;
+
+            obstacle = calcAttackSquare(currentPos, sourcePos);
+
+            x++;
+            y--;
+        }
+
+        // diagonal towards bottom left
+        x = sourceX - 1;
+        y = sourceY + 1;
+        obstacle = false;
+        while (x >= 0 && y < 8 && !obstacle) {
+            currentPos.y = y;
+            currentPos.x = x;
+
+            obstacle = calcAttackSquare(currentPos, sourcePos);
+
+            x--;
+            y++;
+        }
+    }
+
+    @Override
+    public void calcKingAttackingSquares() {
+
+    }
+
 
 }

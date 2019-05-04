@@ -1,353 +1,201 @@
-package com.example.androidchess.chessboard.pieces;
+package com.example.androidchess.chessboard.Pieces;
 
+import android.graphics.Color;
 import com.example.androidchess.R;
+import com.example.androidchess.chessboard.*;
 
-import java.util.ArrayList;
+public class Pawn extends Piece {
 
-import static com.example.androidchess.chessboard.GameActivity.*;
-import static com.example.androidchess.chessboard.pieces.King.kingSafety;
-
-public class Pawn {
-
-    public void pawnCheck(int position) {
-        if (getFilename(position).charAt(1) == 'w' && whiteTurn) {
-            pawnCheckWhite(position);
-        } else if (getFilename(position).charAt(1) == 'b' && !whiteTurn) {
-            pawnCheckBlack(position);
-        }
-    }
-
-    public void pawnCheckWhite(int position) {
-        int x = position % 8;
-        int y = position / 8;
-
-        int i = x;
-        int n = y - 1;
-        int currentPos;
-        if (y == 6) {
-            boolean obstacle = false;
-            while (n >= 4 && !obstacle) {
-                currentPos = i + 8 * n;
-                if (getFilename(currentPos).charAt(0) != 't') {
-
-                    obstacle = true;
-                }
-                if (getFilename(currentPos).charAt(0) == 't') {
-                    if (kingSafety(currentPos, position))
-                        possibleMoves[currentPos] = true;
-                }
-                n--;
-            }
-            i = x - 1;
-            n = y - 1;
-            currentPos = i + 8 * n;
-            if (n >= 0 && i >= 0 && getFilename(currentPos).charAt(1) == 'b') {
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-            }
-            i = x + 1;
-            n = y - 1;
-            currentPos = i + 8 * n;
-            if (n >= 0 && i < 8 && getFilename(currentPos).charAt(1) == 'b') {
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-            }
+    public Pawn(boolean isWhite) {
+        this.setWhite(isWhite);
+        if (isWhite) {
+            this.setID(R.drawable.pw);
         } else {
-
-            currentPos = i + 8 * n;
-
-            // 1 step forward
-            if (n >= 0 && getFilename(currentPos).charAt(0) == 't') {
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-            }
-            i = x - 1;
-            n = y - 1;
-            currentPos = i + 8 * n;
-            if (n >= 0 && i >= 0 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-            }
-            i = x + 1;
-            n = y - 1;
-            currentPos = i + 8 * n;
-            if (n >= 0 && i < 8 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-            }
+            this.setID(R.drawable.pb);
         }
     }
 
-    public void pawnCheckBlack(int position) {
-        int x = position % 8;
-        int y = position / 8;
+    @Override
+    public void calcPossibleMoves(YX sourcePos) {
 
-        int i = x;
-        int n = y + 1;
-        int currentPos;
-        if (y == 1) {
-            boolean obstacle = false;
-            while (n <= 3 && !obstacle) {
-                currentPos = i + 8 * n;
-                if (getFilename(currentPos).charAt(0) != 't') {
+        Board board = GameInfo.get().board;
 
-                    obstacle = true;
+        YX currentPos = new YX(0, 0);
+
+        // white pawn logic
+        if (this.isWhite()) {
+            // standing in default position possible to move more than 1 square
+            if (sourcePos.y == 1) {
+                boolean obstacle = false;
+                int y = sourcePos.y + 1;
+                // check for obstacles
+                while (y <= 3 && !obstacle) {
+                    currentPos.y = y;
+                    if (board.getSquare(currentPos).hasPiece()) {
+                        obstacle = true;
+                    } else {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                        }
+                    }
+                    y++;
                 }
-                if (getFilename(currentPos).charAt(0) == 't') {
-                    if (kingSafety(currentPos, position))
-                        possibleMoves[currentPos] = true;
+
+                currentPos.y = sourcePos.y + 1;
+                currentPos.x = sourcePos.x + 1;
+
+                if (currentPos.x < 8) {
+                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
                 }
-                n++;
-            }
-            i = x + 1;
-            n = y + 1;
-            currentPos = i + 8 * n;
-            if (n < 8 && i < 8 && getFilename(currentPos).charAt(1) == 'w') {
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-            }
-            i = x - 1;
-            n = y + 1;
-            currentPos = i + 8 * n;
-            if (n < 8 && i >= 0 && getFilename(currentPos).charAt(1) == 'w') {
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
-            }
-        } else {
-            currentPos = i + 8 * n;
-            if (n < 8 && getFilename(currentPos).charAt(0) == 't') {
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-            }
 
-            i = x + 1;
-            n = y + 1;
-            currentPos = i + 8 * n;
-            if (n < 8 && i < 8 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+                // Y value is the same
+                currentPos.x = sourcePos.x - 1;
+                if (currentPos.x >= 0) {
+                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
             }
-            i = x - 1;
-            n = y + 1;
-            currentPos = i + 8 * n;
-            if (n < 8 && i >= 0 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
-                if (kingSafety(currentPos, position))
-                    possibleMoves[currentPos] = true;
-                getCell(currentPos).setBackgroundResource(R.drawable.redbackground);
+            // possible moves from non starting position
+            else {
+
+                // check above
+                currentPos.y = sourcePos.y + 1;
+                currentPos.x = sourcePos.x;
+
+                if (currentPos.y < 8 && !board.getSquare(currentPos).hasPiece()) {
+                    if (kingSafety(currentPos, sourcePos)) {
+                        GameInfo.get().possibleToMove(currentPos);
+                    }
+                }
+
+                // check diagonal left
+                // Y value is the same
+                currentPos.x = sourcePos.x - 1;
+
+                if (currentPos.y < 8 && currentPos.x >= 0) {
+                    if (board.getSquare(currentPos).hasPiece()) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
+
+                // check diagonal right
+                // Y value is the same
+                currentPos.x = sourcePos.x + 1;
+
+                if (currentPos.y < 8 && currentPos.x < 8) {
+                    if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
+
             }
         }
-    }
-
-    public void setSquareValue(int currentPos, char color) {
-        if (color == 'w') {
-            if (attackedSquares[currentPos] == 0)
-                attackedSquares[currentPos] = 1;
-            else if (attackedSquares[currentPos] == 2)
-                attackedSquares[currentPos] = 3;
-        } else {
-            if (attackedSquares[currentPos] == 0)
-                attackedSquares[currentPos] = 2;
-            else if (attackedSquares[currentPos] == 1)
-                attackedSquares[currentPos] = 3;
-        }
-    }
-
-    public void setAttackedSqueres(int position) {
-
-        int x = position % 8;
-        int y = position / 8;
-
-        int i;
-        int n;
-        int currentPos;
-
-        // white pawn
-        if (getFilename(position).charAt(1) == 'w') {
-            i = x - 1;
-            n = y - 1;
-            currentPos = i + 8 * n;
-            if (n >= 0 && i >= 0) {
-                setSquareValue(currentPos, 'w');
-            }
-            i = x + 1;
-            n = y - 1;
-            currentPos = i + 8 * n;
-            if (n >= 0 && i < 8) {
-                setSquareValue(currentPos, 'w');
-            }
-        }
-
-        // black pawn
+        // black pawn logic
         else {
-            i = x + 1;
-            n = y + 1;
-            currentPos = i + 8 * n;
-            if (n < 8 && i < 8) {
-                setSquareValue(currentPos, 'b');
+            // standing in default position possible to move more than 1 square
+            if (sourcePos.y == 6) {
+                boolean obstacle = false;
+                int y = sourcePos.y - 1;
+                // check for obstacles
+                while (y >= 4 && !obstacle) {
+                    currentPos.y = y;
+                    if (board.getSquare(currentPos).hasPiece()) {
+                        obstacle = true;
+                    } else {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                        }
+                    }
+                    y--;
+                }
+
+                currentPos.y = sourcePos.y - 1;
+                currentPos.x = sourcePos.x + 1;
+
+                if (currentPos.x < 8) {
+                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
+
+                // Y value is the same
+                currentPos.x = sourcePos.x - 1;
+                if (currentPos.x >= 0) {
+                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
             }
-            i = x - 1;
-            n = y + 1;
-            currentPos = i + 8 * n;
-            if (n < 8 && i >= 0) {
-                setSquareValue(currentPos, 'b');
+            // possible move from non starting position
+            else {
+
+                currentPos.y = sourcePos.y - 1;
+                currentPos.x = sourcePos.x;
+
+                if (currentPos.y >= 0 && !board.getSquare(currentPos).hasPiece()) {
+                    if (kingSafety(currentPos, sourcePos)) {
+                        GameInfo.get().possibleToMove(currentPos);
+                    }
+                }
+
+                // check diagonal left
+                // Y value is the same
+                currentPos.x = sourcePos.x - 1;
+
+                if (currentPos.y >= 0 && currentPos.x >= 0) {
+                    if (board.getSquare(currentPos).hasPiece()) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
+
+                // check diagonal right
+                // Y value is the same
+                currentPos.x = sourcePos.x + 1;
+
+                if (currentPos.y >= 0 && currentPos.x < 8) {
+                    if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
+                        if (kingSafety(currentPos, sourcePos)) {
+                            GameInfo.get().possibleToMove(currentPos);
+                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                        }
+                    }
+                }
             }
         }
+
     }
 
-    public void checkMateAttackSquares(int kingPos, int sourcePos) {
-        int kx = kingPos % 8;
-        //int ky = kingPos / 8;
+    @Override
+    public void calcAttackedSquares(YX sourcePos) {
 
-        int sx = sourcePos % 8;
-        //int sy = sourcePos / 8;
-
-        int x = sourcePos % 8;
-        int y = sourcePos / 8;
-        kingAttacker[x + (8 * y)] = true;
-
-
-        String imgName = getFilename(sourcePos);
-
-        if (imgName.charAt(1) == 'w') {
-            y--;
-        } else {
-            y++;
-        }
-
-        if (kx < sx) {
-            x--;
-            kingAttacker[x + (8 * y)] = true;
-        } else {
-            x++;
-            kingAttacker[x + (8 * y)] = true;
-        }
     }
 
-    public ArrayList<Integer> getPossibleMoves(int position, char color) {
-        ArrayList<Integer> theMoves = new ArrayList<>();
-        if (color == 'w') {
+    @Override
+    public void calcKingAttackingSquares() {
 
-            int x = position % 8;
-            int y = position / 8;
-
-            int i = x;
-            int n = y - 1;
-            int currentPos;
-            if (y == 6) {
-                boolean obstacle = false;
-                while (n >= 4 && !obstacle) {
-                    currentPos = i + 8 * n;
-                    if (getFilename(currentPos).charAt(0) != 't') {
-
-                        obstacle = true;
-                    }
-                    if (getFilename(currentPos).charAt(0) == 't') {
-                        theMoves.add(currentPos);
-                    }
-                    n--;
-                }
-                i = x - 1;
-                n = y - 1;
-                currentPos = i + 8 * n;
-                if (n >= 0 && i >= 0 && getFilename(currentPos).charAt(1) == 'b') {
-                    theMoves.add(currentPos);
-                }
-                i = x + 1;
-                n = y - 1;
-                currentPos = i + 8 * n;
-                if (n >= 0 && i < 8 && getFilename(currentPos).charAt(1) == 'b') {
-                    theMoves.add(currentPos);
-                }
-            } else {
-
-                currentPos = i + 8 * n;
-
-                // 1 step forward
-                if (n >= 0 && getFilename(currentPos).charAt(0) == 't') {
-                    theMoves.add(currentPos);
-                }
-                i = x - 1;
-                n = y - 1;
-                currentPos = i + 8 * n;
-                if (n >= 0 && i >= 0 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
-                    theMoves.add(currentPos);
-                }
-                i = x + 1;
-                n = y - 1;
-                currentPos = i + 8 * n;
-                if (n >= 0 && i < 8 && (getFilename(currentPos).charAt(1) == 'b' || currentPos == enPassantPos)) {
-                    theMoves.add(currentPos);
-                }
-            }
-        } else if (color == 'b') {
-
-            int x = position % 8;
-            int y = position / 8;
-
-            int i = x;
-            int n = y + 1;
-            int currentPos;
-            if (y == 1) {
-                boolean obstacle = false;
-                while (n <= 3 && !obstacle) {
-                    currentPos = i + 8 * n;
-                    if (getFilename(currentPos).charAt(0) != 't') {
-
-                        obstacle = true;
-                    }
-                    if (getFilename(currentPos).charAt(0) == 't') {
-                        if (kingSafety(currentPos, position))
-                            theMoves.add(currentPos);
-                    }
-                    n++;
-                }
-                i = x + 1;
-                n = y + 1;
-                currentPos = i + 8 * n;
-                if (n < 8 && i < 8 && getFilename(currentPos).charAt(1) == 'w') {
-                    if (kingSafety(currentPos, position))
-                        theMoves.add(currentPos);
-                }
-                i = x - 1;
-                n = y + 1;
-                currentPos = i + 8 * n;
-                if (n < 8 && i >= 0 && getFilename(currentPos).charAt(1) == 'w') {
-                    if (kingSafety(currentPos, position))
-                        theMoves.add(currentPos);
-                }
-            } else {
-                currentPos = i + 8 * n;
-                if (n < 8 && getFilename(currentPos).charAt(0) == 't') {
-                    if (kingSafety(currentPos, position))
-                        theMoves.add(currentPos);
-                }
-
-                i = x + 1;
-                n = y + 1;
-                currentPos = i + 8 * n;
-                if (n < 8 && i < 8 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
-                    if (kingSafety(currentPos, position))
-                        theMoves.add(currentPos);
-                }
-                i = x - 1;
-                n = y + 1;
-                currentPos = i + 8 * n;
-                if (n < 8 && i >= 0 && (getFilename(currentPos).charAt(1) == 'w' || currentPos == enPassantPos)) {
-                    if (kingSafety(currentPos, position))
-                        theMoves.add(currentPos);
-                }
-
-
-            }
-        }
-        return theMoves;
     }
 }
-
