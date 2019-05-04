@@ -38,26 +38,6 @@ public class Bishop extends Piece {
         return obstacle;
     }
 
-    private boolean calcAttackSquare(YX currentPos, YX sourcePos) {
-        boolean obstacle = false;
-        Board board = GameInfo.get().board;
-        // found a piece = cant search further in the same direction
-        if (board.getSquare(currentPos).hasPiece()) {
-            obstacle = true;
-            if ((this.isWhite() != board.getSquare(currentPos).getPiece().isWhite())) {
-                if (this.kingSafety(currentPos, sourcePos)) {
-                    this.setSquareAttackValue(currentPos);
-                }
-            }
-        }
-        else {
-            if (this.kingSafety(currentPos, sourcePos)) {
-                this.setSquareAttackValue(currentPos);
-            }
-        }
-        return obstacle;
-    }
-
     @Override
     public void calcPossibleMoves(YX sourcePos) {
         int sourceY = sourcePos.y;
@@ -122,6 +102,26 @@ public class Bishop extends Piece {
             x--;
             y++;
         }
+    }
+
+    private boolean calcAttackSquare(YX currentPos, YX sourcePos) {
+        boolean obstacle = false;
+        Board board = GameInfo.get().board;
+        // found a piece = cant search further in the same direction
+        if (board.getSquare(currentPos).hasPiece()) {
+            obstacle = true;
+            if ((this.isWhite() != board.getSquare(currentPos).getPiece().isWhite())) {
+                if (this.kingSafety(currentPos, sourcePos)) {
+                    this.setSquareAttackValue(currentPos);
+                }
+            }
+        }
+        else {
+            if (this.kingSafety(currentPos, sourcePos)) {
+                this.setSquareAttackValue(currentPos);
+            }
+        }
+        return obstacle;
     }
 
     @Override
@@ -192,8 +192,6 @@ public class Bishop extends Piece {
 
     @Override
     public void calcKingAttackingSquares() {
-
+        
     }
-
-
 }

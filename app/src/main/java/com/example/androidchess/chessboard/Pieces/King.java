@@ -27,7 +27,7 @@ public class King extends Piece {
 
         if (board.getSquare(currentPos).hasPiece()) {
             // if the squares are different colors
-            if (board.getSquare(currentPos).getPiece().isWhite() != board.getSquare(sourcePos).getPiece().isWhite()) {
+            if (board.getSquare(currentPos).getPiece().isWhite() != this.isWhite()) {
                 if (kingSafety(currentPos, sourcePos)) {
                     GameInfo.get().possibleToMove(currentPos);
                     board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
@@ -50,7 +50,7 @@ public class King extends Piece {
         YX currentPos = new YX(y, x);
 
         // castle check white king
-        if (!GameInfo.get().kingMoved[0] && board.getSquare(sourcePos).getPiece().isWhite()) {
+        if (!GameInfo.get().kingMoved[0] && this.isWhite()) {
             boolean obstacle = false;
 
             // right white rook
@@ -92,7 +92,7 @@ public class King extends Piece {
         } // end castle check white king
 
         // castle check black king
-        else if (!GameInfo.get().kingMoved[1] && !board.getSquare(sourcePos).getPiece().isWhite()) {
+        else if (!GameInfo.get().kingMoved[1] && !this.isWhite()) {
             boolean obstacle = false;
             x = sourcePos.x;
             // right black rook

@@ -19,7 +19,7 @@ public class Knight extends Piece {
         Board board = GameInfo.get().board;
 
         if (board.getSquare(currentPos).hasPiece()) {
-            if (board.getSquare(currentPos).getPiece().isWhite() != board.getSquare(sourcePos).getPiece().isWhite()) {
+            if (board.getSquare(currentPos).getPiece().isWhite() != this.isWhite()) {
                 if (kingSafety(currentPos, sourcePos)) {
                     GameInfo.get().possibleToMove(currentPos);
                     board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));

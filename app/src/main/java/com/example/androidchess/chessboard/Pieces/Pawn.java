@@ -191,7 +191,65 @@ public class Pawn extends Piece {
 
     @Override
     public void calcAttackedSquares(YX sourcePos) {
+        Board board = GameInfo.get().board;
+        YX currentPos = new YX(0 ,0);
 
+        // white pawn logic
+        if (this.isWhite()) {
+            // check diagonal left
+            // Y value is the same
+            currentPos.y = sourcePos.y + 1;
+            currentPos.x = sourcePos.x - 1;
+
+            if (currentPos.y < 8 && currentPos.x >= 0) {
+                if (board.getSquare(currentPos).hasPiece()) {
+                    if (kingSafety(currentPos, sourcePos)) {
+                        GameInfo.get().possibleToMove(currentPos);
+                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                    }
+                }
+            }
+
+            // check diagonal right
+            // Y value is the same
+            currentPos.x = sourcePos.x + 1;
+
+            if (currentPos.y < 8 && currentPos.x < 8) {
+                if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
+                    if (kingSafety(currentPos, sourcePos)) {
+                        GameInfo.get().possibleToMove(currentPos);
+                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                    }
+                }
+            }
+        }
+        // black pawn logic
+        else {
+            currentPos.y = sourcePos.y - 1;
+            currentPos.x = sourcePos.x - 1;
+
+            if (currentPos.y >= 0 && currentPos.x >= 0) {
+                if (board.getSquare(currentPos).hasPiece()) {
+                    if (kingSafety(currentPos, sourcePos)) {
+                        GameInfo.get().possibleToMove(currentPos);
+                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                    }
+                }
+            }
+
+            // check diagonal right
+            // Y value is the same
+            currentPos.x = sourcePos.x + 1;
+
+            if (currentPos.y >= 0 && currentPos.x < 8) {
+                if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
+                    if (kingSafety(currentPos, sourcePos)) {
+                        GameInfo.get().possibleToMove(currentPos);
+                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                    }
+                }
+            }
+        }
     }
 
     @Override
