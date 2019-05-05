@@ -3,7 +3,7 @@ package com.example.androidchess.chessboard;
 import android.content.Context;
 import android.util.AttributeSet;
 import com.example.androidchess.R;
-import com.example.androidchess.chessboard.Pieces.Piece;
+import com.example.androidchess.chessboard.Pieces.*;
 
 public class Square extends android.support.v7.widget.AppCompatImageView {
 
@@ -38,47 +38,21 @@ public class Square extends android.support.v7.widget.AppCompatImageView {
         else
             name = piece.toString();
 
-        switch (name.charAt(0)) {
-            case 'r':
-                if (name.charAt(1) == 'w')
-                    this.setImageResource(R.drawable.rw);
-                else
-                    this.setImageResource(R.drawable.rb);
-                break;
-            case 'n':
-                if (name.charAt(1) == 'w')
-                    this.setImageResource(R.drawable.nw);
-                else
-                    this.setImageResource(R.drawable.nb);
-                break;
-            case 'b':
-                if (name.charAt(1) == 'w')
-                    this.setImageResource(R.drawable.bw);
-                else
-                    this.setImageResource(R.drawable.bb);
-                break;
-            case 'q':
-                if (name.charAt(1) == 'w')
-                    this.setImageResource(R.drawable.qw);
-                else
-                    this.setImageResource(R.drawable.qb);
-                break;
-            case 'k':
-                if (name.charAt(1) == 'w')
-                    this.setImageResource(R.drawable.kw);
-                else
-                    this.setImageResource(R.drawable.kb);
-                break;
-            case 'p':
-                if (name.charAt(1) == 'w')
-                    this.setImageResource(R.drawable.pw);
-                else
-                    this.setImageResource(R.drawable.pb);
-                break;
-            default:
+        if (piece instanceof Rook) {
+            this.setImageResource(piece.isWhite() ? R.drawable.rw : R.drawable.rb);
+        } else if (piece instanceof Queen){
+            this.setImageResource(piece.isWhite() ? R.drawable.qw : R.drawable.qb);
+        } else if (piece instanceof Bishop){
+            this.setImageResource(piece.isWhite() ? R.drawable.bw : R.drawable.bb);
+        } else if (piece instanceof Knight){
+            this.setImageResource(piece.isWhite() ? R.drawable.nw : R.drawable.nb);
+        } else if (piece instanceof King){
+            this.setImageResource(piece.isWhite() ? R.drawable.kw : R.drawable.kb);
+        } else if (piece instanceof Pawn){
+            this.setImageResource(piece.isWhite() ? R.drawable.pw : R.drawable.pb);
+        } else {
                 this.setImageResource(R.drawable.ts);
                 this.setAlpha(0f);
-                break;
         }
     }
 
