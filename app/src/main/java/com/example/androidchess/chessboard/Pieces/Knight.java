@@ -149,7 +149,7 @@ public class Knight extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares() {
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
 
     }
 }

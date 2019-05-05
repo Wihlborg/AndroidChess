@@ -2,6 +2,10 @@ package com.example.androidchess.chessboard;
 
 import com.example.androidchess.chessboard.Pieces.King;
 
+
+/*
+contains game info for the visible game
+*/
 public class GameInfo {
     public static GameInfo info;
 
@@ -25,12 +29,20 @@ public class GameInfo {
     rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     board positions | who's turn | castle options | en passant | half move counter | full move counter
     */
-    public void setGameState(String fenStr) {
 
+    // board state used for calculations
+    public BoardState boardState;
+    // also updates the view
+    public void setBoardState(String fenStr) {
+        boardState = new BoardState(fenStr);
+        updateBoard(boardState);
     }
 
-    // board
+    // visible board
     public Board board;
+    public void updateBoard(BoardState boardState) {
+
+    }
 
     // flags
     public boolean whiteTurn;
@@ -117,21 +129,15 @@ public class GameInfo {
         }
     }
 
-    /*
-    flag for castling if the king has moved.
-    [0] = white king
-    [1] = black king
-    */
-    public boolean[] kingMoved;
 
     /*
-    flag for castling if the rook has moves
-    [0] = left black rook
-    [1] = right black rook
-    [2] = left white rook
-    [3] = right white rook
+    flag for castling
+    [0] = black queen side castle
+    [1] = black king side castle
+    [2] = white queen side castle
+    [3] = white king side castle
      */
-    public boolean[] rookMoved;
+    public boolean[] castleFlag = new boolean[4];
 
     String winner, winCondition;
 

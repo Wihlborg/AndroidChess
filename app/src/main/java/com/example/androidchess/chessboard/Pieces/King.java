@@ -50,12 +50,12 @@ public class King extends Piece {
         YX currentPos = new YX(y, x);
 
         // castle check white king
-        if (!GameInfo.get().kingMoved[0] && this.isWhite()) {
+        if (this.isWhite()) {
             boolean obstacle = false;
 
             // right white rook
             //System.out.println(rookMoved[3]);
-            if (!GameInfo.get().rookMoved[3]) {
+            if (!GameInfo.get().castleFlag[3]) {
                 //TODO might be x++ to fix possible castling when king is checked
                 while (++x < 8 && !obstacle) {
                     currentPos.y = y;
@@ -77,7 +77,7 @@ public class King extends Piece {
             obstacle = false;
             x = sourcePos.x;
             // left white rook
-            if (!GameInfo.get().rookMoved[2]) {
+            if (!GameInfo.get().castleFlag[2]) {
                 while ((--x >= 0) && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
@@ -92,11 +92,11 @@ public class King extends Piece {
         } // end castle check white king
 
         // castle check black king
-        else if (!GameInfo.get().kingMoved[1] && !this.isWhite()) {
+        else if (!this.isWhite()) {
             boolean obstacle = false;
             x = sourcePos.x;
             // right black rook
-            if (!GameInfo.get().rookMoved[1]) {
+            if (!GameInfo.get().castleFlag[1]) {
                 while (++x < 8 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
@@ -114,7 +114,7 @@ public class King extends Piece {
             obstacle = false;
             x = sourcePos.x;
             // left black rook
-            if (!GameInfo.get().rookMoved[0]) {
+            if (!GameInfo.get().castleFlag[0]) {
                 while ((--x >= 0) && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
@@ -245,7 +245,7 @@ public class King extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares() {
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
 
     }
 }

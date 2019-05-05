@@ -1,6 +1,5 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import android.graphics.Color;
 import com.example.androidchess.R;
 import com.example.androidchess.chessboard.*;
 
@@ -17,16 +16,16 @@ public class Bishop extends Piece {
         }
     }
 
-    private boolean findPossibleMove(YX currentPos, YX sourcePos) {
+    private boolean findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
         boolean obstacle = false;
-        Board board = GameInfo.get().board;
+
         // found a piece = cant search further in the same direction
-        if (board.getSquare(currentPos).hasPiece()) {
+        if (boardState.hasPiece(currentPos)) {
             obstacle = true;
-            if ((this.isWhite() != board.getSquare(currentPos).getPiece().isWhite())) {
+            if ((this.isWhite() != boardState.getPiece(currentPos).isWhite())) {
                 if (this.kingSafety(currentPos, sourcePos)) {
                     GameInfo.get().possibleToMove(currentPos);
-                    board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#00FFFF"));
+                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         }

@@ -9,8 +9,4 @@ public class YX {
         this.x = x;
     }
 
-    public void setYX(int y, int x) {
-        this.y = y;
-        this.x = x;
-    }
 }
