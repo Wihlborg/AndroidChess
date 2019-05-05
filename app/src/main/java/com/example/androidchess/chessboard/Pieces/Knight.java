@@ -15,19 +15,16 @@ public class Knight extends Piece {
         }
     }
 
-    public void findPossibleMove(YX currentPos, YX sourcePos) {
-        Board board = GameInfo.get().board;
-
-        if (board.getSquare(currentPos).hasPiece()) {
-            if (board.getSquare(currentPos).getPiece().isWhite() != this.isWhite()) {
-                if (kingSafety(currentPos, sourcePos)) {
+    public void findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
+        if (boardState.hasPiece(currentPos)){
+            if (this.isWhite() != boardState.getPiece(currentPos).isWhite()){
+                if (this.kingSafety(currentPos, sourcePos)){
                     GameInfo.get().possibleToMove(currentPos);
-                    board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                    boardState.markPossibleCaptures(currentPos);
                 }
             }
-        }
-        else {
-            if (kingSafety(currentPos, sourcePos))
+        } else {
+            if (this.kingSafety(currentPos, sourcePos))
                 GameInfo.get().possibleToMove(currentPos);
         }
     }

@@ -15,15 +15,15 @@ public class Rook extends Piece {
         }
     }
 
-    public boolean findPossibleMove(YX currentPos, YX sourcePos) {
+    public boolean findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
         Board board = GameInfo.get().board;
         boolean obstacle = false;
-        if (board.getSquare(currentPos).hasPiece()) {
+        if (boardState.hasPiece(currentPos)) {
             obstacle = true;
-            if (board.getSquare(currentPos).getPiece().isWhite() == this.isWhite()) {
-                if (kingSafety(currentPos, sourcePos)) {
+            if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
+                if (this.kingSafety(currentPos, sourcePos)) {
                     GameInfo.get().possibleToMove(currentPos);
-                    board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         }
