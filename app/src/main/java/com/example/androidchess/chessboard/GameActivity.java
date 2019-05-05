@@ -20,9 +20,10 @@ import com.example.androidchess.chessboard.pieces.*;
 import com.facebook.share.model.ShareContent;
 import com.facebook.share.model.ShareMediaContent;
 import com.facebook.share.model.SharePhoto;
-import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
 
+import java.io.BufferedReader;
+import java.lang.reflect.Array;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
@@ -57,6 +58,7 @@ public class GameActivity extends AppCompatActivity {
     public static String winCondition;
     private SoundPool soundPool;
     private int moveSound, checkMateSound;
+    public ArrayList<Move> moves = new ArrayList<>();
     ChessClock blackClock;
     ChessClock whiteClock;
     //public static Map<Integer, Boolean> rookFlag = new HashMap<>();
@@ -151,6 +153,8 @@ public class GameActivity extends AppCompatActivity {
                 }
                 else {
                     vsAIMove(position);
+                     statesForChessAi();
+
                 }
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
@@ -166,6 +170,7 @@ public class GameActivity extends AppCompatActivity {
         });
 
     }
+
 
     public void basicMove(int position) {
         king.check();
@@ -207,6 +212,24 @@ public class GameActivity extends AppCompatActivity {
         } else if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI && !fen.equals(getFenNotation()) && !popup) {
             makeRandomComputerMove();
         }
+    }
+
+    public void statesForChessAi(){
+        String fen= "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+        TreeNode rootNode=new TreeNode(0,fen);
+ArrayList<TreeNode>createNodes=new ArrayList<>();
+
+
+for (int i=0;i<moves.size();i++){
+    //createNodes.add(new TreeNode(Double.toString(BoardEvaluation.getEvaluation(board)));
+}
+
+
+        rootNode.children=createNodes;
+         TreeNode best;
+
+
+
     }
 
     public void localMove(int position) {
@@ -1103,6 +1126,7 @@ public class GameActivity extends AppCompatActivity {
                 // rook
                 case 'r':
                     moves = rook.getPossibleMoves(chosenPiece, 'b');
+
                     break;
                 // knight
                 case 'n':
@@ -1144,6 +1168,63 @@ public class GameActivity extends AppCompatActivity {
         king.check();
         move(moves.get(random.nextInt(moves.size())));
         king.checkMateCheck();
+    }
+    public void allpossibleMoves(){
+
+        ArrayList<Integer> myPieces = new ArrayList<>();
+
+        for (int i = 0; i < 64; i++) {
+            if (getFilename(i).charAt(1) == 'b') {
+                myPieces.add(i);
+            }
+        }
+
+
+        for (int j =0;j<myPieces.size();j++) {
+            ArrayList<Integer> tempList = new ArrayList<>();
+            switch (getFilename(myPieces.get(j)).charAt(1)) {
+                case 'q':
+
+                    tempList.addAll(bishop.getPossibleMoves(j, 'b'));
+                    tempList.addAll(rook.getPossibleMoves(j, 'b'));
+                    for (Integer i: tempList){
+                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                    }
+
+                case 'b':
+                    tempList.addAll(bishop.getPossibleMoves(j, 'b'));
+                    for (Integer i: tempList){
+                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                    }
+                case 'k':
+                    tempList.addAll(king.getPossibleMoves(j, 'b'));
+                    for (Integer i: tempList){
+                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                    }
+                case 'r':
+                    tempList.addAll(rook.getPossibleMoves(j, 'b'));
+                    for (Integer i: tempList){
+                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                    }
+                case 'n':
+                    tempList.addAll(knight.getPossibleMoves(j, 'b'));
+                    for (Integer i: tempList){
+                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                    }
+                case 'p':
+                    tempList.addAll(pawn.getPossibleMoves(j, 'b'));
+                    for (Integer i: tempList){
+                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                    }
+            }
+
+
+        }
+
+
+
+
+
     }
 
     private void checkDraw(boolean isWhite) {
