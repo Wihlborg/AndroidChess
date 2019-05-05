@@ -133,6 +133,7 @@ public class GameActivity extends AppCompatActivity {
         board.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+                String fen = getFenNotation();
                 /*System.out.println("---------------");
                 //printChildren();
                 System.out.println("b: "+getFenNotation());
@@ -151,7 +152,6 @@ public class GameActivity extends AppCompatActivity {
                 else {
                     vsAIMove(position);
                 }
-                String fen = getFenNotation();
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
 
