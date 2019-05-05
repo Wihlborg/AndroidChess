@@ -191,7 +191,51 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares() {
-        
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
+        GameInfo.get().setKingAttackTrue(sourcePos);
+        YX currentPos = new YX(sourcePos.y, sourcePos.x);
+
+        GameInfo.get().setKingAttackTrue(sourcePos);
+
+        // down left
+        if (kingPos.x < sourcePos.x && kingPos.y < sourcePos.y) {
+            currentPos.y--;
+            currentPos.x--;
+            while (currentPos.x >= 0 && currentPos.y >= 0 && currentPos.x > kingPos.x && currentPos.y > kingPos.y) {
+                GameInfo.get().setKingAttackTrue(currentPos);
+                currentPos.y--;
+                currentPos.x--;
+            }
+        }
+        // down right
+        else if (kingPos.x > sourcePos.x && kingPos.y < sourcePos.y) {
+            currentPos.y--;
+            currentPos.x++;
+            while (currentPos.x < 8 && currentPos.y >= 0 && currentPos.x < kingPos.x && currentPos.y > kingPos.y) {
+                GameInfo.get().setKingAttackTrue(currentPos);
+                currentPos.y--;
+                currentPos.x++;
+            }
+        }
+        // up right
+        else if (kingPos.x > sourcePos.x && kingPos.y > sourcePos.y) {
+            currentPos.y++;
+            currentPos.x++;
+            while (currentPos.x < 8 && currentPos.y < 8 && currentPos.x < kingPos.x && currentPos.y < kingPos.y) {
+                GameInfo.get().setKingAttackTrue(currentPos);
+                currentPos.y++;
+                currentPos.x++;
+            }
+        }
+        // up left
+        else if (kingPos.x < sourcePos.x && kingPos.y > sourcePos.y) {
+            currentPos.y++;
+            currentPos.x--;
+            while (currentPos.x >= 0 && currentPos.y < 8 && currentPos.x > kingPos.x && currentPos.y < kingPos.y) {
+                GameInfo.get().setKingAttackTrue(currentPos);
+                currentPos.y++;
+                currentPos.x--;
+            }
+        }
     }
 }

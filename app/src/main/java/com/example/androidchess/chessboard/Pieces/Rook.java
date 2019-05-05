@@ -144,7 +144,44 @@ public class Rook extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares() {
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
+        YX currentPos = new YX(sourcePos.y, sourcePos.x);
 
+        GameInfo.get().setKingAttackTrue(currentPos);
+
+        // if they are positioned on the same x axis
+        if (kingPos.x == sourcePos.x) {
+            if (sourcePos.y > kingPos.y) {
+                currentPos.y--;
+                while (currentPos.y >= 0 && currentPos.y > kingPos.y) {
+                    GameInfo.get().setKingAttackTrue(currentPos);
+                    currentPos.y--;
+                }
+            }
+            else {
+                currentPos.y++;
+                while (currentPos.y < 8 && currentPos.y < kingPos.y) {
+                    GameInfo.get().setKingAttackTrue(currentPos);
+                    currentPos.y++;
+                }
+            }
+        }
+        // if they are positioned on the same y axis
+        else {
+            if (sourcePos.x > kingPos.x) {
+                currentPos.x--;
+                while (currentPos.x >= 0 && currentPos.x > kingPos.x) {
+                    GameInfo.get().setKingAttackTrue(currentPos);
+                    currentPos.x--;
+                }
+            }
+            else {
+                currentPos.x++;
+                while (currentPos.x < 8 && currentPos.x < kingPos.x) {
+                    GameInfo.get().setKingAttackTrue(currentPos);
+                    currentPos.x++;
+                }
+            }
+        }
     }
 }

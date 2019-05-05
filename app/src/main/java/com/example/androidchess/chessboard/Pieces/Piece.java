@@ -1,8 +1,10 @@
-package com.example.androidchess.chessboard;
+package com.example.androidchess.chessboard.Pieces;
 
 
 import com.example.androidchess.R;
-import com.example.androidchess.chessboard.Pieces.King;
+import com.example.androidchess.chessboard.Board;
+import com.example.androidchess.chessboard.GameInfo;
+import com.example.androidchess.chessboard.YX;
 
 public abstract class Piece {
     // for example black queen is = qb
@@ -41,7 +43,7 @@ public abstract class Piece {
     used to calculate if other pieces can block the check created by the king attacker
     */
 
-    abstract public void calcKingAttackingSquares();
+    abstract public void calcKingAttackingSquares(YX kingPos, YX sourcePos);
 
     /*
     swaps places of pieces/empty squares and calculates if the king stands in check.

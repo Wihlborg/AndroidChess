@@ -3,6 +3,7 @@ package com.example.androidchess.chessboard;
 import android.content.Context;
 import android.util.AttributeSet;
 import com.example.androidchess.R;
+import com.example.androidchess.chessboard.Pieces.Piece;
 
 public class Square extends android.support.v7.widget.AppCompatImageView {
 

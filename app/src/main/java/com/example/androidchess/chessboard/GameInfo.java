@@ -65,6 +65,9 @@ public class GameInfo {
     calcs the squares who are attacking the king
      */
     public boolean[][] kingAttacker;
+    public void setKingAttackTrue(YX position) {
+        kingAttacker[position.y][position.x] = true;
+    }
 
     /*
     0 = no attacker
