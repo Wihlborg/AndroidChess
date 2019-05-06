@@ -218,10 +218,10 @@ public class GameActivity extends AppCompatActivity {
         String fen= "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         TreeNode rootNode=new TreeNode(0,fen);
 ArrayList<TreeNode>createNodes=new ArrayList<>();
-
+allpossibleMoves();
 
 for (int i=0;i<moves.size();i++){
-    //createNodes.add(new TreeNode(Double.toString(BoardEvaluation.getEvaluation(board)));
+    createNodes.add(new TreeNode(0,null));
 }
 
 
