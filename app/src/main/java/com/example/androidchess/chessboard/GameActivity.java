@@ -217,18 +217,16 @@ public class GameActivity extends AppCompatActivity {
     public void statesForChessAi(){
         String fen= "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
         TreeNode rootNode=new TreeNode(0,fen);
-ArrayList<TreeNode>createNodes=new ArrayList<>();
-allpossibleMoves();
+        ArrayList<TreeNode>createNodes=new ArrayList<>();
+        //False = Black, True = White
+        allpossibleMoves(false);
 
-for (int i=0;i<moves.size();i++){
-    createNodes.add(new TreeNode(0,null));
-}
-
+        for (int i=0;i<moves.size();i++){
+        createNodes.add(new TreeNode());
+        }
 
         rootNode.children=createNodes;
          TreeNode best;
-
-
 
     }
 
@@ -1169,61 +1167,111 @@ for (int i=0;i<moves.size();i++){
         move(moves.get(random.nextInt(moves.size())));
         king.checkMateCheck();
     }
-    public void allpossibleMoves(){
+    public void allpossibleMoves(Boolean chessColor){
+        //chessCholor true is white and false is black
 
-        ArrayList<Integer> myPieces = new ArrayList<>();
+        if (chessColor == false){
 
-        for (int i = 0; i < 64; i++) {
-            if (getFilename(i).charAt(1) == 'b') {
-                myPieces.add(i);
-            }
-        }
+            ArrayList<Integer> myPieces = new ArrayList<>();
 
-
-        for (int j =0;j<myPieces.size();j++) {
-            ArrayList<Integer> tempList = new ArrayList<>();
-            switch (getFilename(myPieces.get(j)).charAt(1)) {
-                case 'q':
-
-                    tempList.addAll(bishop.getPossibleMoves(j, 'b'));
-                    tempList.addAll(rook.getPossibleMoves(j, 'b'));
-                    for (Integer i: tempList){
-                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
-                    }
-
-                case 'b':
-                    tempList.addAll(bishop.getPossibleMoves(j, 'b'));
-                    for (Integer i: tempList){
-                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
-                    }
-                case 'k':
-                    tempList.addAll(king.getPossibleMoves(j, 'b'));
-                    for (Integer i: tempList){
-                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
-                    }
-                case 'r':
-                    tempList.addAll(rook.getPossibleMoves(j, 'b'));
-                    for (Integer i: tempList){
-                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
-                    }
-                case 'n':
-                    tempList.addAll(knight.getPossibleMoves(j, 'b'));
-                    for (Integer i: tempList){
-                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
-                    }
-                case 'p':
-                    tempList.addAll(pawn.getPossibleMoves(j, 'b'));
-                    for (Integer i: tempList){
-                        moves.add(new Move(j, i, getFilename(myPieces.get(j))));
-                    }
+            for (int i = 0; i < 64; i++) {
+                if (getFilename(i).charAt(1) == 'b') {
+                    myPieces.add(i);
+                }
             }
 
 
+            for (int j =0;j<myPieces.size();j++) {
+                ArrayList<Integer> tempList = new ArrayList<>();
+                switch (getFilename(myPieces.get(j)).charAt(1)) {
+                    case 'q':
+
+                        tempList.addAll(bishop.getPossibleMoves(j, 'b'));
+                        tempList.addAll(rook.getPossibleMoves(j, 'b'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                        }
+
+                    case 'b':
+                        tempList.addAll(bishop.getPossibleMoves(j, 'b'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                        }
+                    case 'k':
+                        tempList.addAll(king.getPossibleMoves(j, 'b'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                        }
+                    case 'r':
+                        tempList.addAll(rook.getPossibleMoves(j, 'b'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                        }
+                    case 'n':
+                        tempList.addAll(knight.getPossibleMoves(j, 'b'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                        }
+                    case 'p':
+                        tempList.addAll(pawn.getPossibleMoves(j, 'b'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(myPieces.get(j))));
+                        }
+                }
+
+            }
+
+        }else if (chessColor == true) {
+            ArrayList<Integer> anotherPieces = new ArrayList<>();
+
+            for (int i = 0; i < 64; i++) {
+                if (getFilename(i).charAt(1) == 'v') {
+                    anotherPieces.add(i);
+                }
+            }
+
+
+            for (int j = 0; j < anotherPieces.size(); j++) {
+                ArrayList<Integer> tempList = new ArrayList<>();
+                switch (getFilename(anotherPieces.get(j)).charAt(1)) {
+                    case 'q':
+
+                        tempList.addAll(bishop.getPossibleMoves(j, 'v'));
+                        tempList.addAll(rook.getPossibleMoves(j, 'v'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(anotherPieces.get(j))));
+                        }
+
+                    case 'b':
+                        tempList.addAll(bishop.getPossibleMoves(j, 'v'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(anotherPieces.get(j))));
+                        }
+                    case 'k':
+                        tempList.addAll(king.getPossibleMoves(j, 'v'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(anotherPieces.get(j))));
+                        }
+                    case 'r':
+                        tempList.addAll(rook.getPossibleMoves(j, 'v'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(anotherPieces.get(j))));
+                        }
+                    case 'n':
+                        tempList.addAll(knight.getPossibleMoves(j, 'v'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(anotherPieces.get(j))));
+                        }
+                    case 'p':
+                        tempList.addAll(pawn.getPossibleMoves(j, 'v'));
+                        for (Integer i : tempList) {
+                            moves.add(new Move(j, i, getFilename(anotherPieces.get(j))));
+                        }
+                }
+            }
+
+
         }
-
-
-
-
 
     }
 
