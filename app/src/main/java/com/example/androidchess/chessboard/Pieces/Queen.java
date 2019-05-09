@@ -1,6 +1,5 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.R;
 import com.example.androidchess.chessboard.*;
 
 public class Queen extends Piece {
@@ -9,32 +8,34 @@ public class Queen extends Piece {
     Rook rook;
 
     public Queen(boolean isWhite) {
-        if (isWhite) {
-            this.setID(R.drawable.qw);
-        }
-        else {
-            this.setID(R.drawable.qb);
-        }
-
+        this.setWhite(isWhite);
         bishop = new Bishop(this.isWhite());
         rook = new Rook(this.isWhite());
     }
 
     @Override
-    public void calcPossibleMoves(YX sourcePos) {
-        bishop.calcPossibleMoves(sourcePos);
-        rook.calcPossibleMoves(sourcePos);
+    public void calcPossibleMoves(YX sourcePos, BoardState boardState) {
+        bishop.calcPossibleMoves(sourcePos, boardState);
+        rook.calcPossibleMoves(sourcePos, boardState);
     }
 
     @Override
-    public void calcAttackedSquares(YX sourcePos) {
-        bishop.calcAttackedSquares(sourcePos);
-        rook.calcAttackedSquares(sourcePos);
+    public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
+        bishop.calcAttackedSquares(sourcePos, boardState);
+        rook.calcAttackedSquares(sourcePos, boardState);
     }
 
     @Override
-    public void calcKingAttackingSquares() {
-        bishop.calcKingAttackingSquares();
-        rook.calcKingAttackingSquares();
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
+        bishop.calcKingAttackingSquares(kingPos, sourcePos, boardState);
+        rook.calcKingAttackingSquares(kingPos, sourcePos, boardState);
+    }
+
+    @Override
+    public String toString() {
+        if (isWhite())
+            return "qw";
+        else
+            return "qb";
     }
 }

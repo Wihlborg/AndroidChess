@@ -1,19 +1,11 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.R;
 import com.example.androidchess.chessboard.*;
-
 
 public class Bishop extends Piece {
 
     public Bishop(boolean isWhite) {
         this.setWhite(isWhite);
-        if (isWhite) {
-            this.setID(R.drawable.bw);
-        }
-        else {
-            this.setID(R.drawable.bb);
-        }
     }
 
     private boolean findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
@@ -23,35 +15,32 @@ public class Bishop extends Piece {
         if (boardState.hasPiece(currentPos)) {
             obstacle = true;
             if ((this.isWhite() != boardState.getPiece(currentPos).isWhite())) {
-                if (this.kingSafety(currentPos, sourcePos)) {
-                    GameInfo.get().possibleToMove(currentPos);
+                if (this.kingSafety(currentPos, sourcePos, boardState)) {
+                    this.addMove(new Move(sourcePos, currentPos, this));
                     boardState.markPossibleCaptures(currentPos);
                 }
             }
-        }
-        else {
-            if (this.kingSafety(currentPos, sourcePos)) {
-                GameInfo.get().possibleToMove(currentPos);
+        } else {
+            if (this.kingSafety(currentPos, sourcePos, boardState)) {
+                this.addMove(new Move(sourcePos, currentPos, this));
             }
         }
         return obstacle;
     }
 
     @Override
-    public void calcPossibleMoves(YX sourcePos) {
-        int sourceY = sourcePos.y;
-        int sourceX = sourcePos.x;
+    public void calcPossibleMoves(YX sourcePos, BoardState boardState) {
 
         // diagonal towards bottom right
-        int y = sourceY + 1;
-        int x = sourceX + 1;
+        int y = sourcePos.y + 1;
+        int x = sourcePos.x + 1;
         boolean obstacle = false;
-        YX currentPos = new YX(y ,x);
+        YX currentPos = new YX(y, x);
         while (x < 8 && y < 8 && !obstacle) {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, boardState);
 
             x++;
             y++;
@@ -59,8 +48,8 @@ public class Bishop extends Piece {
         }
 
         // diagonal towards top left
-        x = sourceX - 1;
-        y = sourceY - 1;
+        x = sourcePos.x - 1;
+        y = sourcePos.y - 1;
         obstacle = false;
         while (x >= 0 && y >= 0 && !obstacle) {
 
@@ -68,63 +57,58 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, boardState);
 
             x--;
             y--;
         }
 
         // diagonal towards top right
-        x = sourceX + 1;
-        y = sourceY - 1;
+        x = sourcePos.x + 1;
+        y = sourcePos.y - 1;
         obstacle = false;
         while (x < 8 && y >= 0 && !obstacle) {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, boardState);
 
             x++;
             y--;
         }
 
         // diagonal towards bottom left
-        x = sourceX - 1;
-        y = sourceY + 1;
+        x = sourcePos.x - 1;
+        y = sourcePos.y + 1;
         obstacle = false;
         while (x >= 0 && y < 8 && !obstacle) {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, boardState);
 
             x--;
             y++;
         }
     }
 
-    private boolean calcAttackSquare(YX currentPos, YX sourcePos) {
+    private boolean calcAttackSquare(YX currentPos, BoardState boardState) {
         boolean obstacle = false;
-        Board board = GameInfo.get().board;
+
         // found a piece = cant search further in the same direction
-        if (board.getSquare(currentPos).hasPiece()) {
+        if (boardState.hasPiece(currentPos)) {
             obstacle = true;
-            if ((this.isWhite() != board.getSquare(currentPos).getPiece().isWhite())) {
-                if (this.kingSafety(currentPos, sourcePos)) {
-                    this.setSquareAttackValue(currentPos);
-                }
+            if ((this.isWhite() != boardState.getPiece(currentPos).isWhite())) {
+                this.setSquareAttackValue(currentPos, boardState);
             }
-        }
-        else {
-            if (this.kingSafety(currentPos, sourcePos)) {
-                this.setSquareAttackValue(currentPos);
-            }
+        } else {
+            this.setSquareAttackValue(currentPos, boardState);
         }
         return obstacle;
     }
 
     @Override
-    public void calcAttackedSquares(YX sourcePos) {
+    public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
         int sourceY = sourcePos.y;
         int sourceX = sourcePos.x;
 
@@ -132,12 +116,12 @@ public class Bishop extends Piece {
         int y = sourceY + 1;
         int x = sourceX + 1;
         boolean obstacle = false;
-        YX currentPos = new YX(y ,x);
+        YX currentPos = new YX(y, x);
         while (x < 8 && y < 8 && !obstacle) {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = calcAttackSquare(currentPos, sourcePos);
+            obstacle = calcAttackSquare(currentPos, boardState);
 
             x++;
             y++;
@@ -154,7 +138,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = calcAttackSquare(currentPos, sourcePos);
+            obstacle = calcAttackSquare(currentPos, boardState);
 
             x--;
             y--;
@@ -168,7 +152,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = calcAttackSquare(currentPos, sourcePos);
+            obstacle = calcAttackSquare(currentPos, boardState);
 
             x++;
             y--;
@@ -182,7 +166,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = calcAttackSquare(currentPos, sourcePos);
+            obstacle = calcAttackSquare(currentPos, boardState);
 
             x--;
             y++;
@@ -190,18 +174,18 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
-        GameInfo.get().setKingAttackTrue(sourcePos);
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
+        boardState.setKingAttackTrue(sourcePos);
         YX currentPos = new YX(sourcePos.y, sourcePos.x);
 
-        GameInfo.get().setKingAttackTrue(sourcePos);
+        boardState.setKingAttackTrue(sourcePos);
 
         // down left
         if (kingPos.x < sourcePos.x && kingPos.y < sourcePos.y) {
             currentPos.y--;
             currentPos.x--;
             while (currentPos.x >= 0 && currentPos.y >= 0 && currentPos.x > kingPos.x && currentPos.y > kingPos.y) {
-                GameInfo.get().setKingAttackTrue(currentPos);
+                boardState.setKingAttackTrue(currentPos);
                 currentPos.y--;
                 currentPos.x--;
             }
@@ -211,7 +195,7 @@ public class Bishop extends Piece {
             currentPos.y--;
             currentPos.x++;
             while (currentPos.x < 8 && currentPos.y >= 0 && currentPos.x < kingPos.x && currentPos.y > kingPos.y) {
-                GameInfo.get().setKingAttackTrue(currentPos);
+                boardState.setKingAttackTrue(currentPos);
                 currentPos.y--;
                 currentPos.x++;
             }
@@ -221,7 +205,7 @@ public class Bishop extends Piece {
             currentPos.y++;
             currentPos.x++;
             while (currentPos.x < 8 && currentPos.y < 8 && currentPos.x < kingPos.x && currentPos.y < kingPos.y) {
-                GameInfo.get().setKingAttackTrue(currentPos);
+                boardState.setKingAttackTrue(currentPos);
                 currentPos.y++;
                 currentPos.x++;
             }
@@ -231,10 +215,18 @@ public class Bishop extends Piece {
             currentPos.y++;
             currentPos.x--;
             while (currentPos.x >= 0 && currentPos.y < 8 && currentPos.x > kingPos.x && currentPos.y < kingPos.y) {
-                GameInfo.get().setKingAttackTrue(currentPos);
+                boardState.setKingAttackTrue(currentPos);
                 currentPos.y++;
                 currentPos.x--;
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        if (isWhite())
+            return "bw";
+        else
+            return "bb";
     }
 }

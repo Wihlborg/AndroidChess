@@ -9,4 +9,11 @@ public class YX {
         this.x = x;
     }
 
+    @Override
+    public String toString() {
+        return "YX{" +
+                "y=" + y +
+                ", x=" + x +
+                '}';
+    }
 }

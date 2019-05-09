@@ -1,36 +1,96 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import android.graphics.Color;
-import com.example.androidchess.R;
 import com.example.androidchess.chessboard.*;
 
 public class Knight extends Piece {
 
     public Knight(boolean isWhite) {
         this.setWhite(isWhite);
-        if (isWhite) {
-            this.setID(R.drawable.nw);
-        } else {
-            this.setID(R.drawable.nb);
-        }
     }
 
     public void findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
-        if (boardState.hasPiece(currentPos)){
+        if (boardState.hasPiece(currentPos)) {
             if (this.isWhite() != boardState.getPiece(currentPos).isWhite()){
-                if (this.kingSafety(currentPos, sourcePos)){
-                    GameInfo.get().possibleToMove(currentPos);
+                if (this.kingSafety(currentPos, sourcePos, boardState)){
+                    //System.out.println(this+" found victim @"+currentPos+", from: "+sourcePos);
+                    this.addMove(new Move(sourcePos, currentPos, this));
                     boardState.markPossibleCaptures(currentPos);
                 }
             }
         } else {
-            if (this.kingSafety(currentPos, sourcePos))
-                GameInfo.get().possibleToMove(currentPos);
+            if (this.kingSafety(currentPos, sourcePos, boardState)) {
+                //System.out.println(currentPos);
+                //Move move = new Move(sourcePos, currentPos, this);
+                //System.out.println("testMove"+move);
+                this.addMove(new Move(sourcePos, currentPos, this));
+                //System.out.println(this.getMoves());
+            }
         }
     }
 
     @Override
-    public void calcPossibleMoves(YX sourcePos) {
+    public void calcPossibleMoves(YX sourcePos, BoardState boardState) {
+        int y = sourcePos.y;
+        int x = sourcePos.x;
+
+        //System.out.println("-----------------");
+        YX currentPos = new YX(0, 0);
+
+        currentPos.y = y + 2;
+        currentPos.x = x + 1;
+        if (currentPos.y < 8 && currentPos.x < 8) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+        currentPos.y = y + 1;
+        currentPos.x = x + 2;
+        if (currentPos.y < 8 && currentPos.x < 8) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+        currentPos.y = y - 1;
+        currentPos.x = x + 2;
+        if (currentPos.y >= 0 && currentPos.x < 8) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+        currentPos.y = y - 2;
+        currentPos.x = x + 1;
+        if (currentPos.y >= 0 && currentPos.x < 8) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+
+        currentPos.y = y - 2;
+        currentPos.x = x - 1;
+        if (currentPos.y >= 0 && currentPos.x >= 0) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+        currentPos.y = y - 1;
+        currentPos.x = x - 2;
+        if (currentPos.y >= 0 && currentPos.x >= 0) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+        currentPos.y = y + 1;
+        currentPos.x = x - 2;
+        if (currentPos.y < 8 && currentPos.x >= 0) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+
+
+        currentPos.y = y + 2;
+        currentPos.x = x - 1;
+        if (currentPos.y < 8 && currentPos.x >= 0) {
+            findPossibleMove(currentPos, sourcePos, boardState);
+        }
+        //System.out.println("size: "+this.getMoves().size());
+        //System.out.println(this.getMoves().toString());
+    }
+
+    @Override
+    public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
         int y = sourcePos.y;
         int x = sourcePos.x;
 
@@ -39,114 +99,63 @@ public class Knight extends Piece {
 
         currentPos.y = y + 1;
         currentPos.x = x + 2;
-        if (x + 2 < 8 && y + 1 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+        if (currentPos.x < 8 && currentPos.y < 8) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y + 2;
         currentPos.x = x + 1;
-        if (x + 1 < 8 && y + 2 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+        if (currentPos.x < 8 && currentPos.y < 8) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y + 2;
         currentPos.x = x - 1;
-        if (x - 1 >= 0 && y + 2 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+        if (currentPos.x >= 0 && currentPos.y < 8) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y + 1;
         currentPos.x = x - 2;
-        if (x - 2 >= 0 && y + 1 < 8) {
-            findPossibleMove(currentPos, sourcePos);
-        }
-
-
-        currentPos.y = y - 1;
-        currentPos.x = x - 2;
-        if (x - 2 >= 0 && y - 1 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
-        }
-
-        currentPos.y = y - 2;
-        currentPos.x = x - 1;
-        if (x - 1 >= 0 && y - 2 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
-        }
-
-        currentPos.y = y - 2;
-        currentPos.x = x + 1;
-        if (x + 1 < 8 && y - 2 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
-        }
-
-
-        currentPos.y = y - 1;
-        currentPos.x = x + 2;
-        if (x + 2 < 8 && y - 1 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
-        }
-    }
-
-    @Override
-    public void calcAttackedSquares(YX sourcePos) {
-        int y = sourcePos.y;
-        int x = sourcePos.x;
-
-        //System.out.println("-----------------");
-        YX currentPos = new YX(0, 0);
-
-        currentPos.y = y + 1;
-        currentPos.x = x + 2;
-        if (x + 2 < 8 && y + 1 < 8) {
-            this.setSquareAttackValue(currentPos);
-        }
-
-        currentPos.y = y + 2;
-        currentPos.x = x + 1;
-        if (x + 1 < 8 && y + 2 < 8) {
-            this.setSquareAttackValue(currentPos);
-        }
-
-        currentPos.y = y + 2;
-        currentPos.x = x - 1;
-        if (x - 1 >= 0 && y + 2 < 8) {
-            this.setSquareAttackValue(currentPos);
-        }
-
-        currentPos.y = y + 1;
-        currentPos.x = x - 2;
-        if (x - 2 >= 0 && y + 1 < 8) {
-            this.setSquareAttackValue(currentPos);
+        if (currentPos.x >= 0 && currentPos.y < 8) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y - 1;
         currentPos.x = x - 2;
         if (x - 2 >= 0 && y - 1 >= 0) {
-            this.setSquareAttackValue(currentPos);
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y - 2;
         currentPos.x = x - 1;
-        if (x - 1 >= 0 && y - 2 >= 0) {
-            this.setSquareAttackValue(currentPos);
+        if (currentPos.x >= 0 && currentPos.y >= 0) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y - 2;
         currentPos.x = x + 1;
-        if (x + 1 < 8 && y - 2 >= 0) {
-            this.setSquareAttackValue(currentPos);
+        if (currentPos.x < 8 && currentPos.y >= 0) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
 
         currentPos.y = y - 1;
         currentPos.x = x + 2;
-        if (x + 2 < 8 && y - 1 >= 0) {
-            this.setSquareAttackValue(currentPos);
+        if (currentPos.x < 8 && currentPos.y >= 0) {
+            this.setSquareAttackValue(currentPos, boardState);
         }
     }
 
     @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
+        boardState.setKingAttackTrue(sourcePos);
+    }
 
+    @Override
+    public String toString() {
+        if (isWhite())
+            return "nw";
+        else
+            return "nb";
     }
 }
