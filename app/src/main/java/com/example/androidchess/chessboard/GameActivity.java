@@ -159,11 +159,8 @@ public class GameActivity extends AppCompatActivity {
                 if (User.INSTANCE.getSounds() && !fen.equals(getFenNotation()))
                 soundPool.play(moveSound, 1, 1, 2, 0, 1);
 
-                String[] board = new String[64];
-                for (int i = 0; i < 64; i++) {
-                    board[i] = getFilename(i);
-                }
-                Toast toast = Toast.makeText(getApplicationContext(), Double.toString(BoardEvaluation.getEvaluation(board)), Toast.LENGTH_SHORT);
+
+                Toast toast = Toast.makeText(getApplicationContext(), Double.toString(BoardEvaluation.getEvaluation(getFenNotation())), Toast.LENGTH_SHORT);
                 toast.show();
 
             }
