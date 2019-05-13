@@ -67,7 +67,8 @@ public class ChessClock extends Thread {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    game.endGame();
+                    //TODO fix
+                    // game.endGame();
                 }
             });
 

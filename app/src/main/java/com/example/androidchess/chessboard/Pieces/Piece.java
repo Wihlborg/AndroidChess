@@ -1,30 +1,37 @@
 package com.example.androidchess.chessboard.Pieces;
 
+import com.example.androidchess.chessboard.*;
 
-import com.example.androidchess.R;
-import com.example.androidchess.chessboard.Board;
-import com.example.androidchess.chessboard.GameInfo;
-import com.example.androidchess.chessboard.YX;
+import java.util.LinkedList;
 
 public abstract class Piece {
     // for example black queen is = qb
     private boolean isWhite;
-    private int ID;
+    private LinkedList<Move> moves;
+
+    public Piece() {
+        moves = new LinkedList<>();
+    }
+/*
+    public Piece(Piece piece) {
+        this.moves = new LinkedList<>();
+        this.isWhite = piece.isWhite;
+    }
+    */
 
     /*
-    calculates the possible moves
-    taking into account if the king is getting attacked if the move was to be made
-    using kingSafety()
+    calculates the possible moves for this piece
+    taking into account if the king is getting attacked using kingSafety() on every possible evaluated square
     */
-    abstract public void calcPossibleMoves(YX sourcePos);
+    abstract public void calcPossibleMoves(YX sourcePos, BoardState boardState);
 
     /*
     calculates which square this piece attacks
     */
-    abstract public void calcAttackedSquares(YX sourcePos);
+    abstract public void calcAttackedSquares(YX sourcePos, BoardState boardState);
 
-    public void setSquareAttackValue(YX currentPos) {
-        int[][] attackedSquares = GameInfo.get().attackedSquares;
+    public void setSquareAttackValue(YX currentPos, BoardState boardState) {
+        int[][] attackedSquares = boardState.attackedSquares;
         if (isWhite) {
             if (attackedSquares[currentPos.y][currentPos.x] == 0)
                 attackedSquares[currentPos.y][currentPos.x] = 1;
@@ -43,82 +50,99 @@ public abstract class Piece {
     used to calculate if other pieces can block the check created by the king attacker
     */
 
-    abstract public void calcKingAttackingSquares(YX kingPos, YX sourcePos);
+    abstract public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState);
 
     /*
     swaps places of pieces/empty squares and calculates if the king stands in check.
     removes piece temporarily and swaps to simulate a capture if current checked position contains a piece
     */
-    public boolean kingSafety(YX currentPos, YX sourcePos) {
-        Board board = GameInfo.get().board;
+    public boolean kingSafety(YX currentPos, YX sourcePos, BoardState boardState) {
 
         boolean safe = true;
-        //String imgName = board.getSquare(pos).getPiece().getName();
-        //String imgName = getFilename(sourcePos);
 
-        //int imgID = 0;
         Piece piece = null;
 
         // remove enemy piece temporarily
-        if (board.getSquare(currentPos).hasPiece()) {
-            //System.out.println(imgID);
-            //System.out.println(R.drawable.pw);
-            //imgID = board.getSquare(currentPos).getId();
-            piece = board.getSquare(currentPos).getPiece();
-            board.getSquare(currentPos).setPiece(null);
-            board.getSquare(currentPos).setImageResource(R.drawable.ts);
+        if (boardState.hasPiece(currentPos)) {
+            piece = boardState.getPiece(currentPos);
+            boardState.setPiece(null, currentPos);
         }
 
+        // make move to check if king is safe
+        boardState.movePiece(new Move(sourcePos, currentPos, this));
 
-        board.swap(sourcePos, currentPos);
-        // if piece is king
-        if (board.getSquare(sourcePos).getPiece() instanceof King)
-            GameInfo.get().updatePosOfKings();
+        // if source piece is king
+        if (boardState.getPiece(sourcePos) instanceof King) {
+            if (boardState.getPiece(sourcePos).isWhite())
+                boardState.setKingPos(true, sourcePos);
 
-        GameInfo.get().resetAttackedSquares();
-        GameInfo.get().calcAllAttackedSquares();
-        //printAttackedSquares();
+            else
+                boardState.setKingPos(false, sourcePos);
+        }
+
+        // temporarily save the array to skip new reset and calculations
+        int[][] attackedSquares = boardState.attackedSquares;
+
+        // start of calculations
+
+        boardState.resetAttackedSquares();
+        boardState.calcAllAttackedSquares();
 
         // if the square is white, is white's turn and if the king stands on a attacked square
-        if (board.getSquare(sourcePos).getPiece().isWhite) {
-            if (GameInfo.get().whiteTurn) {
-                int y = GameInfo.get().kingPos[0].y;
-                int x = GameInfo.get().kingPos[0].x;
-                if (GameInfo.get().attackedSquares[y][x] > 1)
+        if (boardState.getPiece(currentPos).isWhite()) {
+            if (boardState.isWhiteTurn()) {
+                if (boardState.getAttackedSquare(boardState.getKingPos(true)) > 1)
                     safe = false;
             }
         }
         // if the square is black, is black's turn and if the king stands on a attacked square
-        else if (!board.getSquare(sourcePos).getPiece().isWhite) {
-            if (!GameInfo.get().whiteTurn) {
-                int y = GameInfo.get().kingPos[0].y;
-                int x = GameInfo.get().kingPos[0].x;
-                if (GameInfo.get().attackedSquares[y][x] == 1 || GameInfo.get().attackedSquares[y][x] == 3)
+        else if (!boardState.getPiece(currentPos).isWhite()) {
+            if (!boardState.isWhiteTurn()) {
+                if (boardState.getAttackedSquare(boardState.getKingPos(false)) == 1 || boardState.getAttackedSquare(boardState.getKingPos(false)) == 3)
                     safe = false;
             }
         }
 
-        board.swap(sourcePos, currentPos);
+        // end of calculations
+
+        // revert the first move
+        boardState.movePiece(new Move(currentPos, sourcePos, this));
+
         // if piece is king
-        if (board.getSquare(sourcePos).getPiece() instanceof King)
-            GameInfo.get().updatePosOfKings();
+        if (boardState.getPiece(sourcePos) instanceof King) {
+            if (boardState.getPiece(sourcePos).isWhite())
+                boardState.setKingPos(true, sourcePos);
 
-
-        if (piece != null) {
-            board.getSquare(currentPos).setPiece(piece);
-            board.getSquare(currentPos).setImageResource(piece.getID());
+            else
+                boardState.setKingPos(false, sourcePos);
         }
 
-        GameInfo.get().resetAttackedSquares();
-        GameInfo.get().calcAllAttackedSquares();
-        //printAttackedSquares();
+        if (piece != null) {
+            boardState.setPiece(piece, currentPos);
+        }
 
-        //System.out.println(safe);
+        // assign the temporarily saved array to return old values
+        boardState.attackedSquares = attackedSquares;
+
         return safe;
     }
 
-    public String toString() {
-        return Integer.toString(ID);
+    public void addMove(Move move) {
+
+
+        moves.add(move);
+    }
+
+    public Move getMove(int index) {
+        return moves.get(index);
+    }
+
+    public LinkedList<Move> getMoves() {
+        return this.moves;
+    }
+
+    public void clearMoves() {
+        moves.clear();
     }
 
     public boolean isWhite() {
@@ -129,11 +153,5 @@ public abstract class Piece {
         isWhite = white;
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
-    }
+    abstract public String toString();
 }

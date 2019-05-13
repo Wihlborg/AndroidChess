@@ -1,8 +1,5 @@
 package com.example.androidchess.chessboard;
 
-import com.example.androidchess.chessboard.Pieces.King;
-
-
 /*
 contains game info for the visible game
 */
@@ -10,6 +7,7 @@ public class GameInfo {
     public static GameInfo info;
 
     private GameInfo() {
+
     }
 
     public static GameInfo get() {
@@ -23,6 +21,12 @@ public class GameInfo {
         info = null;
     }
 
+    public String winner, winCondition;
+
+    public ChessClock blackClock, whiteClock;
+
+
+
     /*
     set the game info/state using fen notation
     fen string example:
@@ -31,19 +35,14 @@ public class GameInfo {
     */
 
     // board state used for calculations
-    public BoardState boardState;
+    //public BoardState boardState;
     // also updates the view
-    public void setBoardState(String fenStr) {
-        boardState = new BoardState(fenStr);
-        updateBoard(boardState);
-    }
 
     // visible board
-    public Board board;
-    public void updateBoard(BoardState boardState) {
+    //public Board board;
 
-    }
 
+    /*
     // flags
     public boolean whiteTurn;
     public boolean checkMate;
@@ -57,42 +56,45 @@ public class GameInfo {
     // full move is when both sides has made a move
     // increment everytime black makes a move
     public int fullMoveCounter;
-
+    */
 
     /*
     used to calc/display the possible moves for a clicked piece
     */
-    public boolean[][] possibleMoves;
-    public void resetPossibleMoves() {
+/*
+    public boolean[][] possibleClicks = new boolean[8][8];
+    public void resetPossibleClicks() {
         for (int y=0; y < 8; y++) {
             for (int x=0; x<8; x++)
-                possibleMoves[y][x] = false;
+                possibleClicks[y][x] = false;
         }
     }
-    public void possibleToMove(YX position) {
-        possibleMoves[position.y][position.x] = true;
+    public void setPossibleClick(YX position) {
+        possibleClicks[position.y][position.x] = true;
     }
+*/
 
     /*
     calcs the squares who are attacking the king
-     */
+
     public boolean[][] kingAttacker;
     public void setKingAttackTrue(YX position) {
         kingAttacker[position.y][position.x] = true;
     }
+    */
 
     /*
     0 = no attacker
     1 = only white attacker
     2 = only black attacker
     3 = attacked by both sides
-    */
-    public int[][] attackedSquares;
+
+    public int[][] attackedSquaresss;
 
     public void resetAttackedSquares() {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++)
-                attackedSquares[y][x] = 0;
+                attackedSquaresss[y][x] = 0;
         }
     }
 
@@ -105,11 +107,12 @@ public class GameInfo {
             }
         }
     }
+    */
 
     /*
     [0] = coordinate of white king
     [1] = coordinate of black king
-    */
+
     public YX[] kingPos;
 
     public void updatePosOfKings() {
@@ -128,7 +131,7 @@ public class GameInfo {
             }
         }
     }
-
+    */
 
     /*
     flag for castling
@@ -137,8 +140,7 @@ public class GameInfo {
     [2] = white queen side castle
     [3] = white king side castle
      */
+    /*
     public boolean[] castleFlag = new boolean[4];
-
-    String winner, winCondition;
-
+    */
 }

@@ -1,211 +1,91 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import android.graphics.Color;
-import com.example.androidchess.R;
 import com.example.androidchess.chessboard.*;
 
 public class Pawn extends Piece {
 
     public Pawn(boolean isWhite) {
         this.setWhite(isWhite);
-        if (isWhite) {
-            this.setID(R.drawable.pw);
-        } else {
-            this.setID(R.drawable.pb);
-        }
     }
 
     @Override
-    public void calcPossibleMoves(YX sourcePos) {
+    public void calcPossibleMoves(YX sourcePos, BoardState boardState) {
 
-        Board board = GameInfo.get().board;
-
-        YX currentPos = new YX(0, 0);
+        YX currentPos = new YX(sourcePos.y, sourcePos.x);
 
         // white pawn logic
-        if (this.isWhite()) {
-            // standing in default position possible to move more than 1 square
-            if (sourcePos.y == 1) {
-                boolean obstacle = false;
-                int y = sourcePos.y + 1;
-                // check for obstacles
-                while (y <= 3 && !obstacle) {
-                    currentPos.y = y;
-                    if (board.getSquare(currentPos).hasPiece()) {
-                        obstacle = true;
-                    } else {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                        }
-                    }
-                    y++;
-                }
+        if (this.isWhite())
+            whitePawnLogic(sourcePos, currentPos, boardState);
 
-                currentPos.y = sourcePos.y + 1;
-                currentPos.x = sourcePos.x + 1;
-
-                if (currentPos.x < 8) {
-                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
-                    }
-                }
-
-                // Y value is the same
-                currentPos.x = sourcePos.x - 1;
-                if (currentPos.x >= 0) {
-                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
-                    }
-                }
-            }
-            // possible moves from non starting position
-            else {
-
-                // check above
-                currentPos.y = sourcePos.y + 1;
-                currentPos.x = sourcePos.x;
-
-                if (currentPos.y < 8 && !board.getSquare(currentPos).hasPiece()) {
-                    if (kingSafety(currentPos, sourcePos)) {
-                        GameInfo.get().possibleToMove(currentPos);
-                    }
-                }
-
-                // check diagonal left
-                // Y value is the same
-                currentPos.x = sourcePos.x - 1;
-
-                if (currentPos.y < 8 && currentPos.x >= 0) {
-                    if (board.getSquare(currentPos).hasPiece()) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
-                    }
-                }
-
-                // check diagonal right
-                // Y value is the same
-                currentPos.x = sourcePos.x + 1;
-
-                if (currentPos.y < 8 && currentPos.x < 8) {
-                    if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
-                    }
-                }
-
-            }
-        }
         // black pawn logic
-        else {
-            // standing in default position possible to move more than 1 square
-            if (sourcePos.y == 6) {
-                boolean obstacle = false;
-                int y = sourcePos.y - 1;
-                // check for obstacles
-                while (y >= 4 && !obstacle) {
-                    currentPos.y = y;
-                    if (board.getSquare(currentPos).hasPiece()) {
-                        obstacle = true;
-                    } else {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                        }
-                    }
-                    y--;
-                }
+        else
+            blackPawnLogic(sourcePos, currentPos, boardState);
 
-                currentPos.y = sourcePos.y - 1;
-                currentPos.x = sourcePos.x + 1;
+    }
 
-                if (currentPos.x < 8) {
-                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
+    private void whitePawnLogic(YX sourcePos, YX currentPos, BoardState boardState) {
+        // standing in default position possible to move more than 1 square
+        if (sourcePos.y == 1) {
+            boolean obstacle = false;
+            int y = sourcePos.y + 1;
+            // check for obstacles
+            while (y <= 3 && !obstacle) {
+                currentPos.y = y;
+                if (boardState.hasPiece(currentPos)) {
+                    obstacle = true;
+                } else {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
                     }
                 }
+                y++;
+            }
 
-                // Y value is the same
-                currentPos.x = sourcePos.x - 1;
-                if (currentPos.x >= 0) {
-                    if (board.getSquare(currentPos).hasPiece() && !board.getSquare(currentPos).getPiece().isWhite()) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
+            currentPos.y = sourcePos.y + 1;
+            currentPos.x = sourcePos.x + 1;
+
+            if (currentPos.x < 8) {
+                if (boardState.hasPiece(currentPos) && !boardState.getPiece(currentPos).isWhite()) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
-            // possible move from non starting position
-            else {
 
-                currentPos.y = sourcePos.y - 1;
-                currentPos.x = sourcePos.x;
-
-                if (currentPos.y >= 0 && !board.getSquare(currentPos).hasPiece()) {
-                    if (kingSafety(currentPos, sourcePos)) {
-                        GameInfo.get().possibleToMove(currentPos);
-                    }
-                }
-
-                // check diagonal left
-                // Y value is the same
-                currentPos.x = sourcePos.x - 1;
-
-                if (currentPos.y >= 0 && currentPos.x >= 0) {
-                    if (board.getSquare(currentPos).hasPiece()) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
-                    }
-                }
-
-                // check diagonal right
-                // Y value is the same
-                currentPos.x = sourcePos.x + 1;
-
-                if (currentPos.y >= 0 && currentPos.x < 8) {
-                    if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
-                        if (kingSafety(currentPos, sourcePos)) {
-                            GameInfo.get().possibleToMove(currentPos);
-                            board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
-                        }
+            // Y value is the same
+            currentPos.x = sourcePos.x - 1;
+            if (currentPos.x >= 0) {
+                if (boardState.hasPiece(currentPos) && !boardState.getPiece(currentPos).isWhite()) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
         }
+        // possible moves from non starting position
+        else {
 
-    }
+            // check above
+            currentPos.y = sourcePos.y + 1;
+            currentPos.x = sourcePos.x;
 
-    @Override
-    public void calcAttackedSquares(YX sourcePos) {
-        Board board = GameInfo.get().board;
-        YX currentPos = new YX(0 ,0);
+            if (currentPos.y < 8 && !boardState.hasPiece(currentPos)) {
+                if (kingSafety(currentPos, sourcePos, boardState)) {
+                    this.addMove(new Move(sourcePos, currentPos, this));
+                }
+            }
 
-        // white pawn logic
-        if (this.isWhite()) {
             // check diagonal left
             // Y value is the same
-            currentPos.y = sourcePos.y + 1;
             currentPos.x = sourcePos.x - 1;
 
             if (currentPos.y < 8 && currentPos.x >= 0) {
-                if (board.getSquare(currentPos).hasPiece()) {
-                    if (kingSafety(currentPos, sourcePos)) {
-                        GameInfo.get().possibleToMove(currentPos);
-                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                if (boardState.hasPiece(currentPos)) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -215,24 +95,79 @@ public class Pawn extends Piece {
             currentPos.x = sourcePos.x + 1;
 
             if (currentPos.y < 8 && currentPos.x < 8) {
-                if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
-                    if (kingSafety(currentPos, sourcePos)) {
-                        GameInfo.get().possibleToMove(currentPos);
-                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
+                    }
+                }
+            }
+
+        }
+    }
+
+    private void blackPawnLogic(YX sourcePos, YX currentPos, BoardState boardState) {
+        // standing in default position possible to move more than 1 square
+        if (sourcePos.y == 6) {
+            boolean obstacle = false;
+            int y = sourcePos.y - 1;
+            // check for obstacles
+            while (y >= 4 && !obstacle) {
+                currentPos.y = y;
+                if (boardState.hasPiece(currentPos)) {
+                    obstacle = true;
+                } else {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                    }
+                }
+                y--;
+            }
+
+            currentPos.y = sourcePos.y - 1;
+            currentPos.x = sourcePos.x + 1;
+
+            if (currentPos.x < 8) {
+                if (boardState.hasPiece(currentPos) && boardState.getPiece(currentPos).isWhite()) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
+                    }
+                }
+            }
+
+            // Y value is the same
+            currentPos.x = sourcePos.x - 1;
+            if (currentPos.x >= 0) {
+                if (boardState.hasPiece(currentPos) && boardState.getPiece(currentPos).isWhite()) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
         }
-        // black pawn logic
+        // possible move from non starting position
         else {
+
             currentPos.y = sourcePos.y - 1;
+            currentPos.x = sourcePos.x;
+
+            if (currentPos.y >= 0 && !boardState.hasPiece(currentPos)) {
+                if (kingSafety(currentPos, sourcePos, boardState)) {
+                    this.addMove(new Move(sourcePos, currentPos, this));
+                }
+            }
+
+            // check diagonal left
+            // Y value is the same
             currentPos.x = sourcePos.x - 1;
 
             if (currentPos.y >= 0 && currentPos.x >= 0) {
-                if (board.getSquare(currentPos).hasPiece()) {
-                    if (kingSafety(currentPos, sourcePos)) {
-                        GameInfo.get().possibleToMove(currentPos);
-                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                if (boardState.hasPiece(currentPos)) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -242,10 +177,10 @@ public class Pawn extends Piece {
             currentPos.x = sourcePos.x + 1;
 
             if (currentPos.y >= 0 && currentPos.x < 8) {
-                if (board.getSquare(currentPos).hasPiece() || currentPos == GameInfo.get().enPassantPos) {
-                    if (kingSafety(currentPos, sourcePos)) {
-                        GameInfo.get().possibleToMove(currentPos);
-                        board.getSquare(currentPos).setBackgroundColor(Color.parseColor("#FF0000"));
+                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
+                    if (kingSafety(currentPos, sourcePos, boardState)) {
+                        this.addMove(new Move(sourcePos, currentPos, this));
+                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -253,7 +188,85 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares() {
+    public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
 
+        YX currentPos = new YX(0, 0);
+
+        // white pawn logic
+        if (this.isWhite()) {
+            // check diagonal left
+            // Y value is the same
+            currentPos.y = sourcePos.y + 1;
+            currentPos.x = sourcePos.x - 1;
+
+            if (currentPos.y < 8 && currentPos.x >= 0) {
+                if (boardState.hasPiece(currentPos)) {
+                    this.setSquareAttackValue(currentPos, boardState);
+
+                }
+            }
+
+            // check diagonal right
+            // Y value is the same
+            currentPos.x = sourcePos.x + 1;
+
+            if (currentPos.y < 8 && currentPos.x < 8) {
+                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
+                    this.setSquareAttackValue(currentPos, boardState);
+
+                }
+            }
+        }
+        // black pawn logic
+        else {
+            currentPos.y = sourcePos.y - 1;
+            currentPos.x = sourcePos.x - 1;
+
+            if (currentPos.y >= 0 && currentPos.x >= 0) {
+                if (boardState.hasPiece(currentPos)) {
+                    this.setSquareAttackValue(currentPos, boardState);
+
+                }
+            }
+
+            // check diagonal right
+            // Y value is the same
+            currentPos.x = sourcePos.x + 1;
+
+            if (currentPos.y >= 0 && currentPos.x < 8) {
+                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
+                    this.setSquareAttackValue(currentPos, boardState);
+
+                }
+            }
+        }
+    }
+
+    @Override
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
+        boardState.setKingAttackTrue(sourcePos);
+        YX currentPos;
+
+        if (boardState.getPiece(sourcePos).isWhite()) {
+            currentPos = new YX(sourcePos.y++, sourcePos.x);
+        } else {
+            currentPos = new YX(sourcePos.y--, sourcePos.x);
+        }
+
+        if (kingPos.x < sourcePos.x) {
+            currentPos.x--;
+            boardState.setKingAttackTrue(currentPos);
+        } else {
+            currentPos.x++;
+            boardState.setKingAttackTrue(currentPos);
+        }
+    }
+
+    @Override
+    public String toString() {
+        if (isWhite())
+            return "pw";
+        else
+            return "pb";
     }
 }
