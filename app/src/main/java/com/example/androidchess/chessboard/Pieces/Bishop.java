@@ -51,7 +51,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
 
             x++;
             y++;
@@ -68,7 +68,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
 
             x--;
             y--;
@@ -82,7 +82,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
 
             x++;
             y--;
@@ -96,7 +96,7 @@ public class Bishop extends Piece {
             currentPos.y = y;
             currentPos.x = x;
 
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
 
             x--;
             y++;

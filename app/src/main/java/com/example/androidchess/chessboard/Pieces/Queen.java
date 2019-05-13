@@ -33,8 +33,8 @@ public class Queen extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares() {
-        bishop.calcKingAttackingSquares();
-        rook.calcKingAttackingSquares();
+    public void calcKingAttackingSquares(YX kingPos, YX sourcePos) {
+        bishop.calcKingAttackingSquares(kingPos, sourcePos);
+        rook.calcKingAttackingSquares(kingPos, sourcePos);
     }
 }

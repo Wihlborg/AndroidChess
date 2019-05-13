@@ -43,7 +43,7 @@ public class Rook extends Piece {
         YX currentPos = new YX(y, x);
         while (x < 8 && !obstacle) {
             currentPos.x = x;
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
             x++;
         }
 
@@ -53,7 +53,7 @@ public class Rook extends Piece {
         obstacle = false;
         while (y < 8 && !obstacle) {
             currentPos.y = y;
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
             y++;
         }
 
@@ -63,7 +63,7 @@ public class Rook extends Piece {
         obstacle = false;
         while (y >= 0 && !obstacle) {
             currentPos.y = y;
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
             y--;
         }
 
@@ -73,7 +73,7 @@ public class Rook extends Piece {
         obstacle = false;
         while (x >= 0 && !obstacle) {
             currentPos.x = x;
-            obstacle = findPossibleMove(currentPos, sourcePos);
+            obstacle = findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
             x--;
         }
     }

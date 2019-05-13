@@ -40,51 +40,51 @@ public class Knight extends Piece {
         currentPos.y = y + 1;
         currentPos.x = x + 2;
         if (x + 2 < 8 && y + 1 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
         currentPos.y = y + 2;
         currentPos.x = x + 1;
         if (x + 1 < 8 && y + 2 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
         currentPos.y = y + 2;
         currentPos.x = x - 1;
         if (x - 1 >= 0 && y + 2 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
         currentPos.y = y + 1;
         currentPos.x = x - 2;
         if (x - 2 >= 0 && y + 1 < 8) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
 
         currentPos.y = y - 1;
         currentPos.x = x - 2;
         if (x - 2 >= 0 && y - 1 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
         currentPos.y = y - 2;
         currentPos.x = x - 1;
         if (x - 1 >= 0 && y - 2 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
         currentPos.y = y - 2;
         currentPos.x = x + 1;
         if (x + 1 < 8 && y - 2 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
 
 
         currentPos.y = y - 1;
         currentPos.x = x + 2;
         if (x + 2 < 8 && y - 1 >= 0) {
-            findPossibleMove(currentPos, sourcePos);
+            findPossibleMove(currentPos, sourcePos, GameInfo.get().boardState);
         }
     }
 
