@@ -10,6 +10,8 @@ public class Rook extends Piece {
 
     public boolean findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
         boolean obstacle = false;
+
+
         if (boardState.hasPiece(currentPos)) {
             obstacle = true;
             if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
@@ -19,7 +21,9 @@ public class Rook extends Piece {
                 }
             }
         } else {
-            this.addMove(new Move(sourcePos, currentPos, this));
+            if (this.kingSafety(currentPos, sourcePos, boardState)) {
+                this.addMove(new Move(sourcePos, currentPos, this));
+            }
         }
         return obstacle;
     }
@@ -69,7 +73,7 @@ public class Rook extends Piece {
 
     }
 
-    public boolean calcAttackSquare(YX currentPos, BoardState boardState) {
+    private boolean calcAttackSquare(YX currentPos, BoardState boardState) {
         boolean obstacle = false;
 
         if (boardState.hasPiece(currentPos)) {

@@ -1,6 +1,7 @@
 package com.example.androidchess.chessboard;
 
 import com.example.androidchess.chessboard.Pieces.*;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
@@ -18,7 +19,7 @@ public class BoardState {
     public YX promotionPos;
 
     // coordinate of last move. Used when king is placed in check since only the last move can place kings in check
-    private int lastMovePos;
+    private YX lastMovePos;
 
     // full move is when both sides has made a move
     // increment everytime black makes a move
@@ -31,6 +32,7 @@ public class BoardState {
     3 = attacked by both sides
     */
     public int[][] attackedSquares;
+
     public int getAttackedSquare(YX position) {
         return attackedSquares[position.y][position.x];
     }
@@ -63,7 +65,7 @@ public class BoardState {
     /*
     creates board with a fenString
      */
-    public BoardState(String fenString) {
+    public BoardState(String FENStr) {
         this.squares = new Piece[8][8];
         this.possibleCaptures = new boolean[8][8];
         this.castleFlag = new boolean[4];
@@ -83,7 +85,7 @@ public class BoardState {
         while (!stop) {
             //System.out.println(fenString.charAt(strIndex));
             //System.out.println(arrayPos);
-            switch (fenString.charAt(strIndex)) {
+            switch (FENStr.charAt(strIndex)) {
                 case 'q':
                     this.setPiece(new Queen(false), arrayPos);
                     break;
@@ -129,7 +131,7 @@ public class BoardState {
                     arrayPos.y--;
                     break;
                 default:
-                    for (int t = 0; t < Character.getNumericValue(fenString.charAt(strIndex)); t++) {
+                    for (int t = 0; t < Character.getNumericValue(FENStr.charAt(strIndex)); t++) {
                         squares[arrayPos.y][arrayPos.x++] = null;
                     }
                     arrayPos.x--;
@@ -139,7 +141,7 @@ public class BoardState {
             arrayPos.x++;
         }
 
-        if (fenString.charAt(strIndex) == 'w')
+        if (FENStr.charAt(strIndex) == 'w')
             whiteTurn = true;
         else
             whiteTurn = false;
@@ -147,10 +149,10 @@ public class BoardState {
         strIndex += 2;
         stop = false;
 
-        if (fenString.charAt(strIndex) == '-')
+        if (FENStr.charAt(strIndex) == '-')
             stop = true;
         while (!stop) {
-            switch (fenString.charAt(strIndex)) {
+            switch (FENStr.charAt(strIndex)) {
                 case 'K':
                     castleFlag[3] = false;
                     break;
@@ -176,24 +178,23 @@ public class BoardState {
 
         enPassantPos = new YX(0, 0);
 
-        if (fenString.charAt(strIndex) == '-') {
+        if (FENStr.charAt(strIndex) == '-') {
             enPassantPos.x = -1;
             enPassantPos.y = -1;
         } else {
 
-            int x = fenString.charAt(strIndex);
-            int y = Character.getNumericValue(fenString.charAt(++strIndex));
+            int x = FENStr.charAt(strIndex);
+            int y = Character.getNumericValue(FENStr.charAt(++strIndex));
             x = x - 'a';
             enPassantPos.x = x;
             enPassantPos.y = y;
         }
 
-
         strIndex += 2;
         // half time clock inbetween
 
         //fenNotation.length()-1
-        fullMoveCounter = Character.getNumericValue(fenString.charAt(fenString.length() - 1));
+        fullMoveCounter = Character.getNumericValue(FENStr.charAt(FENStr.length() - 1));
     }
 
     /*
@@ -202,6 +203,7 @@ public class BoardState {
     public BoardState(BoardState boardState, Move move) {
         this.possibleCaptures = boardState.possibleCaptures;
         this.squares = new Piece[8][8];
+
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
                 this.squares[y][x] = boardState.squares[y][x];
@@ -230,103 +232,126 @@ public class BoardState {
         }
     }
 
-    public BoardState makeMove(Move move) {
+    // tree search
+    public BoardState createBoardState(Move move) {
         return new BoardState(this, move);
     }
 
     public void move(Move move) {
         // pawn
         if (move.piece instanceof Pawn) {
-            if (move.source.y - move.destination.y == 2) {
-                this.enPassantPos = move.source;
-                this.enPassantPos.y--;
-            } else if (move.source.y - move.destination.y == -2) {
-                this.enPassantPos = move.source;
-                this.enPassantPos.y++;
-            }
+            pawnMoveLogic(move);
         }
         // king
         else if (move.piece instanceof King) {
-            // checking if the move is a castle move
-            if (move.source.x - move.destination.x > 1) {
-                // white queen side
-                if (move.piece.isWhite()) {
-                    YX rookPos = new YX(0, 0);
-                    this.move(new Move(rookPos, new YX(0, 3), getPiece(rookPos)));
-                }
-                // black queen side
-                else {
-                    YX rookPos = new YX(8, 0);
-                    this.move(new Move(rookPos, new YX(8, 3), getPiece(rookPos)));
-                }
-            } else if (move.source.x - move.destination.x < 1) {
-                // white king side
-                if (move.piece.isWhite()) {
-                    YX rookPos = new YX(0, 8);
-                    this.move(new Move(rookPos, new YX(0, 6), getPiece(rookPos)));
-                }
-                // black king side
-                else {
-                    YX rookPos = new YX(8, 6);
-                    this.move(new Move(rookPos, new YX(8, 6), getPiece(rookPos)));
-                }
-            }
-
-            // mark the castle flags and update the position of the moved king
-            if (move.piece.isWhite()) {
-                if (!this.castleFlag[2] || !this.castleFlag[3]){
-                    this.castleFlag[2] = true;
-                    this.castleFlag[3] = true;
-                }
-                this.kingPos[0] = move.destination;
-            }
-            else  {
-                if (!this.castleFlag[0] || !this.castleFlag[1]) {
-                    this.castleFlag[1] = true;
-                    this.castleFlag[0] = true;
-                }
-                this.kingPos[1] = move.destination;
-            }
+            kingMoveLogic(move);
         }
         // rook
         else if (move.piece instanceof Rook) {
+            rookMoveLogic(move);
+        }
+
+        movePiece(move);
+        this.lastMovePos = new YX(move.destination.y, move.destination.x);
+
+    }
+
+    private void pawnMoveLogic(Move move) {
+        if (move.source.y - move.destination.y == 2) {
+            this.enPassantPos = new YX(move.source.y, move.source.x);
+            this.enPassantPos.y--;
+        } else if (move.source.y - move.destination.y == -2) {
+            this.enPassantPos = new YX(move.source.y, move.source.x);
+            this.enPassantPos.y++;
+        }
+    }
+
+    private void kingMoveLogic(Move move) {
+        // checking if the move is a castle move
+        if (move.source.x - move.destination.x > 1) {
+            // white queen side
             if (move.piece.isWhite()) {
-                if (move.source.y == 0) {
-                    // queen side white
-                    if (move.source.x == 0) {
-                        this.castleFlag[2] = true;
-                    }
-                    // king side white
-                    else if (move.source.x == 8) {
-                        this.castleFlag[3] = true;
-                    }
+                YX rookPos = new YX(0, 0);
+                this.move(new Move(rookPos, new YX(0, 3), getPiece(rookPos)));
+            }
+            // black queen side
+            else {
+                YX rookPos = new YX(8, 0);
+                this.move(new Move(rookPos, new YX(8, 3), getPiece(rookPos)));
+            }
+        } else if (move.source.x - move.destination.x < 1) {
+            // white king side
+            if (move.piece.isWhite()) {
+                YX rookPos = new YX(0, 8);
+                this.move(new Move(rookPos, new YX(0, 6), getPiece(rookPos)));
+            }
+            // black king side
+            else {
+                YX rookPos = new YX(8, 6);
+                this.move(new Move(rookPos, new YX(8, 6), getPiece(rookPos)));
+            }
+        }
+
+        // mark the castle flags and update the position of the moved king
+        if (move.piece.isWhite()) {
+            if (!this.castleFlag[2] || !this.castleFlag[3]) {
+                this.castleFlag[2] = true;
+                this.castleFlag[3] = true;
+            }
+            this.kingPos[0] = move.destination;
+        } else {
+            if (!this.castleFlag[0] || !this.castleFlag[1]) {
+                this.castleFlag[1] = true;
+                this.castleFlag[0] = true;
+            }
+            this.kingPos[1] = move.destination;
+        }
+    }
+
+    private void rookMoveLogic(Move move) {
+        if (move.piece.isWhite()) {
+            if (move.source.y == 0) {
+                // queen side white
+                if (move.source.x == 0) {
+                    this.castleFlag[2] = true;
                 }
-            } else {
-                if (move.source.y == 8) {
-                    // queen side black
-                    if (move.source.x == 0) {
-                        this.castleFlag[0] = true;
-                    }
-                    // king side black
-                    else if (move.source.x == 8) {
-                        this.castleFlag[1] = true;
-                    }
+                // king side white
+                else if (move.source.x == 8) {
+                    this.castleFlag[3] = true;
+                }
+            }
+        } else {
+            if (move.source.y == 8) {
+                // queen side black
+                if (move.source.x == 0) {
+                    this.castleFlag[0] = true;
+                }
+                // king side black
+                else if (move.source.x == 8) {
+                    this.castleFlag[1] = true;
                 }
             }
         }
+    }
+
+    public void movePiece(Move move) {
         setPiece(null, move.source);
         setPiece(move.piece, move.destination);
     }
 
-    public void tempMove(Move move) {
-        setPiece(move.piece, move.destination);
-        setPiece(null, move.source);
+    public void setCheckMate(Move move) {
+        if (move.piece.isWhite())
+            move.piece.calcKingAttackingSquares(kingPos[1], move.destination, this);
+
+        else
+            move.piece.calcKingAttackingSquares(kingPos[0], move.destination, this);
     }
 
     public void resetAttackedSquares() {
         for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++)
+            for (int x = 0; x < 8; x++) {
                 attackedSquares[y][x] = 0;
+            }
         }
     }
 
@@ -349,12 +374,13 @@ public class BoardState {
 
     public void setKingPos(boolean isWhite, YX position) {
         if (isWhite)
-            kingPos[0] = position;
+            kingPos[0] = new YX(position.y, position.x);
         else
-            kingPos[1] = position;
+            kingPos[1] = new YX(position.y, position.x);
     }
 
     public boolean hasPiece(YX position) {
+        /*
         if (position.y < 0 || position.y > 8) {
             System.out.println(position);
             StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
@@ -364,6 +390,7 @@ public class BoardState {
             System.out.println(stackTraceElements[3].getMethodName());
             System.out.println(stackTraceElements[4].getMethodName());
         }
+        */
         return squares[position.y][position.x] != null;
     }
 
@@ -433,15 +460,15 @@ public class BoardState {
 
     public void printBoardState() {
         String str = "boardState\n";
-        for (int y=7; y >= 0; y--) {
-            for (int x=0; x < 8; x++) {
+        for (int y = 7; y >= 0; y--) {
+            for (int x = 0; x < 8; x++) {
                 if (squares[y][x] != null)
-                    str += "["+squares[y][x].toString()+"] ";
+                    str += "[" + squares[y][x].toString() + "] ";
                 else
                     str += "[  ] ";
 
             }
-            str += "\t"+y+"\n";
+            str += "\t" + y + "\n";
         }
         System.out.println(str);
     }

@@ -175,7 +175,7 @@ public class Bishop extends Piece {
 
     @Override
     public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-        boardState.setKingAttackTrue(sourcePos);
+
         YX currentPos = new YX(sourcePos.y, sourcePos.x);
 
         boardState.setKingAttackTrue(sourcePos);

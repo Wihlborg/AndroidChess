@@ -69,7 +69,7 @@ public abstract class Piece {
         }
 
         // make move to check if king is safe
-        boardState.tempMove(new Move(sourcePos, currentPos, this));
+        boardState.movePiece(new Move(sourcePos, currentPos, this));
 
         // if source piece is king
         if (boardState.getPiece(sourcePos) instanceof King) {
@@ -106,7 +106,7 @@ public abstract class Piece {
         // end of calculations
 
         // revert the first move
-        boardState.tempMove(new Move(sourcePos, currentPos, this));
+        boardState.movePiece(new Move(currentPos, sourcePos, this));
 
         // if piece is king
         if (boardState.getPiece(sourcePos) instanceof King) {
@@ -128,15 +128,8 @@ public abstract class Piece {
     }
 
     public void addMove(Move move) {
-        if (move.destination.y > 8 || move.destination.y < 0) {
-            System.out.println("errrror");
-            StackTraceElement[] stackTraceElements = Thread.currentThread().getStackTrace();
-            System.out.println(stackTraceElements[0].getMethodName());
-            System.out.println(stackTraceElements[1].getMethodName());
-            System.out.println(stackTraceElements[2].getMethodName());
-            System.out.println(stackTraceElements[3].getMethodName());
-            System.out.println(stackTraceElements[4].getMethodName());
-        }
+
+
         moves.add(move);
     }
 

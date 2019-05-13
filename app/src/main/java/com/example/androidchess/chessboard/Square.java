@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import com.example.androidchess.R;
 import com.example.androidchess.chessboard.Pieces.*;
+import org.jetbrains.annotations.Nullable;
 
 public class Square extends android.support.v7.widget.AppCompatImageView {
 
@@ -31,7 +32,7 @@ public class Square extends android.support.v7.widget.AppCompatImageView {
             return true;
     }*/
 
-    public void setPiece(Piece piece) {
+    public void setPiece(@Nullable Piece piece) {
 
         if (piece != null) {
 
@@ -48,6 +49,9 @@ public class Square extends android.support.v7.widget.AppCompatImageView {
             } else if (piece instanceof Pawn) {
                 this.setImageResource(piece.isWhite() ? R.drawable.pw : R.drawable.pb);
             }
+        }
+        else {
+            this.setImageResource(0);
         }
 
     }

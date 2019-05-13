@@ -14,8 +14,7 @@ public class Board {
     private Square[][] squares;
     public BoardState boardState;
 
-    public boolean[][] possibleMoves = new boolean[8][8];
-
+    public boolean[][] possibleClicks = new boolean[8][8];
 
     public Board(GameActivity gameActivity, ConstraintLayout boardContainer) {
         this.squares = new Square[8][8];
@@ -24,14 +23,10 @@ public class Board {
         set.clone(boardContainer);
         setConstraints(set, boardContainer);
         setBoardState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        updateBoard(boardState);
-        boardState.printBoardState();
         calcAllPossibleMoves();
-        //placeDefaultPieces();
-        boardState.printBoardState();
     }
 
-    YX firstPos = new YX(0, 0);
+    YX firstPos = new YX(4, 4);
     int swapCounter = 0;
 
     // function for a square click
@@ -46,19 +41,25 @@ public class Board {
                 clearVisibleMoves();
             }
         }
+
         // first click on a piece
         if (++swapCounter == 1 && boardState.hasPiece(pos) && turnCheck(pos)) {
             firstPos = pos;
             this.getSquare(pos).setBackgroundColor(Color.parseColor("#00FFFF"));
             showPossibleMoves(pos);
+            //System.out.println(boardState.getPiece(pos).getMoves().toString());
         }
         // a legal move is made
         else if (swapCounter == 2 && legalMove(pos)) {
             boardState.move(new Move(firstPos, pos, boardState.getPiece(firstPos)));
+            updateBoard(boardState);
 
             swapCounter = 0;
-            clearVisibleMoves();
             swapTurn();
+
+            clearPossibleMoves();
+            clearVisibleMoves();
+            calcAllPossibleMoves();
         }
         //
         else {
@@ -77,7 +78,7 @@ public class Board {
     }
 
     public void updateBoard(BoardState boardState) {
-        YX currentPos = new YX(0 , 0);
+        YX currentPos = new YX(0, 0);
 
         System.out.println("updateboard");
         for (; currentPos.y < 8; currentPos.y++) {
@@ -90,15 +91,21 @@ public class Board {
         //board.redrawViews();
     }
 
-    public void setBoardState(String FENstr) {
-        boardState = new BoardState(FENstr);
+    public void setBoardState(String FENStr) {
+        boardState = new BoardState(FENStr);
+        updateBoard(boardState);
+    }
+
+    public void setBoardState(BoardState boardState) {
+        this.boardState = boardState;
+        updateBoard(this.boardState);
     }
 
     // fen string example
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     // board positions | whos turn | castle options | en passant | half move counter | full move counter
     public String getFENstring(BoardState boardState) {
-        String FENstr = "";
+        String FENStr = "";
 
         // board positions
         int emptyCellCounter = 0;
@@ -109,75 +116,75 @@ public class Board {
 
                 if (boardState.hasPiece(currentPos)) {
                     if (emptyCellCounter != 0)
-                        FENstr += Integer.toString(emptyCellCounter);
+                        FENStr += Integer.toString(emptyCellCounter);
 
                     Piece piece = boardState.getPiece(currentPos);
                     if (piece instanceof Rook) {
-                        FENstr += (piece.isWhite() ? "R" : "r");
+                        FENStr += (piece.isWhite() ? "R" : "r");
                     } else if (piece instanceof Queen) {
-                        FENstr += (piece.isWhite() ? "Q" : "q");
+                        FENStr += (piece.isWhite() ? "Q" : "q");
                     } else if (piece instanceof Bishop) {
-                        FENstr += (piece.isWhite() ? "B" : "b");
+                        FENStr += (piece.isWhite() ? "B" : "b");
                     } else if (piece instanceof Knight) {
-                        FENstr += (piece.isWhite() ? "N" : "n");
+                        FENStr += (piece.isWhite() ? "N" : "n");
                     } else if (piece instanceof King) {
-                        FENstr += (piece.isWhite() ? "K" : "k");
+                        FENStr += (piece.isWhite() ? "K" : "k");
                     } else if (piece instanceof Pawn) {
-                        FENstr += (piece.isWhite() ? "P" : "p");
+                        FENStr += (piece.isWhite() ? "P" : "p");
                     }
                 } else {
                     emptyCellCounter++;
                 }
             }
             if (emptyCellCounter != 0)
-                FENstr += Integer.toString(emptyCellCounter);
-            FENstr += "/";
+                FENStr += Integer.toString(emptyCellCounter);
+            FENStr += "/";
 
         }
 
         if (boardState.isWhiteTurn())
-            FENstr += " w ";
+            FENStr += " w ";
         else
-            FENstr += " b ";
+            FENStr += " b ";
 
         // castle
         boolean castleAvailable = false;
         if (!boardState.getCastleFlag(3)) {
             castleAvailable = true;
-            FENstr += "K";
+            FENStr += "K";
         }
         if (!boardState.getCastleFlag(2)) {
             castleAvailable = true;
-            FENstr += "Q";
+            FENStr += "Q";
         }
         if (!boardState.getCastleFlag(1)) {
             castleAvailable = true;
-            FENstr += "k";
+            FENStr += "k";
         }
         if (!boardState.getCastleFlag(0)) {
             castleAvailable = true;
-            FENstr += "q";
+            FENStr += "q";
         }
         if (!castleAvailable) {
-            FENstr += "- ";
+            FENStr += "- ";
         }
 
         // enpassant
         YX enpassantPos = boardState.getEnPassantPos();
         if (enpassantPos.y != -1)
-            FENstr += this.getSquare(enpassantPos).coordinate + " ";
+            FENStr += this.getSquare(enpassantPos).coordinate + " ";
         else {
-            FENstr += "- ";
+            FENStr += "- ";
         }
 
         // half move counter
         //TODO half move counter implementation
-        FENstr += "0 ";
+        FENStr += "0 ";
 
         // full move counter
-        FENstr += Integer.toString(boardState.getFullMoveCounter());
+        FENStr += Integer.toString(boardState.getFullMoveCounter());
 
-        return FENstr;
+        return FENStr;
     }
 
     public boolean turnCheck(YX pos) {
@@ -210,45 +217,56 @@ public class Board {
         }
     }
 
+    public void clearPossibleMoves() {
+        for (Piece[] pArray : boardState.squares) {
+            for (Piece piece : pArray) {
+                if (piece != null)
+                    piece.clearMoves();
+            }
+        }
+    }
+
     public void showPossibleMoves(YX sourcePos) {
         LinkedList<Move> listOfMoves = boardState.getPiece(sourcePos).getMoves();
+        //System.out.println("object: "+System.identityHashCode(boardState.getPiece(sourcePos)));
+        //System.out.println("list: "+System.identityHashCode(listOfMoves));
         //System.out.println(listOfMoves.toString());
-        for (int i = 0; i < listOfMoves.size(); i++) {
-            Move move = listOfMoves.get(i);
+        for (Move move : listOfMoves) {
             if (boardState.hasPiece(move.destination)) {
                 if (boardState.isPossibleCapture(move.destination))
                     this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
-            }
-            else
+            } else
                 this.getSquare(move.destination).setImageResource(R.drawable.ts);
 
-            setPossibleMove(move.destination);
+            setPossibleClick(move.destination);
         }
     }
 
-    public void resetPossibleMoves() {
-        for (int y=0; y < 8; y++) {
-            for (int x=0; x<8; x++)
-                possibleMoves[y][x] = false;
+    public void resetPossibleClicks() {
+        for (int y = 0; y < 8; y++) {
+            for (int x = 0; x < 8; x++)
+                possibleClicks[y][x] = false;
         }
     }
-    public void setPossibleMove(YX position) {
-        possibleMoves[position.y][position.x] = true;
+
+    public void setPossibleClick(YX position) {
+        possibleClicks[position.y][position.x] = true;
     }
 
     public boolean legalMove(YX pos) {
-        return possibleMoves[pos.y][pos.x];
+        return possibleClicks[pos.y][pos.x];
     }
 
     public void clearVisibleMoves() {
         resetBackgrounds();
         YX currentPos = new YX(0, 0);
-        for (; currentPos.y < 8; currentPos.y++) {
-            for (; currentPos.x < 8; currentPos.x++) {
+        for (currentPos.y = 0; currentPos.y < 8; currentPos.y++) {
+            for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
                 if (!boardState.hasPiece(currentPos))
                     this.getSquare(currentPos).setImageDrawable(null);
             }
         }
+        resetPossibleClicks();
     }
 
     public void resetBackgrounds() {
