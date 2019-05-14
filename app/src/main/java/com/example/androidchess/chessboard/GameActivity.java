@@ -221,9 +221,7 @@ public class GameActivity extends AppCompatActivity {
         //False = Black, True = White
         allpossibleMoves(false);
 
-        for (int i=0;i<moves.size();i++){
-        createNodes.add(new TreeNode());
-        }
+
 
         rootNode.children=createNodes;
          TreeNode best;
