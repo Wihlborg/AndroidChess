@@ -23,7 +23,7 @@ public class Board {
         set.clone(boardContainer);
         setConstraints(set, boardContainer);
         setBoardState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        calcAllPossibleMoves();
+        boardState.calcAllPossibleMoves();
     }
 
     YX firstPos = new YX(4, 4);
@@ -31,6 +31,9 @@ public class Board {
 
     // function for a square click
     public void move(YX pos) {
+        Timer timer = new Timer();
+
+        timer.startTimer();
 
         // both squares has pieces and they are the same color
         // makes it responsive between clicks of same color
@@ -51,21 +54,22 @@ public class Board {
         }
         // a legal move is made
         else if (swapCounter == 2 && legalMove(pos)) {
-            boardState.move(new Move(firstPos, pos, boardState.getPiece(firstPos)));
+            boardState.doLegalMove(new Move(firstPos, pos, boardState.getPiece(firstPos)));
             updateBoard(boardState);
 
             swapCounter = 0;
-            swapTurn();
+            //swapTurn();
 
-            clearPossibleMoves();
             clearVisibleMoves();
-            calcAllPossibleMoves();
         }
         //
         else {
             swapCounter = 0;
             clearVisibleMoves();
         }
+
+        timer.stopTimer();
+        System.out.println(timer.retreiveTime());
     }
 
     public void swap(YX firstPos, YX secondPos) {
@@ -197,6 +201,7 @@ public class Board {
         return false;
     }
 
+    /*
     public void swapTurn() {
         if (boardState.isWhiteTurn()) {
             boardState.setWhiteTurn(false);
@@ -205,38 +210,19 @@ public class Board {
             boardState.incrementFullMoveCounter();
         }
     }
-
-    public void calcAllPossibleMoves() {
-        YX currentPos = new YX(0, 0);
-        for (currentPos.y = 0; currentPos.y < 8; currentPos.y++) {
-            for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
-                if (boardState.hasPiece(currentPos)) {
-                    boardState.getPiece(currentPos).calcPossibleMoves(currentPos, boardState);
-                }
-            }
-        }
-    }
-
-    public void clearPossibleMoves() {
-        for (Piece[] pArray : boardState.squares) {
-            for (Piece piece : pArray) {
-                if (piece != null)
-                    piece.clearMoves();
-            }
-        }
-    }
+    */
 
     public void showPossibleMoves(YX sourcePos) {
         LinkedList<Move> listOfMoves = boardState.getPiece(sourcePos).getMoves();
         //System.out.println("object: "+System.identityHashCode(boardState.getPiece(sourcePos)));
         //System.out.println("list: "+System.identityHashCode(listOfMoves));
-        //System.out.println(listOfMoves.toString());
+        System.out.println(listOfMoves.toString());
         for (Move move : listOfMoves) {
             if (boardState.hasPiece(move.destination)) {
                 if (boardState.isPossibleCapture(move.destination))
                     this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
             } else
-                this.getSquare(move.destination).setImageResource(R.drawable.ts);
+                this.getSquare(move.destination).setAlpha(1f);
 
             setPossibleClick(move.destination);
         }
@@ -263,12 +249,22 @@ public class Board {
         for (currentPos.y = 0; currentPos.y < 8; currentPos.y++) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
                 if (!boardState.hasPiece(currentPos))
-                    this.getSquare(currentPos).setImageDrawable(null);
+                    squares[currentPos.y][currentPos.x].setAlpha(0f);
             }
         }
         resetPossibleClicks();
+        //redrawViews();
     }
 
+    public void resetBackgrounds() {
+        for (Square[] sArray : squares) {
+            for (Square square : sArray) {
+                square.setBackgroundResource(0);
+            }
+        }
+    }
+
+    /*
     public void resetBackgrounds() {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -286,6 +282,7 @@ public class Board {
             }
         }
     }
+    */
 
     public void createSquares(GameActivity gameActivity, ConstraintLayout boardContainer) {
         DisplayMetrics metrics = gameActivity.getResources().getDisplayMetrics();
@@ -304,6 +301,7 @@ public class Board {
                 squares[y][x].getLayoutParams().height = width / 8;
                 //board[y][x].setClickable(true);
 
+                /*
                 if (y % 2 == 0) {
                     if (x % 2 == 0)
                         squares[y][x].setBackgroundColor(Color.parseColor("#45515F"));
@@ -315,6 +313,7 @@ public class Board {
                     else
                         squares[y][x].setBackgroundColor(Color.parseColor("#45515F"));
                 }
+                */
 
                 final YX yx = new YX(y, x);
 

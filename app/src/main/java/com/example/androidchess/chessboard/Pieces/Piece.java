@@ -46,13 +46,6 @@ public abstract class Piece {
     }
 
     /*
-    calculates based on the lastmove made what squares are attacking the king
-    used to calculate if other pieces can block the check created by the king attacker
-    */
-
-    abstract public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState);
-
-    /*
     swaps places of pieces/empty squares and calculates if the king stands in check.
     removes piece temporarily and swaps to simulate a capture if current checked position contains a piece
     */
@@ -68,16 +61,16 @@ public abstract class Piece {
             boardState.setPiece(null, currentPos);
         }
 
-        // make move to check if king is safe
+        // make a temporarily move
         boardState.movePiece(new Move(sourcePos, currentPos, this));
 
         // if source piece is king
-        if (boardState.getPiece(sourcePos) instanceof King) {
-            if (boardState.getPiece(sourcePos).isWhite())
-                boardState.setKingPos(true, sourcePos);
+        if (boardState.getPiece(currentPos) instanceof King) {
+            if (boardState.getPiece(currentPos).isWhite())
+                boardState.setKingPos(true, currentPos);
 
             else
-                boardState.setKingPos(false, sourcePos);
+                boardState.setKingPos(false, currentPos);
         }
 
         // temporarily save the array to skip new reset and calculations
@@ -155,3 +148,4 @@ public abstract class Piece {
 
     abstract public String toString();
 }
+

@@ -243,26 +243,6 @@ public class Pawn extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-        boardState.setKingAttackTrue(sourcePos);
-        YX currentPos;
-
-        if (boardState.getPiece(sourcePos).isWhite()) {
-            currentPos = new YX(sourcePos.y++, sourcePos.x);
-        } else {
-            currentPos = new YX(sourcePos.y--, sourcePos.x);
-        }
-
-        if (kingPos.x < sourcePos.x) {
-            currentPos.x--;
-            boardState.setKingAttackTrue(currentPos);
-        } else {
-            currentPos.x++;
-            boardState.setKingAttackTrue(currentPos);
-        }
-    }
-
-    @Override
     public String toString() {
         if (isWhite())
             return "pw";

@@ -11,7 +11,6 @@ public class Rook extends Piece {
     public boolean findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
         boolean obstacle = false;
 
-
         if (boardState.hasPiece(currentPos)) {
             obstacle = true;
             if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
@@ -131,46 +130,6 @@ public class Rook extends Piece {
             currentPos.y = y;
             obstacle = calcAttackSquare(currentPos, boardState);
             y--;
-        }
-    }
-
-    @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-        YX currentPos = new YX(sourcePos.y, sourcePos.x);
-
-        boardState.setKingAttackTrue(currentPos);
-
-        // if they are positioned on the same x axis
-        if (kingPos.x == sourcePos.x) {
-            if (sourcePos.y > kingPos.y) {
-                currentPos.y--;
-                while (currentPos.y >= 0 && currentPos.y > kingPos.y) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.y--;
-                }
-            } else {
-                currentPos.y++;
-                while (currentPos.y < 8 && currentPos.y < kingPos.y) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.y++;
-                }
-            }
-        }
-        // if they are positioned on the same y axis
-        else {
-            if (sourcePos.x > kingPos.x) {
-                currentPos.x--;
-                while (currentPos.x >= 0 && currentPos.x > kingPos.x) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.x--;
-                }
-            } else {
-                currentPos.x++;
-                while (currentPos.x < 8 && currentPos.x < kingPos.x) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.x++;
-                }
-            }
         }
     }
 

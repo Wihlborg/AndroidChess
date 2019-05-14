@@ -148,11 +148,6 @@ public class Knight extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-        boardState.setKingAttackTrue(sourcePos);
-    }
-
-    @Override
     public String toString() {
         if (isWhite())
             return "nw";

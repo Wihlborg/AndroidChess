@@ -174,55 +174,6 @@ public class Bishop extends Piece {
     }
 
     @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-
-        YX currentPos = new YX(sourcePos.y, sourcePos.x);
-
-        boardState.setKingAttackTrue(sourcePos);
-
-        // down left
-        if (kingPos.x < sourcePos.x && kingPos.y < sourcePos.y) {
-            currentPos.y--;
-            currentPos.x--;
-            while (currentPos.x >= 0 && currentPos.y >= 0 && currentPos.x > kingPos.x && currentPos.y > kingPos.y) {
-                boardState.setKingAttackTrue(currentPos);
-                currentPos.y--;
-                currentPos.x--;
-            }
-        }
-        // down right
-        else if (kingPos.x > sourcePos.x && kingPos.y < sourcePos.y) {
-            currentPos.y--;
-            currentPos.x++;
-            while (currentPos.x < 8 && currentPos.y >= 0 && currentPos.x < kingPos.x && currentPos.y > kingPos.y) {
-                boardState.setKingAttackTrue(currentPos);
-                currentPos.y--;
-                currentPos.x++;
-            }
-        }
-        // up right
-        else if (kingPos.x > sourcePos.x && kingPos.y > sourcePos.y) {
-            currentPos.y++;
-            currentPos.x++;
-            while (currentPos.x < 8 && currentPos.y < 8 && currentPos.x < kingPos.x && currentPos.y < kingPos.y) {
-                boardState.setKingAttackTrue(currentPos);
-                currentPos.y++;
-                currentPos.x++;
-            }
-        }
-        // up left
-        else if (kingPos.x < sourcePos.x && kingPos.y > sourcePos.y) {
-            currentPos.y++;
-            currentPos.x--;
-            while (currentPos.x >= 0 && currentPos.y < 8 && currentPos.x > kingPos.x && currentPos.y < kingPos.y) {
-                boardState.setKingAttackTrue(currentPos);
-                currentPos.y++;
-                currentPos.x--;
-            }
-        }
-    }
-
-    @Override
     public String toString() {
         if (isWhite())
             return "bw";

@@ -51,7 +51,8 @@ public class Square extends android.support.v7.widget.AppCompatImageView {
             }
         }
         else {
-            this.setImageResource(0);
+            this.setImageResource(R.drawable.ts);
+            this.setAlpha(0f);
         }
 
     }

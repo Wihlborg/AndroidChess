@@ -58,8 +58,10 @@ public class King extends Piece {
                         obstacle = true;
                     } else {
                         //System.out.println("kingsafety: " + kingSafety(currentPos, sourcePos));
-                        if (x == 7 && this.kingSafety(currentPos, sourcePos, boardState))
+                        if (x == 7 && this.kingSafety(currentPos, sourcePos, boardState)) {
+                            currentPos.x--;
                             this.addMove(new Move(sourcePos, currentPos, this));
+                        }
                     }
                 }
             }
@@ -74,8 +76,10 @@ public class King extends Piece {
                     if (x != 0 && boardState.hasPiece(currentPos) || boardState.attackedSquares[currentPos.y][currentPos.x] > 1) {
                         obstacle = true;
                     } else {
-                        if (x == 0 && kingSafety(currentPos, sourcePos, boardState))
+                        if (x == 0 && kingSafety(currentPos, sourcePos, boardState)) {
+                            currentPos.x = 2;
                             this.addMove(new Move(sourcePos, currentPos, this));
+                        }
                     }
                 }
             }
@@ -95,8 +99,10 @@ public class King extends Piece {
                                     || boardState.attackedSquares[currentPos.y][currentPos.x] == 3)) {
                         obstacle = true;
                     } else {
-                        if (x == 7 && kingSafety(currentPos, sourcePos, boardState))
+                        if (x == 7 && kingSafety(currentPos, sourcePos, boardState)) {
+                            currentPos.x--;
                             this.addMove(new Move(sourcePos, currentPos, this));
+                        }
                     }
                 }
             }
@@ -113,8 +119,10 @@ public class King extends Piece {
                                     || boardState.attackedSquares[currentPos.y][currentPos.x] == 3)) {
                         obstacle = true;
                     } else {
-                        if (x == 0 && kingSafety(currentPos, sourcePos, boardState))
+                        if (x == 0 && kingSafety(currentPos, sourcePos, boardState)) {
+                            currentPos.x = 2;
                             this.addMove(new Move(sourcePos, currentPos, this));
+                        }
                     }
                 }
             }
@@ -231,11 +239,6 @@ public class King extends Piece {
         currentPos.x = x - 1;
         if (currentPos.y >= 0 && currentPos.x >= 0)
             this.setSquareAttackValue(currentPos, boardState);
-
-    }
-
-    @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
 
     }
 
