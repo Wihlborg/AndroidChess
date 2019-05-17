@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class Rook extends Piece {
 
@@ -16,7 +18,6 @@ public class Rook extends Piece {
             if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
                 if (this.kingSafety(currentPos, sourcePos, boardState)) {
                     this.addMove(new Move(sourcePos, currentPos, this));
-                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         } else {
@@ -72,6 +73,7 @@ public class Rook extends Piece {
 
     }
 
+    /*
     private boolean calcAttackSquare(YX currentPos, BoardState boardState) {
         boolean obstacle = false;
 
@@ -132,6 +134,7 @@ public class Rook extends Piece {
             y--;
         }
     }
+    */
 
     @Override
     public String toString() {

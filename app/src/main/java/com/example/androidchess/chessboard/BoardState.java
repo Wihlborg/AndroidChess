@@ -3,6 +3,7 @@ package com.example.androidchess.chessboard;
 import com.example.androidchess.chessboard.Pieces.*;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 
 public class BoardState {
     // logical presentation of the board
@@ -15,7 +16,7 @@ public class BoardState {
     // postition where enpassant is possible
     private YX enPassantPos;
 
-    public YX promotionPos;
+    //public YX promotionPos;
 
 
     // full move is when both sides has made a move
@@ -28,11 +29,13 @@ public class BoardState {
     2 = only black attacker
     3 = attacked by both sides
     */
-    public int[][] attackedSquares;
+    //public int[][] attackedSquares;
 
+    /*
     public int getAttackedSquare(YX position) {
         return attackedSquares[position.y][position.x];
     }
+    */
 
     /*
     [0] = coordinate of white king
@@ -43,7 +46,7 @@ public class BoardState {
     /*
     calculates the squares who are attacking the king
     */
-    private boolean[][] kingAttacker;
+    //private boolean[][] kingAttacker;
 
     /*
     flag for castling
@@ -55,7 +58,7 @@ public class BoardState {
     private boolean[] castleFlag;
 
     // is only used by UI for the player turn
-    public boolean[][] possibleCaptures;
+    //public boolean[][] possibleCaptures;
 
 
     /*
@@ -63,12 +66,12 @@ public class BoardState {
      */
     public BoardState(String FENStr) {
         this.squares = new Piece[8][8];
-        this.possibleCaptures = new boolean[8][8];
+        //this.possibleCaptures = new boolean[8][8];
+        this.enPassantPos = new YX(0 ,0);
         this.castleFlag = new boolean[4];
         this.kingPos = new YX[2];
         this.kingPos[0] = new YX(0, 4);
         this.kingPos[1] = new YX(7, 4);
-        this.attackedSquares = new int[8][8];
         this.checkMate = false;
 
         // fen string example
@@ -192,14 +195,17 @@ public class BoardState {
 
         //fenNotation.length()-1
         fullMoveCounter = Character.getNumericValue(FENStr.charAt(FENStr.length() - 1));
+
+        calcAllPossibleMoves();
     }
 
     /*
     creates a new boardstate with old boardstate and a move
      */
     public BoardState(BoardState parentBoardState, Move move) {
-        this.possibleCaptures = parentBoardState.possibleCaptures;
+        //this.possibleCaptures = parentBoardState.possibleCaptures;
         this.squares = new Piece[8][8];
+        this.enPassantPos = new YX(-1, -1);
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -208,13 +214,10 @@ public class BoardState {
         }
 
         this.checkMate = false;
-        this.whiteTurn = !parentBoardState.whiteTurn;
-        this.enPassantPos.x = -1;
-        this.enPassantPos.y = -1;
+        this.whiteTurn = parentBoardState.whiteTurn;
         this.castleFlag = Arrays.copyOf(parentBoardState.castleFlag, parentBoardState.castleFlag.length);
-        this.fullMoveCounter = parentBoardState.fullMoveCounter + 1;
+        //this.fullMoveCounter = parentBoardState.fullMoveCounter + 1;
         this.kingPos = new YX[2];
-        this.attackedSquares = new int[8][8];
 
         this.kingPos[0] = new YX(parentBoardState.kingPos[0].y, parentBoardState.kingPos[0].x);
         this.kingPos[1] = new YX(parentBoardState.kingPos[1].y, parentBoardState.kingPos[1].x);
@@ -241,6 +244,27 @@ public class BoardState {
         return new BoardState(this, move);
     }
 
+    public LinkedList<Move> getAllMoves() {
+        LinkedList<Move> listOfMoves = new LinkedList<>();
+        for (Piece[] pArray: squares) {
+            for (Piece piece: pArray) {
+                if (piece != null) {
+                    if (whiteTurn) {
+                        if (piece.isWhite())
+                            listOfMoves.addAll(piece.getMoves());
+                    }
+                    else {
+                        if (!piece.isWhite())
+                            listOfMoves.addAll(piece.getMoves());
+                    }
+                }
+            }
+        }
+
+        //System.out.println(listOfMoves);
+        return listOfMoves;
+    }
+
     public void calcAllPossibleMoves() {
         this.clearPossibleMoves();
 
@@ -248,7 +272,15 @@ public class BoardState {
         for (currentPos.y = 0; currentPos.y < 8; currentPos.y++) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
                 if (this.hasPiece(currentPos)) {
-                    this.getPiece(currentPos).calcPossibleMoves(currentPos, this);
+                    Piece piece = this.getPiece(currentPos);
+                    if (whiteTurn) {
+                        if (piece.isWhite())
+                            piece.calcPossibleMoves(currentPos, this);
+                    }
+                    else {
+                        if (!piece.isWhite())
+                            piece.calcPossibleMoves(currentPos, this);
+                    }
                 }
             }
         }
@@ -282,8 +314,8 @@ public class BoardState {
 
         this.calcAllPossibleMoves();
 
-        System.out.println(isCheckMate());
-
+        if (isCheckMate())
+            System.out.println("CHECKMATE!!!");
     }
 
     private void pawnMoveLogic(Move move) {
@@ -309,7 +341,7 @@ public class BoardState {
                 YX rookPos = new YX(7, 0);
                 this.movePiece(new Move(rookPos, new YX(7, 3), getPiece(rookPos)));
             }
-        } else if (move.source.x - move.destination.x < 1) {
+        } else if (move.source.x - move.destination.x < -1) {
             // white king side
             if (move.piece.isWhite()) {
                 YX rookPos = new YX(0, 7);
@@ -392,7 +424,7 @@ public class BoardState {
             }
         }
 
-        System.out.println("nrOfMoves: "+nrOfMoves);
+        //System.out.println("nrOfMoves: "+nrOfMoves);
         if(nrOfMoves == 0) {
             checkMate = true;
         }
@@ -400,6 +432,7 @@ public class BoardState {
         return this.checkMate;
     }
 
+    /*
     public void resetAttackedSquares() {
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -407,17 +440,17 @@ public class BoardState {
             }
         }
     }
+*/
+    public int[][] calcAllAttackedSquares() {
+        int[][] calcAllAttackedSquares = new int[8][8];
 
-    public void calcAllAttackedSquares() {
-        YX currentPos = new YX(0 , 0);
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
-                currentPos.y = y;
-                currentPos.x = x;
-                if (this.hasPiece(currentPos))
-                    this.getPiece(currentPos).calcAttackedSquares(currentPos, this);
+                //calcAllAttackedSquares[y][x]
             }
         }
+
+        return calcAllAttackedSquares;
     }
 
     public YX getKingPos(boolean isWhite) {
@@ -499,18 +532,6 @@ public class BoardState {
 
     public void incrementFullMoveCounter() {
         this.fullMoveCounter++;
-    }
-
-    public void setKingAttackTrue(YX position) {
-        kingAttacker[position.y][position.x] = true;
-    }
-
-    public void markPossibleCaptures(YX position) {
-        this.possibleCaptures[position.y][position.x] = true;
-    }
-
-    public boolean isPossibleCapture(YX position) {
-        return this.possibleCaptures[position.y][position.x];
     }
 
     public void printBoardState() {

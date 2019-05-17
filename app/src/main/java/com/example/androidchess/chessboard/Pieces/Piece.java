@@ -1,6 +1,9 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
+
 
 import java.util.LinkedList;
 
@@ -28,22 +31,7 @@ public abstract class Piece {
     /*
     calculates which square this piece attacks
     */
-    abstract public void calcAttackedSquares(YX sourcePos, BoardState boardState);
-
-    public void setSquareAttackValue(YX currentPos, BoardState boardState) {
-        int[][] attackedSquares = boardState.attackedSquares;
-        if (isWhite) {
-            if (attackedSquares[currentPos.y][currentPos.x] == 0)
-                attackedSquares[currentPos.y][currentPos.x] = 1;
-            else if (attackedSquares[currentPos.y][currentPos.x] == 2)
-                attackedSquares[currentPos.y][currentPos.x] = 3;
-        } else {
-            if (attackedSquares[currentPos.y][currentPos.x] == 0)
-                attackedSquares[currentPos.y][currentPos.x] = 2;
-            else if (attackedSquares[currentPos.y][currentPos.x] == 1)
-                attackedSquares[currentPos.y][currentPos.x] = 3;
-        }
-    }
+    //abstract public void calcAttackedSquares(YX sourcePos, BoardState boardState);
 
     /*
     swaps places of pieces/empty squares and calculates if the king stands in check.
@@ -51,7 +39,7 @@ public abstract class Piece {
     */
     public boolean kingSafety(YX currentPos, YX sourcePos, BoardState boardState) {
 
-        boolean safe = true;
+        boolean safe;
 
         Piece piece = null;
 
@@ -73,13 +61,23 @@ public abstract class Piece {
                 boardState.setKingPos(false, currentPos);
         }
 
+        // isSafeFromCheck
+        if (boardState.isWhiteTurn()) {
+            YX pos = boardState.getKingPos(true);
+            safe = (boardState.getPiece(pos)).isSafeFromCheck(pos, boardState);
+        }
+        else {
+            YX pos = boardState.getKingPos(false);
+            safe = (boardState.getPiece(pos)).isSafeFromCheck(pos, boardState);
+        }
+
+        /*
         // temporarily save the array to skip new reset and calculations
         int[][] attackedSquares = boardState.attackedSquares;
 
         // start of calculations
 
-        boardState.resetAttackedSquares();
-        boardState.calcAllAttackedSquares();
+        if (whiteTir)
 
         // if the square is white, is white's turn and if the king stands on a attacked square
         if (boardState.getPiece(currentPos).isWhite()) {
@@ -96,7 +94,11 @@ public abstract class Piece {
             }
         }
 
+        // assign the temporarily saved array to return old values
+        boardState.attackedSquares = attackedSquares;
+
         // end of calculations
+        */
 
         // revert the first move
         boardState.movePiece(new Move(currentPos, sourcePos, this));
@@ -114,15 +116,344 @@ public abstract class Piece {
             boardState.setPiece(piece, currentPos);
         }
 
-        // assign the temporarily saved array to return old values
-        boardState.attackedSquares = attackedSquares;
+        return safe;
+    }
+
+    public boolean isSafeFromCheck(YX sourcePos, BoardState boardState) {
+        boolean safe = true;
+
+        safe = isCheckedBishopMovement(sourcePos, boardState);
+
+        if (safe)
+            safe = isCheckedRookMovement(sourcePos, boardState);
+
+        if (safe)
+            safe = isCheckedKnightMovement(sourcePos, boardState);
+
+        if (safe)
+            safe = isCheckedPawnMovement(sourcePos, boardState);
+
+        return safe;
+    }
+
+    private boolean isCheckedBishopMovement(YX sourcePos, BoardState boardState) {
+        boolean safe = true;
+
+        // diagonal towards top right
+        boolean obstacle = false;
+        YX currentPos = new YX(sourcePos.y + 1, sourcePos.x + 1);
+        while (currentPos.y < 8 && currentPos.x < 8 && !obstacle) {
+
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Bishop || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+
+            currentPos.y++;
+            currentPos.x++;
+        }
+
+        // diagonal towards top left
+        if (safe)
+            obstacle = false;
+        currentPos.y = sourcePos.y + 1;
+        currentPos.x = sourcePos.x - 1;
+        while (currentPos.y < 8 && currentPos.x >= 0 && !obstacle) {
+
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Bishop || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+
+            currentPos.y++;
+            currentPos.x--;
+        }
+
+        // diagonal towards bottom left
+        if (safe)
+            obstacle = false;
+        currentPos.y = sourcePos.y - 1;
+        currentPos.x = sourcePos.x - 1;
+        while (currentPos.y >= 0 && currentPos.x >= 0 && !obstacle) {
+
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Bishop || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+
+            currentPos.y--;
+            currentPos.x--;
+        }
+
+        // diagonal towards bottom right
+        if (safe)
+            obstacle = false;
+        currentPos.y = sourcePos.y - 1;
+        currentPos.x = sourcePos.x + 1;
+        while (currentPos.y >= 0 && currentPos.x < 8 && !obstacle) {
+
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Bishop || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+
+            currentPos.y--;
+            currentPos.x++;
+        }
+
+        return safe;
+    }
+
+    private boolean isCheckedRookMovement(YX sourcePos, BoardState boardState) {
+        boolean safe = true;
+
+        // checking right
+        boolean obstacle = false;
+        YX currentPos = new YX(sourcePos.y, sourcePos.x + 1);
+        while (currentPos.x < 8 && !obstacle) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Rook || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+            currentPos.x++;
+        }
+
+        // checking left
+        obstacle = false;
+        currentPos.x = sourcePos.x - 1;
+        while (currentPos.x >= 0 && !obstacle) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Rook || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+            currentPos.x--;
+        }
+
+        // checking up
+        obstacle = false;
+        currentPos.y = sourcePos.y + 1;
+        currentPos.x = sourcePos.x;
+        while (currentPos.y < 8 && !obstacle) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Rook || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+            currentPos.y++;
+        }
+
+        // checking down
+        obstacle = false;
+        currentPos.y = sourcePos.y - 1;
+        while (currentPos.y >= 0 && !obstacle) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Rook || piece instanceof Queen)
+                        safe = false;
+                }
+                obstacle = true;
+            }
+            currentPos.y--;
+        }
+
+        return safe;
+    }
+
+    private boolean isCheckedKnightMovement(YX sourcePos, BoardState boardState) {
+        boolean safe = true;
+
+        YX currentPos = new YX(0, 0);
+
+        currentPos.y = sourcePos.y + 2;
+        currentPos.x = sourcePos.x + 1;
+        if (currentPos.y < 8 && currentPos.x < 8) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        currentPos.y = sourcePos.y + 1;
+        currentPos.x = sourcePos.x + 2;
+        if (currentPos.y < 8 && currentPos.x < 8) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        currentPos.y = sourcePos.y - 1;
+        currentPos.x = sourcePos.x + 2;
+        if (currentPos.y >= 0 && currentPos.x < 8) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        currentPos.y = sourcePos.y - 2;
+        currentPos.x = sourcePos.x + 1;
+        if (currentPos.y >= 0 && currentPos.x < 8) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+
+        currentPos.y = sourcePos.y - 2;
+        currentPos.x = sourcePos.x - 1;
+        if (currentPos.y >= 0 && currentPos.x >= 0) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        currentPos.y = sourcePos.y - 1;
+        currentPos.x = sourcePos.x - 2;
+        if (currentPos.y >= 0 && currentPos.x >= 0) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        currentPos.y = sourcePos.y + 1;
+        currentPos.x = sourcePos.x - 2;
+        if (currentPos.y < 8 && currentPos.x >= 0) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        currentPos.y = sourcePos.y + 2;
+        currentPos.x = sourcePos.x - 1;
+        if (currentPos.y < 8 && currentPos.x >= 0) {
+            if (boardState.hasPiece(currentPos)) {
+                Piece piece = boardState.getPiece(currentPos);
+                if (piece.isWhite() != this.isWhite()) {
+                    if (piece instanceof Knight)
+                        safe = false;
+                }
+            }
+        }
+
+        return safe;
+    }
+
+    private boolean isCheckedPawnMovement(YX sourcePos, BoardState boardState) {
+        boolean safe = true;
+        YX currentPos = new YX(sourcePos.y, sourcePos.x);
+
+        if (boardState.isWhiteTurn()) {
+
+            // check right diagonal
+            currentPos.y--;
+            currentPos.x++;
+            if (currentPos.y >= 0 && currentPos.x < 8) {
+                if (boardState.hasPiece(currentPos)) {
+                    Piece piece = boardState.getPiece(currentPos);
+                    if (piece.isWhite() != this.isWhite())
+                        if (piece instanceof Pawn)
+                            safe = false;
+                }
+            }
+
+            // check left diagonal
+            currentPos.x -= 2;
+            if (currentPos.y >= 0 && currentPos.x >= 0) {
+                if (boardState.hasPiece(currentPos)) {
+                    Piece piece = boardState.getPiece(currentPos);
+                    if (piece.isWhite() != this.isWhite())
+                        if (piece instanceof Pawn)
+                            safe = false;
+                }
+            }
+
+
+        }
+        // black turn
+        else {
+
+            // check right diagonal
+            currentPos.y++;
+            currentPos.x++;
+            if (currentPos.y < 8 && currentPos.x < 8) {
+                if (boardState.hasPiece(currentPos)) {
+                    Piece piece = boardState.getPiece(currentPos);
+                    if (piece.isWhite() != this.isWhite())
+                        if (piece instanceof Pawn)
+                            safe = false;
+                }
+            }
+
+            // check left diagonal
+            currentPos.x -= 2;
+            if (currentPos.y < 8 && currentPos.x >= 0) {
+                if (boardState.hasPiece(currentPos)) {
+                    Piece piece = boardState.getPiece(currentPos);
+                    if (piece.isWhite() != this.isWhite())
+                        safe = false;
+                }
+            }
+
+        }
 
         return safe;
     }
 
     public void addMove(Move move) {
-
-
         moves.add(move);
     }
 

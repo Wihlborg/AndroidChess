@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class Pawn extends Piece {
 
@@ -17,7 +19,7 @@ public class Pawn extends Piece {
         if (this.isWhite())
             whitePawnLogic(sourcePos, currentPos, boardState);
 
-        // black pawn logic
+            // black pawn logic
         else
             blackPawnLogic(sourcePos, currentPos, boardState);
 
@@ -48,7 +50,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos) && !boardState.getPiece(currentPos).isWhite()) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -59,7 +60,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos) && !boardState.getPiece(currentPos).isWhite()) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -85,7 +85,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos)) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -98,7 +97,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -131,7 +129,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos) && boardState.getPiece(currentPos).isWhite()) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -142,7 +139,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos) && boardState.getPiece(currentPos).isWhite()) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -167,7 +163,6 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos)) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
@@ -180,13 +175,13 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
-                        boardState.markPossibleCaptures(currentPos);
                     }
                 }
             }
         }
     }
 
+    /*
     @Override
     public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
 
@@ -241,6 +236,7 @@ public class Pawn extends Piece {
             }
         }
     }
+    */
 
     @Override
     public String toString() {

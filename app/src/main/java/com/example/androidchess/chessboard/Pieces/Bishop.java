@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class Bishop extends Piece {
 
@@ -17,7 +19,7 @@ public class Bishop extends Piece {
             if ((this.isWhite() != boardState.getPiece(currentPos).isWhite())) {
                 if (this.kingSafety(currentPos, sourcePos, boardState)) {
                     this.addMove(new Move(sourcePos, currentPos, this));
-                    boardState.markPossibleCaptures(currentPos);
+                    //boardState.markPossibleCaptures(currentPos);
                 }
             }
         } else {
@@ -92,6 +94,7 @@ public class Bishop extends Piece {
         }
     }
 
+    /*
     private boolean calcAttackSquare(YX currentPos, BoardState boardState) {
         boolean obstacle = false;
 
@@ -112,7 +115,7 @@ public class Bishop extends Piece {
         int sourceY = sourcePos.y;
         int sourceX = sourcePos.x;
 
-        // diagonal towards bottom right
+        // diagonal towards top right
         int y = sourceY + 1;
         int x = sourceX + 1;
         boolean obstacle = false;
@@ -128,7 +131,7 @@ public class Bishop extends Piece {
 
         }
 
-        // diagonal towards top left
+        // diagonal towards bottom left
         x = sourceX - 1;
         y = sourceY - 1;
         obstacle = false;
@@ -144,7 +147,7 @@ public class Bishop extends Piece {
             y--;
         }
 
-        // diagonal towards top right
+        // diagonal towards bottom right
         x = sourceX + 1;
         y = sourceY - 1;
         obstacle = false;
@@ -158,7 +161,7 @@ public class Bishop extends Piece {
             y--;
         }
 
-        // diagonal towards bottom left
+        // diagonal towards top left
         x = sourceX - 1;
         y = sourceY + 1;
         obstacle = false;
@@ -171,7 +174,7 @@ public class Bishop extends Piece {
             x--;
             y++;
         }
-    }
+    }*/
 
     @Override
     public String toString() {

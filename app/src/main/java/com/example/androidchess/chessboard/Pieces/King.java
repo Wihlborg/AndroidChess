@@ -1,18 +1,13 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class King extends Piece {
 
     public King(boolean isWhite) {
         this.setWhite(isWhite);
-    }
-
-    private boolean safetyCheck(YX currentPos, BoardState boardState) {
-        if (this.isWhite())
-            return !(boardState.attackedSquares[currentPos.y][currentPos.x] > 1);
-        else
-            return !(boardState.attackedSquares[currentPos.y][currentPos.x] == 1 || boardState.attackedSquares[currentPos.y][currentPos.x] == 3);
     }
 
     private void findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
@@ -21,7 +16,6 @@ public class King extends Piece {
             if (boardState.getPiece(currentPos).isWhite() != this.isWhite()) {
                 if (kingSafety(currentPos, sourcePos, boardState)) {
                     this.addMove(new Move(sourcePos, currentPos, this));
-                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         }
@@ -47,22 +41,24 @@ public class King extends Piece {
             //System.out.println(rookMoved[3]);
             if (!boardState.getCastleFlag(3)) {
                 //TODO might be x++ to fix possible castling when king is checked
-                while (++x < 8 && !obstacle) {
+
+                if (!boardState.getPiece(boardState.getKingPos(true)).isSafeFromCheck(sourcePos, boardState)){
+                    obstacle = true;
+                }
+                while (++x < 7 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
-
-                    //System.out.println("i: " + i + ", squareValue: "+attackedSquares[currentPos]);
-                    if (x != 7 && boardState.hasPiece(currentPos) || boardState.attackedSquares[y][x] > 1) {
-                        //System.out.println(getFilename(currentPos));
-                        //System.out.println("obstacle true");
+                    if (boardState.hasPiece(currentPos)) {
                         obstacle = true;
                     } else {
-                        //System.out.println("kingsafety: " + kingSafety(currentPos, sourcePos));
-                        if (x == 7 && this.kingSafety(currentPos, sourcePos, boardState)) {
-                            currentPos.x--;
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                        if (!kingSafety(currentPos, sourcePos, boardState)) {
+                            obstacle = true;
                         }
                     }
+                }
+                if (!obstacle) {
+                    currentPos.x = sourcePos.x + 2;
+                    this.addMove(new Move(sourcePos, currentPos, this));
                 }
             }
 
@@ -70,17 +66,23 @@ public class King extends Piece {
             x = sourcePos.x;
             // left white rook
             if (!boardState.getCastleFlag(2)) {
-                while ((--x >= 0) && !obstacle) {
+                if (!boardState.getPiece(boardState.getKingPos(true)).isSafeFromCheck(sourcePos, boardState)){
+                    obstacle = true;
+                }
+                while (--x >= 2 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
-                    if (x != 0 && boardState.hasPiece(currentPos) || boardState.attackedSquares[currentPos.y][currentPos.x] > 1) {
+                    if (boardState.hasPiece(currentPos)) {
                         obstacle = true;
                     } else {
-                        if (x == 0 && kingSafety(currentPos, sourcePos, boardState)) {
-                            currentPos.x = 2;
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                        if (!kingSafety(currentPos, sourcePos, boardState)) {
+                            obstacle = true;
                         }
                     }
+                }
+                if (!obstacle) {
+                    currentPos.x = sourcePos.x - 2;
+                    this.addMove(new Move(sourcePos, currentPos, this));
                 }
             }
         } // end castle check white king
@@ -91,19 +93,23 @@ public class King extends Piece {
             x = sourcePos.x;
             // right black rook
             if (!boardState.getCastleFlag(1)) {
-                while (++x < 8 && !obstacle) {
+                if (!boardState.getPiece(boardState.getKingPos(false)).isSafeFromCheck(sourcePos, boardState)){
+                    obstacle = true;
+                }
+                while (++x < 7 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
-                    if (x != 7 && boardState.hasPiece(currentPos) ||
-                            (boardState.attackedSquares[currentPos.y][currentPos.x] == 1
-                                    || boardState.attackedSquares[currentPos.y][currentPos.x] == 3)) {
+                    if (boardState.hasPiece(currentPos)) {
                         obstacle = true;
                     } else {
-                        if (x == 7 && kingSafety(currentPos, sourcePos, boardState)) {
-                            currentPos.x--;
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                        if (!kingSafety(currentPos, sourcePos, boardState)) {
+                            obstacle = true;
                         }
                     }
+                }
+                if (!obstacle) {
+                    currentPos.x = sourcePos.x + 2;
+                    this.addMove(new Move(sourcePos, currentPos, this));
                 }
             }
 
@@ -111,19 +117,26 @@ public class King extends Piece {
             x = sourcePos.x;
             // left black rook
             if (!boardState.getCastleFlag(0)) {
-                while ((--x >= 0) && !obstacle) {
+                if (!boardState.getPiece(boardState.getKingPos(false)).isSafeFromCheck(sourcePos, boardState)) {
+                    System.out.println("obstacle1");
+                    obstacle = true;
+                }
+                while (--x >= 2 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
-                    if (x != 0 && boardState.hasPiece(currentPos) ||
-                            (boardState.attackedSquares[currentPos.y][currentPos.x] == 1
-                                    || boardState.attackedSquares[currentPos.y][currentPos.x] == 3)) {
+                    if (boardState.hasPiece(currentPos)) {
+                        System.out.println("obstacle2");
                         obstacle = true;
                     } else {
-                        if (x == 0 && kingSafety(currentPos, sourcePos, boardState)) {
-                            currentPos.x = 2;
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                        if (!kingSafety(currentPos, sourcePos, boardState)) {
+                            System.out.println("obstacle3");
+                            obstacle = true;
                         }
                     }
+                }
+                if (!obstacle) {
+                    currentPos.x = sourcePos.x - 2;
+                    this.addMove(new Move(sourcePos, currentPos, this));
                 }
             }
         } // end of castle check black
@@ -133,7 +146,7 @@ public class King extends Piece {
         y = sourcePos.y - 1;
         currentPos.y = y;
         currentPos.x = x;
-        if (y >= 0 && safetyCheck(currentPos, boardState)) {
+        if (y >= 0) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -141,7 +154,7 @@ public class King extends Piece {
         y = sourcePos.y - 1;
         currentPos.y = y;
         currentPos.x = x;
-        if (x < 8 && y >= 0 && safetyCheck(currentPos, boardState)) {
+        if (x < 8 && y >= 0) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -149,7 +162,7 @@ public class King extends Piece {
         y = sourcePos.y;
         currentPos.y = y;
         currentPos.x = x;
-        if (x < 8 && safetyCheck(currentPos, boardState)) {
+        if (x < 8) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -157,7 +170,7 @@ public class King extends Piece {
         y = sourcePos.y + 1;
         currentPos.y = y;
         currentPos.x = x;
-        if (x < 8 && y < 8 && safetyCheck(currentPos, boardState)) {
+        if (x < 8 && y < 8) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -165,7 +178,7 @@ public class King extends Piece {
         y = sourcePos.y + 1;
         currentPos.y = y;
         currentPos.x = x;
-        if (y < 8 && safetyCheck(currentPos, boardState)) {
+        if (y < 8) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -173,7 +186,7 @@ public class King extends Piece {
         y = sourcePos.y + 1;
         currentPos.y = y;
         currentPos.x = x;
-        if (x >= 0 && y < 8 && safetyCheck(currentPos, boardState)) {
+        if (x >= 0 && y < 8) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -181,7 +194,7 @@ public class King extends Piece {
         y = sourcePos.y;
         currentPos.y = y;
         currentPos.x = x;
-        if (x >= 0 && safetyCheck(currentPos, boardState)) {
+        if (x >= 0) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
@@ -189,11 +202,12 @@ public class King extends Piece {
         y = sourcePos.y - 1;
         currentPos.y = y;
         currentPos.x = x;
-        if (x >= 0 && y >= 0 && safetyCheck(currentPos, boardState)) {
+        if (x >= 0 && y >= 0) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
     }
 
+    /*
     @Override
     public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
 
@@ -241,6 +255,7 @@ public class King extends Piece {
             this.setSquareAttackValue(currentPos, boardState);
 
     }
+    */
 
     @Override
     public String toString() {

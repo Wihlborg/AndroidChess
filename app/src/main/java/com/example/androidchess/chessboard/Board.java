@@ -50,7 +50,7 @@ public class Board {
             firstPos = pos;
             this.getSquare(pos).setBackgroundColor(Color.parseColor("#00FFFF"));
             showPossibleMoves(pos);
-            //System.out.println(boardState.getPiece(pos).getMoves().toString());
+            System.out.println(boardState.getPiece(pos).getMoves().toString());
         }
         // a legal move is made
         else if (swapCounter == 2 && legalMove(pos)) {
@@ -69,7 +69,7 @@ public class Board {
         }
 
         timer.stopTimer();
-        System.out.println(timer.retreiveTime());
+        //System.out.println(timer.retreiveTime());
     }
 
     public void swap(YX firstPos, YX secondPos) {
@@ -216,11 +216,10 @@ public class Board {
         LinkedList<Move> listOfMoves = boardState.getPiece(sourcePos).getMoves();
         //System.out.println("object: "+System.identityHashCode(boardState.getPiece(sourcePos)));
         //System.out.println("list: "+System.identityHashCode(listOfMoves));
-        System.out.println(listOfMoves.toString());
+        //System.out.println(listOfMoves.toString());
         for (Move move : listOfMoves) {
             if (boardState.hasPiece(move.destination)) {
-                if (boardState.isPossibleCapture(move.destination))
-                    this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
+                this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
             } else
                 this.getSquare(move.destination).setAlpha(1f);
 

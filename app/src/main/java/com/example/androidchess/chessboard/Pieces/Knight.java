@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class Knight extends Piece {
 
@@ -14,7 +16,6 @@ public class Knight extends Piece {
                 if (this.kingSafety(currentPos, sourcePos, boardState)){
                     //System.out.println(this+" found victim @"+currentPos+", from: "+sourcePos);
                     this.addMove(new Move(sourcePos, currentPos, this));
-                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         } else {
@@ -90,6 +91,7 @@ public class Knight extends Piece {
         //System.out.println("object: "+System.identityHashCode(this));
     }
 
+    /*
     @Override
     public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
         int y = sourcePos.y;
@@ -145,7 +147,7 @@ public class Knight extends Piece {
         if (currentPos.x < 8 && currentPos.y >= 0) {
             this.setSquareAttackValue(currentPos, boardState);
         }
-    }
+    }*/
 
     @Override
     public String toString() {
