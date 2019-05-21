@@ -323,8 +323,14 @@ public class Board {
                         String fen = getFENstring(boardState);
                         move(yx);
                         if (fen != getFENstring(boardState)){
-                            //gör AI stuff
-
+                            String rootFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                            Node root=new Node(rootFen);
+                              LinkedList<Node> children=root.children;
+                            MinMax minMax=new MinMax();
+                            int n = children.size();
+                            int h = minMax.log2(n);
+                            int res = minMax.minimax(4, 0, children, h);
+                            System.out.println("Testing:  "+res);
 
                         }
                     }
