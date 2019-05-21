@@ -50,7 +50,8 @@ public class Board {
             firstPos = pos;
             this.getSquare(pos).setBackgroundColor(Color.parseColor("#00FFFF"));
             showPossibleMoves(pos);
-            System.out.println(boardState.getPiece(pos).getMoves().toString());
+            //System.out.println(boardState.getPiece(pos).getMoves().toString());
+            System.out.println(boardState);
         }
         // a legal move is made
         else if (swapCounter == 2 && legalMove(pos)) {
@@ -86,11 +87,10 @@ public class Board {
 
         System.out.println("updateboard");
         for (; currentPos.y < 8; currentPos.y++) {
-            for (; currentPos.x < 8; currentPos.x++) {
+            for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
                 //System.out.println(currentPos);
                 this.getSquare(currentPos).setPiece(boardState.getPiece(currentPos));
             }
-            currentPos.x = 0;
         }
         //board.redrawViews();
     }
@@ -247,7 +247,9 @@ public class Board {
         YX currentPos = new YX(0, 0);
         for (currentPos.y = 0; currentPos.y < 8; currentPos.y++) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
-                if (!boardState.hasPiece(currentPos))
+                if (boardState.hasPiece(currentPos))
+                    squares[currentPos.y][currentPos.x].setAlpha(1f);
+                else
                     squares[currentPos.y][currentPos.x].setAlpha(0f);
             }
         }
@@ -324,18 +326,19 @@ public class Board {
                         move(yx);
                         if (!boardState.isWhiteTurn()) {
                             if (fen != getFENstring(boardState)) {
-                                String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                                //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                                String rootFen = boardState.getFENString();
                                 Node root = new Node(rootFen);
                                 LinkedList<Node> children = root.children;
                                 MinMax minMax = new MinMax();
                                 int n = children.size();
                                 int h = minMax.log2(n);
-                                int res = minMax.minimax(4, 0, children, h);
+                                int res = minMax.minimax(root.DEPTH, 0, children, h);
                                 System.out.println("Testing:  " + res);
                                 root.children.get(res).boardState.printBoardState();
-                                System.out.println(boardState.getFENString());
                                 boardState = new BoardState(root.children.get(res).boardState.getFENString());
                                 updateBoard(boardState);
+                                clearVisibleMoves();
                             }
                         }
                     }

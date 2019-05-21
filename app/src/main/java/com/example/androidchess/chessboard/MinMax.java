@@ -16,7 +16,6 @@ public class MinMax {
         if (depth == h)
             return nodeIndex;
 
-
         if (depth % 2 == 0 )
             return Math.min(minimax(depth+1, nodeIndex*2,scores , h),
                 minimax(depth+1, nodeIndex*2 + 1,  scores, h));

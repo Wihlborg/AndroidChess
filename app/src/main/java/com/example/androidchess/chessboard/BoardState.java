@@ -454,8 +454,10 @@ public class BoardState {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
 
                 if (this.hasPiece(currentPos)) {
-                    if (emptyCellCounter != 0)
+                    if (emptyCellCounter != 0) {
                         FENStr += Integer.toString(emptyCellCounter);
+                        emptyCellCounter = 0;
+                    }
 
                     Piece piece = this.getPiece(currentPos);
                     if (piece instanceof Rook) {
@@ -475,8 +477,10 @@ public class BoardState {
                     emptyCellCounter++;
                 }
             }
-            if (emptyCellCounter != 0)
+            if (emptyCellCounter != 0) {
                 FENStr += Integer.toString(emptyCellCounter);
+                emptyCellCounter = 0;
+            }
             FENStr += "/";
 
         }
@@ -512,10 +516,10 @@ public class BoardState {
         YX enpassantPos = this.getEnPassantPos();
         if (enpassantPos.y != -1) {
             char a = 'a';
-            FENStr += "" + ((char) (a + enpassantPos.y)) + (enpassantPos.x + 1) + " ";
+            FENStr += " " + ((char) (a + enpassantPos.y)) + (enpassantPos.x + 1) + " ";
         }
         else {
-            FENStr += "- ";
+            FENStr += " - ";
         }
 
         // half move counter
@@ -634,5 +638,21 @@ public class BoardState {
             str += "\t" + y + "\n";
         }
         System.out.println(str);
+    }
+
+    @Override
+    public String toString() {
+        String str = "boardState\n";
+        for (int y = 7; y >= 0; y--) {
+            for (int x = 0; x < 8; x++) {
+                if (squares[y][x] != null)
+                    str += "[" + squares[y][x].toString() + "] ";
+                else
+                    str += "[  ] ";
+
+            }
+            str += "\t" + y + "\n";
+        }
+        return str;
     }
 }

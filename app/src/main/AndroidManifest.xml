@@ -18,7 +18,8 @@
             android:label="@string/app_name"
             android:roundIcon="@drawable/qw"
             android:supportsRtl="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:largeHeap="true">
         <activity android:name=".Activities.OptionActivity">
         </activity>
         <activity android:name=".Activities.LobbyActivity">

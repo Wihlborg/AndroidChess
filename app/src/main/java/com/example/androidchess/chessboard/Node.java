@@ -3,7 +3,7 @@ package com.example.androidchess.chessboard;
 import java.util.LinkedList;
 
 public class Node {
-    final int DEPTH = 4;
+    final int DEPTH = 3;
     LinkedList<Node> children;
     Node parent;
     BoardState boardState;
