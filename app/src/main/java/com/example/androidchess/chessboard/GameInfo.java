@@ -1,5 +1,7 @@
 package com.example.androidchess.chessboard;
 
+import android.support.constraint.ConstraintLayout;
+
 /*
 contains game info for the visible game
 */
@@ -25,6 +27,9 @@ public class GameInfo {
 
     public ChessClock blackClock, whiteClock;
 
+    public YX promotionPos;
+
+    public GameActivity game;
 
 
     /*
