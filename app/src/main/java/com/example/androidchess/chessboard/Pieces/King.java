@@ -118,18 +118,15 @@ public class King extends Piece {
             // left black rook
             if (!boardState.getCastleFlag(0)) {
                 if (!boardState.getPiece(boardState.getKingPos(false)).isSafeFromCheck(sourcePos, boardState)) {
-                    System.out.println("obstacle1");
                     obstacle = true;
                 }
                 while (--x >= 2 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
                     if (boardState.hasPiece(currentPos)) {
-                        System.out.println("obstacle2");
                         obstacle = true;
                     } else {
                         if (!kingSafety(currentPos, sourcePos, boardState)) {
-                            System.out.println("obstacle3");
                             obstacle = true;
                         }
                     }

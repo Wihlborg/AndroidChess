@@ -114,7 +114,7 @@ public class Board {
         // board positions
         int emptyCellCounter = 0;
         // start at y = 8, x = 0
-        YX currentPos = new YX(8, 0);
+        YX currentPos = new YX(7, 0);
         for (; currentPos.y >= 0; currentPos.y--) {
             for (; currentPos.x < 8; currentPos.x++) {
 
@@ -322,16 +322,21 @@ public class Board {
                     public void onClick(View v) {
                         String fen = getFENstring(boardState);
                         move(yx);
-                        if (fen != getFENstring(boardState)){
-                            String rootFen="rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-                            Node root=new Node(rootFen);
-                              LinkedList<Node> children=root.children;
-                            MinMax minMax=new MinMax();
-                            int n = children.size();
-                            int h = minMax.log2(n);
-                            int res = minMax.minimax(4, 0, children, h);
-                            System.out.println("Testing:  "+res);
-
+                        if (!boardState.isWhiteTurn()) {
+                            if (fen != getFENstring(boardState)) {
+                                String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+                                Node root = new Node(rootFen);
+                                LinkedList<Node> children = root.children;
+                                MinMax minMax = new MinMax();
+                                int n = children.size();
+                                int h = minMax.log2(n);
+                                int res = minMax.minimax(4, 0, children, h);
+                                System.out.println("Testing:  " + res);
+                                root.children.get(res).boardState.printBoardState();
+                                System.out.println(boardState.getFENString());
+                                boardState = new BoardState(root.children.get(res).boardState.getFENString());
+                                updateBoard(boardState);
+                            }
                         }
                     }
                 });
