@@ -45,6 +45,7 @@ public class GameActivity extends AppCompatActivity {
 
         board = new Board(this, boardContainer);
 
+        System.out.println("stcuk22");
         //GameInfo.get().boardState.setWhiteTurn(true);
         /*
         if (TimerInfo.INSTANCE.getEnable()) {
@@ -177,6 +178,7 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
+    /*
     public void promotion(View v) {
         String imgName = v.getTag().toString();
         char choice = imgName.charAt(0);
@@ -226,8 +228,9 @@ public class GameActivity extends AppCompatActivity {
             winCondition = "checkmate";
             endGame();
         }
-        */
+
     }
+    */
 
     class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
 

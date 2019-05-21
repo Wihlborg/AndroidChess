@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class Rook extends Piece {
 
@@ -10,16 +12,18 @@ public class Rook extends Piece {
 
     public boolean findPossibleMove(YX currentPos, YX sourcePos, BoardState boardState) {
         boolean obstacle = false;
+
         if (boardState.hasPiece(currentPos)) {
             obstacle = true;
             if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
                 if (this.kingSafety(currentPos, sourcePos, boardState)) {
                     this.addMove(new Move(sourcePos, currentPos, this));
-                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         } else {
-            this.addMove(new Move(sourcePos, currentPos, this));
+            if (this.kingSafety(currentPos, sourcePos, boardState)) {
+                this.addMove(new Move(sourcePos, currentPos, this));
+            }
         }
         return obstacle;
     }
@@ -69,7 +73,8 @@ public class Rook extends Piece {
 
     }
 
-    public boolean calcAttackSquare(YX currentPos, BoardState boardState) {
+    /*
+    private boolean calcAttackSquare(YX currentPos, BoardState boardState) {
         boolean obstacle = false;
 
         if (boardState.hasPiece(currentPos)) {
@@ -129,46 +134,7 @@ public class Rook extends Piece {
             y--;
         }
     }
-
-    @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-        YX currentPos = new YX(sourcePos.y, sourcePos.x);
-
-        boardState.setKingAttackTrue(currentPos);
-
-        // if they are positioned on the same x axis
-        if (kingPos.x == sourcePos.x) {
-            if (sourcePos.y > kingPos.y) {
-                currentPos.y--;
-                while (currentPos.y >= 0 && currentPos.y > kingPos.y) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.y--;
-                }
-            } else {
-                currentPos.y++;
-                while (currentPos.y < 8 && currentPos.y < kingPos.y) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.y++;
-                }
-            }
-        }
-        // if they are positioned on the same y axis
-        else {
-            if (sourcePos.x > kingPos.x) {
-                currentPos.x--;
-                while (currentPos.x >= 0 && currentPos.x > kingPos.x) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.x--;
-                }
-            } else {
-                currentPos.x++;
-                while (currentPos.x < 8 && currentPos.x < kingPos.x) {
-                    boardState.setKingAttackTrue(currentPos);
-                    currentPos.x++;
-                }
-            }
-        }
-    }
+    */
 
     @Override
     public String toString() {

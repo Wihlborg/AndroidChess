@@ -1,6 +1,8 @@
 package com.example.androidchess.chessboard.Pieces;
 
-import com.example.androidchess.chessboard.*;
+import com.example.androidchess.chessboard.BoardState;
+import com.example.androidchess.chessboard.Move;
+import com.example.androidchess.chessboard.YX;
 
 public class Knight extends Piece {
 
@@ -14,16 +16,15 @@ public class Knight extends Piece {
                 if (this.kingSafety(currentPos, sourcePos, boardState)){
                     //System.out.println(this+" found victim @"+currentPos+", from: "+sourcePos);
                     this.addMove(new Move(sourcePos, currentPos, this));
-                    boardState.markPossibleCaptures(currentPos);
                 }
             }
         } else {
             if (this.kingSafety(currentPos, sourcePos, boardState)) {
                 //System.out.println(currentPos);
                 //Move move = new Move(sourcePos, currentPos, this);
-                //System.out.println("testMove"+move);
+                //System.out.println("KnightMove: "+move);
                 this.addMove(new Move(sourcePos, currentPos, this));
-                //System.out.println(this.getMoves());
+                //System.out.println("KnightList: "+this.getMoves());
             }
         }
     }
@@ -79,16 +80,18 @@ public class Knight extends Piece {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
 
-
         currentPos.y = y + 2;
         currentPos.x = x - 1;
         if (currentPos.y < 8 && currentPos.x >= 0) {
             findPossibleMove(currentPos, sourcePos, boardState);
         }
         //System.out.println("size: "+this.getMoves().size());
-        //System.out.println(this.getMoves().toString());
+        //System.out.println("List: "+this.getMoves().toString());
+        //System.out.println("list: "+System.identityHashCode(this.getMoves()));
+        //System.out.println("object: "+System.identityHashCode(this));
     }
 
+    /*
     @Override
     public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
         int y = sourcePos.y;
@@ -144,12 +147,7 @@ public class Knight extends Piece {
         if (currentPos.x < 8 && currentPos.y >= 0) {
             this.setSquareAttackValue(currentPos, boardState);
         }
-    }
-
-    @Override
-    public void calcKingAttackingSquares(YX kingPos, YX sourcePos, BoardState boardState) {
-        boardState.setKingAttackTrue(sourcePos);
-    }
+    }*/
 
     @Override
     public String toString() {

@@ -62,15 +62,15 @@ public class GameInfo {
     used to calc/display the possible moves for a clicked piece
     */
 /*
-    public boolean[][] possibleMoves = new boolean[8][8];
-    public void resetPossibleMoves() {
+    public boolean[][] possibleClicks = new boolean[8][8];
+    public void resetPossibleClicks() {
         for (int y=0; y < 8; y++) {
             for (int x=0; x<8; x++)
-                possibleMoves[y][x] = false;
+                possibleClicks[y][x] = false;
         }
     }
-    public void setPossibleMove(YX position) {
-        possibleMoves[position.y][position.x] = true;
+    public void setPossibleClick(YX position) {
+        possibleClicks[position.y][position.x] = true;
     }
 */
 

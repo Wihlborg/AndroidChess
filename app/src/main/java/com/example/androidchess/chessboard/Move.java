@@ -4,11 +4,12 @@ import com.example.androidchess.chessboard.Pieces.Piece;
 
 public class Move {
     YX source;
-    public YX destination;
+    YX destination;
     Piece piece;
 
     public Move(YX source, YX destination, Piece piece) {
-        this.source = source;
+        this.source = new YX(source.y, source.x);
+        /*
         if (source.y > 8 || source.y < 0)
             System.out.println("tets");
         if (destination.x > 8 || destination.x < 0)
@@ -22,9 +23,10 @@ public class Move {
             System.out.println(stackTraceElements[2].getMethodName());
             System.out.println(stackTraceElements[3].getMethodName());
             System.out.println(stackTraceElements[4].getMethodName());
-        }
 
-        this.destination = destination;
+        }*/
+
+        this.destination = new YX(destination.y, destination.x);
         this.piece = piece;
     }
 
@@ -34,6 +36,7 @@ public class Move {
                 "source=" + source +
                 ", destination=" + destination +
                 ", piece=" + piece +
+                ", rID=" + System.identityHashCode(this) +
                 '}';
     }
 }
