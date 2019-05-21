@@ -334,10 +334,21 @@ public class Board {
 
                                 int h=0;
                                 for (Node node: root.children) {
+                                    if (root.DEPTH==1){
+                                        h=node.children.size();
+                                break;
+                                    }
                                     for (Node node1: node.children) {
-                                        for (Node node2:node1.children){
-                                            h=node2.children.size();
+                                        if (root.DEPTH==2){
+                                            h=node1.children.size();
 
+                                      break;
+                                        }
+                                        for (Node node2:node1.children){
+                                     if (root.DEPTH==3){
+                                         h=node2.children.size();
+                                     break;
+                                     }
                                         }
                                     }
                                 }

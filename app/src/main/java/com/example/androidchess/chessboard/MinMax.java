@@ -24,11 +24,11 @@ public class MinMax {
     }
 
 
-    static int log2(int n)
+  /*  static int log2(int n)
     {
         return (n==1)? 0 : 1 + log2(n/2);
     }
-
+*/
 
 
 }
