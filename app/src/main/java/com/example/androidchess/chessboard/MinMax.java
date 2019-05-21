@@ -14,13 +14,13 @@ public class MinMax {
 
         if (depth == h)
             return nodeIndex;
-
+//depth -1 +1???
         if (depth % 2 == 0 )
-            return Math.min(minimax(depth-1, nodeIndex*2,scores , h),
-                minimax(depth-1, nodeIndex*2 + 1,  scores, h));
+            return Math.min(minimax(depth, nodeIndex*2,scores , h),
+                minimax(depth, nodeIndex*2 + 1,  scores, h));
         else
-            return Math.max(minimax(depth-1, nodeIndex*2,scores  , h),
-                    minimax(depth-1, nodeIndex*2 + 1,  scores, h));
+            return Math.max(minimax(depth, nodeIndex*2,scores  , h),
+                    minimax(depth, nodeIndex*2 + 1,  scores, h));
     }
 
 
