@@ -320,7 +320,13 @@ public class Board {
                 squares[y][x].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        String fen = getFENstring(boardState);
                         move(yx);
+                        if (fen != getFENstring(boardState)){
+                            //gör AI stuff
+
+
+                        }
                     }
                 });
             }
