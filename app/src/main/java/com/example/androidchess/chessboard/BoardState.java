@@ -449,7 +449,7 @@ public class BoardState {
         // board positions
         int emptyCellCounter = 0;
         // start at y = 8, x = 0
-        YX currentPos = new YX(8, 0);
+        YX currentPos = new YX(7, 0);
         for (; currentPos.y >= 0; currentPos.y--) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
 
