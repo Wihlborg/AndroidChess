@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.androidchess.Database.Database;
 import com.example.androidchess.GameMode;
@@ -42,10 +43,9 @@ public class GameActivity extends AppCompatActivity {
         getSupportActionBar().hide();
 
         ConstraintLayout boardContainer = findViewById(R.id.boardContainer);
-
+        GameInfo.get().game = this;
         board = new Board(this, boardContainer);
 
-        System.out.println("stcuk22");
         //GameInfo.get().boardState.setWhiteTurn(true);
         /*
         if (TimerInfo.INSTANCE.getEnable()) {
@@ -178,8 +178,37 @@ public class GameActivity extends AppCompatActivity {
 
     }
 
-    /*
+    public void promotionUI() {
+        findViewById(R.id.promotionblock).setVisibility(View.VISIBLE);
+        ImageView imgBishop = findViewById(R.id.imgbishop);
+        ImageView imgRook = findViewById(R.id.imgrook);
+        ImageView imgKnight = findViewById(R.id.imgknight);
+        ImageView imgQueen = findViewById(R.id.imgqueen);
+        if (board.boardState.getPiece(GameInfo.get().promotionPos).isWhite()) {
+            imgBishop.setImageResource(R.drawable.bw);
+            imgBishop.setTag("bw");
+            imgRook.setImageResource(R.drawable.rw);
+            imgRook.setTag("rw");
+            imgKnight.setImageResource(R.drawable.nw);
+            imgKnight.setTag("nw");
+            imgQueen.setImageResource(R.drawable.qw);
+            imgQueen.setTag("qw");
+        }
+        //
+        else {
+            imgBishop.setImageResource(R.drawable.bb);
+            imgBishop.setTag("bb");
+            imgRook.setImageResource(R.drawable.rb);
+            imgRook.setTag("rb");
+            imgKnight.setImageResource(R.drawable.nb);
+            imgKnight.setTag("nb");
+            imgQueen.setImageResource(R.drawable.qb);
+            imgQueen.setTag("qb");
+        }
+    }
+
     public void promotion(View v) {
+        System.out.println("promotion()");
         String imgName = v.getTag().toString();
         char choice = imgName.charAt(0);
 
@@ -188,31 +217,35 @@ public class GameActivity extends AppCompatActivity {
             case 'q':
                 System.out.println(imgName);
                 if (imgName.charAt(1) == 'w')
-                    boardState.setPiece(new Queen(true), boardState.promotionPos);
+                    boardState.setPiece(new Queen(true), GameInfo.get().promotionPos);
                 else
-                    boardState.setPiece(new Queen(false), boardState.promotionPos);
+                    boardState.setPiece(new Queen(false), GameInfo.get().promotionPos);
                 break;
             case 'b':
                 if (imgName.charAt(1) == 'w')
-                    boardState.setPiece(new Bishop(true), boardState.promotionPos);
+                    boardState.setPiece(new Bishop(true), GameInfo.get().promotionPos);
                 else
-                    boardState.setPiece(new Bishop(false), boardState.promotionPos);
+                    boardState.setPiece(new Bishop(false), GameInfo.get().promotionPos);
                 break;
             case 'n':
                 if (imgName.charAt(1) == 'w')
-                    boardState.setPiece(new Knight(true), boardState.promotionPos);
+                    boardState.setPiece(new Knight(true), GameInfo.get().promotionPos);
                 else
-                    boardState.setPiece(new Knight(false), boardState.promotionPos);
+                    boardState.setPiece(new Knight(false), GameInfo.get().promotionPos);
                 break;
             case 'r':
                 if (imgName.charAt(1) == 'w')
-                    boardState.setPiece(new Rook(true), boardState.promotionPos);
+                    boardState.setPiece(new Rook(true), GameInfo.get().promotionPos);
                 else
-                    boardState.setPiece(new Rook(false), boardState.promotionPos);
+                    boardState.setPiece(new Rook(false), GameInfo.get().promotionPos);
                 break;
         }
+
+        findViewById(R.id.promotionblock).setVisibility(View.GONE);
+        board.updateBoard(boardState);
+
         //findViewById(R.id.promotionblock).setVisibility(View.GONE);
-        popup = false;
+        //popup = false;
         /*
         if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
             makeRandomComputerMove();
@@ -228,9 +261,9 @@ public class GameActivity extends AppCompatActivity {
             winCondition = "checkmate";
             endGame();
         }
-
+        */
     }
-    */
+
 
     class UserWinsTask extends AsyncTask<Void, Void, Boolean> {
 

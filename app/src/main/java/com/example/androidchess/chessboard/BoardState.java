@@ -17,8 +17,7 @@ public class BoardState {
     private YX enPassantPos;
 
     //public YX promotionPos;
-
-
+    
     // full move is when both sides has made a move
     // increment everytime black makes a move
     private int fullMoveCounter;
@@ -314,8 +313,7 @@ public class BoardState {
 
         this.calcAllPossibleMoves();
 
-        if (isCheckMate())
-            System.out.println("CHECKMATE!!!");
+        checkMate = isCheckMate();
     }
 
     private void pawnMoveLogic(Move move) {
@@ -441,6 +439,95 @@ public class BoardState {
         }
     }
 */
+
+    // fen string example
+    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
+    // board positions | whos turn | castle options | en passant | half move counter | full move counter
+    public String getFENString() {
+        String FENStr = "";
+
+        // board positions
+        int emptyCellCounter = 0;
+        // start at y = 8, x = 0
+        YX currentPos = new YX(8, 0);
+        for (; currentPos.y >= 0; currentPos.y--) {
+            for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
+
+                if (this.hasPiece(currentPos)) {
+                    if (emptyCellCounter != 0)
+                        FENStr += Integer.toString(emptyCellCounter);
+
+                    Piece piece = this.getPiece(currentPos);
+                    if (piece instanceof Rook) {
+                        FENStr += (piece.isWhite() ? "R" : "r");
+                    } else if (piece instanceof Queen) {
+                        FENStr += (piece.isWhite() ? "Q" : "q");
+                    } else if (piece instanceof Bishop) {
+                        FENStr += (piece.isWhite() ? "B" : "b");
+                    } else if (piece instanceof Knight) {
+                        FENStr += (piece.isWhite() ? "N" : "n");
+                    } else if (piece instanceof King) {
+                        FENStr += (piece.isWhite() ? "K" : "k");
+                    } else if (piece instanceof Pawn) {
+                        FENStr += (piece.isWhite() ? "P" : "p");
+                    }
+                } else {
+                    emptyCellCounter++;
+                }
+            }
+            if (emptyCellCounter != 0)
+                FENStr += Integer.toString(emptyCellCounter);
+            FENStr += "/";
+
+        }
+
+        if (this.isWhiteTurn())
+            FENStr += " w ";
+        else
+            FENStr += " b ";
+
+        // castle
+        boolean castleAvailable = false;
+        if (!this.getCastleFlag(3)) {
+            castleAvailable = true;
+            FENStr += "K";
+        }
+        if (!this.getCastleFlag(2)) {
+            castleAvailable = true;
+            FENStr += "Q";
+        }
+        if (!this.getCastleFlag(1)) {
+            castleAvailable = true;
+            FENStr += "k";
+        }
+        if (!this.getCastleFlag(0)) {
+            castleAvailable = true;
+            FENStr += "q";
+        }
+        if (!castleAvailable) {
+            FENStr += "- ";
+        }
+
+        // enpassant
+        YX enpassantPos = this.getEnPassantPos();
+        if (enpassantPos.y != -1) {
+            char a = 'a';
+            FENStr += "" + ((char) (a + enpassantPos.y)) + (enpassantPos.x + 1) + " ";
+        }
+        else {
+            FENStr += "- ";
+        }
+
+        // half move counter
+        //TODO half move counter implementation
+        FENStr += "0 ";
+
+        // full move counter
+        FENStr += Integer.toString(this.getFullMoveCounter());
+
+        return FENStr;
+    }
+
     public int[][] calcAllAttackedSquares() {
         int[][] calcAllAttackedSquares = new int[8][8];
 

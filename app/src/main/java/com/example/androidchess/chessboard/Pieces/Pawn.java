@@ -73,7 +73,14 @@ public class Pawn extends Piece {
 
             if (currentPos.y < 8 && !boardState.hasPiece(currentPos)) {
                 if (kingSafety(currentPos, sourcePos, boardState)) {
-                    this.addMove(new Move(sourcePos, currentPos, this));
+                    if (currentPos.y == 7) {
+                        this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
+                        this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
+                        this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
+                        this.addMove(new Move(sourcePos, currentPos, new Knight(this.isWhite())));
+                    }
+                    else
+                        this.addMove(new Move(sourcePos, currentPos, this));
                 }
             }
 
@@ -100,6 +107,8 @@ public class Pawn extends Piece {
                     }
                 }
             }
+
+
 
         }
     }
@@ -146,12 +155,20 @@ public class Pawn extends Piece {
         // possible move from non starting position
         else {
 
+            // check below
             currentPos.y = sourcePos.y - 1;
             currentPos.x = sourcePos.x;
 
             if (currentPos.y >= 0 && !boardState.hasPiece(currentPos)) {
                 if (kingSafety(currentPos, sourcePos, boardState)) {
-                    this.addMove(new Move(sourcePos, currentPos, this));
+                    if (currentPos.y == 7) {
+                        this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
+                        this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
+                        this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
+                        this.addMove(new Move(sourcePos, currentPos, new Knight(this.isWhite())));
+                    }
+                    else
+                        this.addMove(new Move(sourcePos, currentPos, this));
                 }
             }
 
@@ -178,6 +195,7 @@ public class Pawn extends Piece {
                     }
                 }
             }
+
         }
     }
 
