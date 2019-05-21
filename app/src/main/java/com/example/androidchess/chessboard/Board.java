@@ -331,8 +331,18 @@ public class Board {
                                 Node root = new Node(rootFen);
                                 LinkedList<Node> children = root.children;
                                 MinMax minMax = new MinMax();
-                                int n = children.size();
-                                int h = minMax.log2(n);
+
+                                int h=0;
+                                for (Node node: root.children) {
+                                    for (Node node1: node.children) {
+                                        for (Node node2:node1.children){
+                                            h=node2.children.size();
+
+                                        }
+                                    }
+                                }
+
+
                                 int res = minMax.minimax(root.DEPTH, 0, children, h);
                                 System.out.println("Testing:  " + res);
                                 root.children.get(res).boardState.printBoardState();

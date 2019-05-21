@@ -4,8 +4,7 @@ import java.util.LinkedList;
 
 public class MinMax {
 
-    static Integer minimax(int depth, int nodeIndex,
-                        LinkedList<Node> scores, int h)
+    static Integer minimax(int depth, int nodeIndex,LinkedList<Node> scores, int h)
     {
 
 //Node index = Index Curr node
@@ -24,9 +23,13 @@ public class MinMax {
                     minimax(depth+1, nodeIndex*2 + 1,  scores, h));
     }
 
+
     static int log2(int n)
     {
         return (n==1)? 0 : 1 + log2(n/2);
     }
 
+
+
 }
+
