@@ -329,15 +329,27 @@ public class Board {
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                                 String rootFen = boardState.getFENString();
                                 Node root = new Node(rootFen);
-                                LinkedList<Node> children = root.children;
-                                MinMax minMax = new MinMax();
+                                int increment=root.DEPTH;
 
+                                MinMax minMax = new MinMax();
+                                LinkedList<Node>bottomBIATCH=new LinkedList<>();
                                 int h=0;
                                     for (Node node: root.children) {
+                                        if (increment==1){
+                                            h=node.children.size();
+                                            bottomBIATCH.clear();
+                                            bottomBIATCH=node.children;
+                                        }
                                     for (Node node1: node.children) {
+                                  if (increment==2){
+                                      h=node1.children.size();
+                                      bottomBIATCH.clear();
+                                      bottomBIATCH=node1.children;
+                                  }
                                     for (Node node2:node1.children){
-                                     if (root.DEPTH==3){
+                                     if (increment==3){
                                          h=node2.children.size();
+                                         bottomBIATCH=node2.children;
                                      break;
                                      }
                                         }
@@ -345,7 +357,7 @@ public class Board {
                                 }
 
 
-                                int res = minMax.minimax(root.DEPTH, 0, children, h);
+                                int res = minMax.minimax(increment, 0,bottomBIATCH , h);
                                 System.out.println("Testing:  " + res);
                                 root.children.get(res).boardState.printBoardState();
                                 boardState = new BoardState(root.children.get(res).boardState.getFENString());
