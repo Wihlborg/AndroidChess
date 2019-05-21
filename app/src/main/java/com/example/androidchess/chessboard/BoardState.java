@@ -640,6 +640,18 @@ public class BoardState {
         System.out.println(str);
     }
 
+    public boolean isDraw(){
+        LinkedList<Move> moves = getAllMoves();
+        //True if no moves available, and whites king is not attacked on whites turn
+        //Similarly true if no moves available and blacks king is not attacked on blacks turn
+        if (moves.size() == 0 && ((isWhiteTurn() && getPiece(kingPos[0]).isSafeFromCheck(kingPos[0], this))||
+            !isWhiteTurn() && getPiece(kingPos[1]).isSafeFromCheck(kingPos[1], this))){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         String str = "boardState\n";
