@@ -17,8 +17,7 @@ public class BoardState {
     private YX enPassantPos;
 
     //public YX promotionPos;
-
-
+    
     // full move is when both sides has made a move
     // increment everytime black makes a move
     private int fullMoveCounter;
@@ -444,7 +443,7 @@ public class BoardState {
     // fen string example
     // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
     // board positions | whos turn | castle options | en passant | half move counter | full move counter
-    public String getFENString(BoardState boardState) {
+    public String getFENString() {
         String FENStr = "";
 
         // board positions
@@ -454,11 +453,11 @@ public class BoardState {
         for (; currentPos.y >= 0; currentPos.y--) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
 
-                if (boardState.hasPiece(currentPos)) {
+                if (this.hasPiece(currentPos)) {
                     if (emptyCellCounter != 0)
                         FENStr += Integer.toString(emptyCellCounter);
 
-                    Piece piece = boardState.getPiece(currentPos);
+                    Piece piece = this.getPiece(currentPos);
                     if (piece instanceof Rook) {
                         FENStr += (piece.isWhite() ? "R" : "r");
                     } else if (piece instanceof Queen) {
@@ -482,26 +481,26 @@ public class BoardState {
 
         }
 
-        if (boardState.isWhiteTurn())
+        if (this.isWhiteTurn())
             FENStr += " w ";
         else
             FENStr += " b ";
 
         // castle
         boolean castleAvailable = false;
-        if (!boardState.getCastleFlag(3)) {
+        if (!this.getCastleFlag(3)) {
             castleAvailable = true;
             FENStr += "K";
         }
-        if (!boardState.getCastleFlag(2)) {
+        if (!this.getCastleFlag(2)) {
             castleAvailable = true;
             FENStr += "Q";
         }
-        if (!boardState.getCastleFlag(1)) {
+        if (!this.getCastleFlag(1)) {
             castleAvailable = true;
             FENStr += "k";
         }
-        if (!boardState.getCastleFlag(0)) {
+        if (!this.getCastleFlag(0)) {
             castleAvailable = true;
             FENStr += "q";
         }
@@ -510,7 +509,7 @@ public class BoardState {
         }
 
         // enpassant
-        YX enpassantPos = boardState.getEnPassantPos();
+        YX enpassantPos = this.getEnPassantPos();
         if (enpassantPos.y != -1) {
             char a = 'a';
             FENStr += "" + ((char) (a + enpassantPos.y)) + (enpassantPos.x + 1) + " ";
@@ -524,7 +523,7 @@ public class BoardState {
         FENStr += "0 ";
 
         // full move counter
-        FENStr += Integer.toString(boardState.getFullMoveCounter());
+        FENStr += Integer.toString(this.getFullMoveCounter());
 
         return FENStr;
     }

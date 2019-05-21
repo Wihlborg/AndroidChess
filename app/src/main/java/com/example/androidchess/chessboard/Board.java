@@ -241,9 +241,9 @@ public class Board {
                 squares[y][x].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String fen = getFENstring(boardState);
+                        String fen = boardState.getFENString();
                         move(yx);
-                        if (fen != getFENstring(boardState)){
+                        if (fen != boardState.getFENString()){
                             //gör AI stuff
 
 
