@@ -107,91 +107,6 @@ public class Board {
         updateBoard(this.boardState);
     }
 
-    // fen string example
-    // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-    // board positions | whos turn | castle options | en passant | half move counter | full move counter
-    public String getFENstring(BoardState boardState) {
-        String FENStr = "";
-
-        // board positions
-        int emptyCellCounter = 0;
-        // start at y = 8, x = 0
-        YX currentPos = new YX(7, 0);
-        for (; currentPos.y >= 0; currentPos.y--) {
-            for (; currentPos.x < 8; currentPos.x++) {
-
-                if (boardState.hasPiece(currentPos)) {
-                    if (emptyCellCounter != 0)
-                        FENStr += Integer.toString(emptyCellCounter);
-
-                    Piece piece = boardState.getPiece(currentPos);
-                    if (piece instanceof Rook) {
-                        FENStr += (piece.isWhite() ? "R" : "r");
-                    } else if (piece instanceof Queen) {
-                        FENStr += (piece.isWhite() ? "Q" : "q");
-                    } else if (piece instanceof Bishop) {
-                        FENStr += (piece.isWhite() ? "B" : "b");
-                    } else if (piece instanceof Knight) {
-                        FENStr += (piece.isWhite() ? "N" : "n");
-                    } else if (piece instanceof King) {
-                        FENStr += (piece.isWhite() ? "K" : "k");
-                    } else if (piece instanceof Pawn) {
-                        FENStr += (piece.isWhite() ? "P" : "p");
-                    }
-                } else {
-                    emptyCellCounter++;
-                }
-            }
-            if (emptyCellCounter != 0)
-                FENStr += Integer.toString(emptyCellCounter);
-            FENStr += "/";
-
-        }
-
-        if (boardState.isWhiteTurn())
-            FENStr += " w ";
-        else
-            FENStr += " b ";
-
-        // castle
-        boolean castleAvailable = false;
-        if (!boardState.getCastleFlag(3)) {
-            castleAvailable = true;
-            FENStr += "K";
-        }
-        if (!boardState.getCastleFlag(2)) {
-            castleAvailable = true;
-            FENStr += "Q";
-        }
-        if (!boardState.getCastleFlag(1)) {
-            castleAvailable = true;
-            FENStr += "k";
-        }
-        if (!boardState.getCastleFlag(0)) {
-            castleAvailable = true;
-            FENStr += "q";
-        }
-        if (!castleAvailable) {
-            FENStr += "- ";
-        }
-
-        // enpassant
-        YX enpassantPos = boardState.getEnPassantPos();
-        if (enpassantPos.y != -1)
-            FENStr += this.getSquare(enpassantPos).coordinate + " ";
-        else {
-            FENStr += "- ";
-        }
-
-        // half move counter
-        //TODO half move counter implementation
-        FENStr += "0 ";
-
-        // full move counter
-        FENStr += Integer.toString(boardState.getFullMoveCounter());
-
-        return FENStr;
-    }
 
     public boolean turnCheck(YX pos) {
         if (boardState.hasPiece(pos)) {
@@ -295,7 +210,7 @@ public class Board {
     }
     */
 
-    public void createSquares(GameActivity gameActivity, ConstraintLayout boardContainer) {
+    public void createSquares(GameActivity gameActivity, final ConstraintLayout boardContainer) {
         DisplayMetrics metrics = gameActivity.getResources().getDisplayMetrics();
 
         int width = metrics.widthPixels;
@@ -332,13 +247,16 @@ public class Board {
                 squares[y][x].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String fen = getFENstring(boardState);
+                        String fen = boardState.getFENString();
                         move(yx);
+                        boardState.printBoardState();
+                        System.out.println(boardState.getEnPassantPos());
+                        System.out.println(boardState.getFENString());
 
                         if (!boardState.isGameOver()) {
                             if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
                                 if (!boardState.isWhiteTurn()) {
-                                    if (!fen.equals(getFENstring(boardState))) {
+                                    if (!fen.equals(boardState.getFENString())) {
 
                                 /*
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";

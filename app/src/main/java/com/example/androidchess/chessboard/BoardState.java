@@ -311,10 +311,18 @@ public class BoardState {
         // king
         else if (move.piece instanceof King) {
             kingMoveLogic(move);
+            enPassantPos.y = -1;
+            enPassantPos.x = -1;
         }
         // rook
         else if (move.piece instanceof Rook) {
             rookMoveLogic(move);
+            enPassantPos.y = -1;
+            enPassantPos.x = -1;
+        }
+        else {
+            enPassantPos.y = -1;
+            enPassantPos.x = -1;
         }
 
         movePiece(move);
@@ -339,15 +347,11 @@ public class BoardState {
             }
             setPiece(null, enpassantCapture);
         }
-        enPassantPos.y = -1;
-        enPassantPos.x = -1;
 
         if (move.source.y - move.destination.y == 2) {
-            this.enPassantPos = new YX(move.source.y, move.source.x);
-            this.enPassantPos.y--;
+            this.enPassantPos = new YX(move.source.y-1, move.source.x);
         } else if (move.source.y - move.destination.y == -2) {
-            this.enPassantPos = new YX(move.source.y, move.source.x);
-            this.enPassantPos.y++;
+            this.enPassantPos = new YX(move.source.y+1, move.source.x);
         }
 
     }
