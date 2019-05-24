@@ -12,12 +12,25 @@ public class BoardState {
     // flags
     private boolean whiteTurn;
     private boolean checkMate;
+    public boolean getCheckMate() { return checkMate; }
+    private boolean draw;
+
+    public boolean isGameOver() {
+        boolean gameOver = false;
+
+        if (checkMate)
+            gameOver = true;
+        if (isDraw())
+            gameOver = true;
+
+        return gameOver;
+    }
 
     // postition where enpassant is possible
     private YX enPassantPos;
 
     //public YX promotionPos;
-    
+
     // full move is when both sides has made a move
     // increment everytime black makes a move
     private int fullMoveCounter;
@@ -66,11 +79,11 @@ public class BoardState {
     public BoardState(String FENStr) {
         this.squares = new Piece[8][8];
         //this.possibleCaptures = new boolean[8][8];
-        this.enPassantPos = new YX(0 ,0);
         this.castleFlag = new boolean[4];
+        for (int i = 0; i < castleFlag.length; i++) {
+            castleFlag[i] = true;
+        }
         this.kingPos = new YX[2];
-        this.kingPos[0] = new YX(0, 4);
-        this.kingPos[1] = new YX(7, 4);
         this.checkMate = false;
 
         // fen string example
@@ -93,9 +106,11 @@ public class BoardState {
                     break;
                 case 'k':
                     this.setPiece(new King(false), arrayPos);
+                    setKingPos(false, arrayPos);
                     break;
                 case 'K':
                     this.setPiece(new King(true), arrayPos);
+                    setKingPos(true, arrayPos);
                     break;
                 case 'n':
                     this.setPiece(new Knight(false), arrayPos);
@@ -175,13 +190,9 @@ public class BoardState {
         // rnbqkbnr/pppppppp/8/8/5P2/8/PPPPP1PP/RNBQKBNR b KQkq f6 0 1
         // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 
-        enPassantPos = new YX(0, 0);
+        enPassantPos = new YX(-1, -1);
 
-        if (FENStr.charAt(strIndex) == '-') {
-            enPassantPos.x = -1;
-            enPassantPos.y = -1;
-        } else {
-
+        if (FENStr.charAt(strIndex) != '-') {
             int x = FENStr.charAt(strIndex);
             int y = Character.getNumericValue(FENStr.charAt(++strIndex));
             x = x - 'a';
@@ -204,7 +215,7 @@ public class BoardState {
     public BoardState(BoardState parentBoardState, Move move) {
         //this.possibleCaptures = parentBoardState.possibleCaptures;
         this.squares = new Piece[8][8];
-        this.enPassantPos = new YX(-1, -1);
+        this.enPassantPos = new YX(parentBoardState.enPassantPos.y, parentBoardState.enPassantPos.x);
 
         for (int y = 0; y < 8; y++) {
             for (int x = 0; x < 8; x++) {
@@ -245,14 +256,13 @@ public class BoardState {
 
     public LinkedList<Move> getAllMoves() {
         LinkedList<Move> listOfMoves = new LinkedList<>();
-        for (Piece[] pArray: squares) {
-            for (Piece piece: pArray) {
+        for (Piece[] pArray : squares) {
+            for (Piece piece : pArray) {
                 if (piece != null) {
                     if (whiteTurn) {
                         if (piece.isWhite())
                             listOfMoves.addAll(piece.getMoves());
-                    }
-                    else {
+                    } else {
                         if (!piece.isWhite())
                             listOfMoves.addAll(piece.getMoves());
                     }
@@ -275,8 +285,7 @@ public class BoardState {
                     if (whiteTurn) {
                         if (piece.isWhite())
                             piece.calcPossibleMoves(currentPos, this);
-                    }
-                    else {
+                    } else {
                         if (!piece.isWhite())
                             piece.calcPossibleMoves(currentPos, this);
                     }
@@ -313,10 +322,26 @@ public class BoardState {
 
         this.calcAllPossibleMoves();
 
-        checkMate = isCheckMate();
+        isCheckMate();
+        isDraw();
     }
 
     private void pawnMoveLogic(Move move) {
+        if (move.destination.equals(this.enPassantPos)) {
+            // enpassant capture on black pawn
+            YX enpassantCapture;
+            if (enPassantPos.y == 5) {
+                enpassantCapture = new YX(enPassantPos.y-1, enPassantPos.x);
+            }
+            // enpassant capture on white pawn
+            else {
+                enpassantCapture = new YX(enPassantPos.y+1, enPassantPos.x);
+            }
+            setPiece(null, enpassantCapture);
+        }
+        enPassantPos.y = -1;
+        enPassantPos.x = -1;
+
         if (move.source.y - move.destination.y == 2) {
             this.enPassantPos = new YX(move.source.y, move.source.x);
             this.enPassantPos.y--;
@@ -324,6 +349,7 @@ public class BoardState {
             this.enPassantPos = new YX(move.source.y, move.source.x);
             this.enPassantPos.y++;
         }
+
     }
 
     private void kingMoveLogic(Move move) {
@@ -358,13 +384,13 @@ public class BoardState {
                 this.castleFlag[2] = true;
                 this.castleFlag[3] = true;
             }
-            this.kingPos[0] = move.destination;
+            setKingPos(true, move.destination);
         } else {
             if (!this.castleFlag[0] || !this.castleFlag[1]) {
                 this.castleFlag[1] = true;
                 this.castleFlag[0] = true;
             }
-            this.kingPos[1] = move.destination;
+            setKingPos(false, move.destination);
         }
     }
 
@@ -423,7 +449,7 @@ public class BoardState {
         }
 
         //System.out.println("nrOfMoves: "+nrOfMoves);
-        if(nrOfMoves == 0) {
+        if (nrOfMoves == 0) {
             checkMate = true;
         }
 
@@ -516,9 +542,8 @@ public class BoardState {
         YX enpassantPos = this.getEnPassantPos();
         if (enpassantPos.y != -1) {
             char a = 'a';
-            FENStr += " " + ((char) (a + enpassantPos.y)) + (enpassantPos.x + 1) + " ";
-        }
-        else {
+            FENStr += " " + ((char) (a + enpassantPos.x)) + (enpassantPos.y + 1) + " ";
+        } else {
             FENStr += " - ";
         }
 
@@ -640,15 +665,15 @@ public class BoardState {
         System.out.println(str);
     }
 
-    public boolean isDraw(){
+    public boolean isDraw() {
         LinkedList<Move> moves = getAllMoves();
         //True if no moves available, and whites king is not attacked on whites turn
         //Similarly true if no moves available and blacks king is not attacked on blacks turn
-        if (moves.size() == 0 && ((isWhiteTurn() && getPiece(kingPos[0]).isSafeFromCheck(kingPos[0], this))||
-            !isWhiteTurn() && getPiece(kingPos[1]).isSafeFromCheck(kingPos[1], this))){
-            return true;
+        if (moves.size() == 0 && ((isWhiteTurn() && getPiece(kingPos[0]).isSafeFromCheck(kingPos[0], this)) ||
+                !isWhiteTurn() && getPiece(kingPos[1]).isSafeFromCheck(kingPos[1], this))) {
+            return draw = true;
         } else {
-            return false;
+            return draw = false;
         }
     }
 

@@ -1,7 +1,5 @@
-package com.example.androidchess;
+package com.example.androidchess.chessboard;
 
-import com.example.androidchess.chessboard.BoardState;
-import com.example.androidchess.chessboard.Move;
 import java.util.LinkedList;
 import java.util.Random;
 
