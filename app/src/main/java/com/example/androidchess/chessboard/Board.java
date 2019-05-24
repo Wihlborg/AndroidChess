@@ -14,6 +14,7 @@ import java.util.LinkedList;
 public class Board {
     private Square[][] squares;
     public BoardState boardState;
+    private AI ai;
 
     public boolean[][] possibleClicks = new boolean[8][8];
 
@@ -25,6 +26,7 @@ public class Board {
         setConstraints(set, boardContainer);
         setBoardState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
         boardState.calcAllPossibleMoves();
+        this.ai = new AI();
     }
 
     YX firstPos = new YX(4, 4);
@@ -332,13 +334,15 @@ public class Board {
                 squares[y][x].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String fen = getFENstring(boardState);
-                        move(yx);
 
                         if (!boardState.isGameOver()) {
                             if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
+                                if (boardState.isWhiteTurn()){
+                                    Move chosenMove = ai.getHenkeFishMove(boardState);
+                                    move(chosenMove.source);
+                                    move(chosenMove.destination);
+                                }
                                 if (!boardState.isWhiteTurn()) {
-                                    if (!fen.equals(getFENstring(boardState))) {
 
                                 /*
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -431,7 +435,7 @@ public class Board {
                                     }
                                 }
                             }
-                        }
+
                         // its game over
                         else {
                             if (boardState.isDraw()) {
