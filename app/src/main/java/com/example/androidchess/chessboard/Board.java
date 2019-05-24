@@ -344,12 +344,39 @@ public class Board {
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                                 String rootFen = boardState.getFENString();
                                 Node root = new Node(rootFen);
-                                LinkedList<Node> children = root.children;
+                                int increment=root.DEPTH;
+Node best=null;
                                 MinMax minMax = new MinMax();
-                                int n = children.size();
-                                int h = minMax.log2(n);
-                                int res = minMax.minimax(root.DEPTH, 0, children, h);
+                                LinkedList<Node>bottomBIATCH=new LinkedList<>();
+                                int h=0;
+                                    for (Node node: root.children) {
+                                    for (Node node1: node.children) {
+                                    for (Node node2:node1.children){
+                                     if (increment==3){
+                                         h=node2.children.size();
+                                         bottomBIATCH=node2.children;
+                                     break;
+                                     }
+                                        }
+                                    }
+                                }
+                                int res = minMax.minimax(increment, 0,bottomBIATCH , h);
                                 System.out.println("Testing:  " + res);
+
+                                for (Node node: root.children) {
+                                    for (Node node1: node.children) {
+                                        for (Node node2:node1.children){
+                                            if (increment==3){
+                                                node2=bottomBIATCH.get(res);
+                                                node1.parent =node2.parent;
+                                                node.parent=node1.parent;
+                                                 best =  node.parent;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }
+
                                 root.children.get(res).boardState.printBoardState();
                                 boardState = new BoardState(root.children.get(res).boardState.getFENString());
                                 */
