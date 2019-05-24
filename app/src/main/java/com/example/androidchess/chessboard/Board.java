@@ -261,6 +261,12 @@ public class Board {
                                     Move chosenMove = ai.getHenkeFishMove(boardState);
                                     move(chosenMove.source);
                                     move(chosenMove.destination);
+                                    if (boardState.isCheckMate()){
+                                        GameInfo.get().winner = "w";
+                                        GameInfo.get().winCondition = "checkmate";
+                                        GameInfo.get().game.endGame();
+                                        return;
+                                    }
                                 }
                                 if (!boardState.isWhiteTurn()) {
 
@@ -352,7 +358,12 @@ public class Board {
                                         //System.out.println(boardState.getFENString());
                                         updateBoard(boardState);
                                         clearVisibleMoves();
-
+                                    if (boardState.isCheckMate()){
+                                        GameInfo.get().winner = "b";
+                                        GameInfo.get().winCondition = "checkmate";
+                                        GameInfo.get().game.endGame();
+                                        return;
+                                    }
                                     }
                                 }
                             }

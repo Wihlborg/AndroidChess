@@ -61,7 +61,7 @@ public class GameActivity extends AppCompatActivity {
         }
 
         popup = false;
-
+        */
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -74,7 +74,7 @@ public class GameActivity extends AppCompatActivity {
 
         moveSound = soundPool.load(this, R.raw.move, 1);
         checkMateSound = soundPool.load(this, R.raw.gameover, 1);
-        */
+
     }
 
 
