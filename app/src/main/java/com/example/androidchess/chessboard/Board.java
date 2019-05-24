@@ -438,9 +438,9 @@ public class Board {
                                         updateBoard(boardState);
                                         clearVisibleMoves();
                                     if (boardState.isCheckMate()){
-                                        GameInfo.get().game.endGame();
                                         GameInfo.get().winner = "w";
                                         GameInfo.get().winCondition = "checkmate";
+                                        GameInfo.get().game.endGame();
                                         return;
                                     }
                                     }
