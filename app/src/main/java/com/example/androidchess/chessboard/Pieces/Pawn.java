@@ -43,6 +43,7 @@ public class Pawn extends Piece {
                 y++;
             }
 
+            // check right diagonal
             currentPos.y = sourcePos.y + 1;
             currentPos.x = sourcePos.x + 1;
 
@@ -54,6 +55,7 @@ public class Pawn extends Piece {
                 }
             }
 
+            // check left diagonal
             // Y value is the same
             currentPos.x = sourcePos.x - 1;
             if (currentPos.x >= 0) {
@@ -90,6 +92,13 @@ public class Pawn extends Piece {
 
             if (currentPos.y < 8 && currentPos.x >= 0) {
                 if (boardState.hasPiece(currentPos)) {
+                    if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
+                        if (kingSafety(currentPos, sourcePos, boardState)) {
+                            this.addMove(new Move(sourcePos, currentPos, this));
+                        }
+                    }
+                }
+                else if (currentPos.equals(boardState.getEnPassantPos())) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
                     }
@@ -101,7 +110,14 @@ public class Pawn extends Piece {
             currentPos.x = sourcePos.x + 1;
 
             if (currentPos.y < 8 && currentPos.x < 8) {
-                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
+                if (boardState.hasPiece(currentPos)) {
+                    if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
+                        if (kingSafety(currentPos, sourcePos, boardState)) {
+                            this.addMove(new Move(sourcePos, currentPos, this));
+                        }
+                    }
+                }
+                else if (currentPos.equals(boardState.getEnPassantPos())) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
                     }
@@ -178,6 +194,13 @@ public class Pawn extends Piece {
 
             if (currentPos.y >= 0 && currentPos.x >= 0) {
                 if (boardState.hasPiece(currentPos)) {
+                    if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
+                        if (kingSafety(currentPos, sourcePos, boardState)) {
+                            this.addMove(new Move(sourcePos, currentPos, this));
+                        }
+                    }
+                }
+                else if (currentPos.equals(boardState.getEnPassantPos())) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
                     }
@@ -189,7 +212,14 @@ public class Pawn extends Piece {
             currentPos.x = sourcePos.x + 1;
 
             if (currentPos.y >= 0 && currentPos.x < 8) {
-                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
+                if (boardState.hasPiece(currentPos)) {
+                    if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
+                        if (kingSafety(currentPos, sourcePos, boardState)) {
+                            this.addMove(new Move(sourcePos, currentPos, this));
+                        }
+                    }
+                }
+                else if (currentPos.equals(boardState.getEnPassantPos())) {
                     if (kingSafety(currentPos, sourcePos, boardState)) {
                         this.addMove(new Move(sourcePos, currentPos, this));
                     }

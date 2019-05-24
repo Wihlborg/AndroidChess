@@ -77,7 +77,7 @@ public class GameActivity extends AppCompatActivity {
         */
     }
 
-    /*
+
     public void endGame() {
         String winner = GameInfo.get().winner;
         String winCondition = GameInfo.get().winCondition;
@@ -167,7 +167,7 @@ public class GameActivity extends AppCompatActivity {
             }
         }
     }
-    */
+
 
     private void shareImage(){
         Bitmap image = Utils.takeScreenShot(this);

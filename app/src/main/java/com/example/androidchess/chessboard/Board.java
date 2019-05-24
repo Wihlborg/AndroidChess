@@ -5,6 +5,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+import com.example.androidchess.GameMode;
 import com.example.androidchess.R;
 import com.example.androidchess.chessboard.Pieces.*;
 
@@ -51,11 +52,13 @@ public class Board {
             this.getSquare(pos).setBackgroundColor(Color.parseColor("#00FFFF"));
             showPossibleMoves(pos);
             //System.out.println(boardState.getPiece(pos).getMoves().toString());
-            System.out.println(boardState);
+            //System.out.println(boardState);
+            //System.out.println(boardState.getFENString());
         }
         // a legal move is made
         else if (swapCounter == 2 && legalMove(pos)) {
-            boardState.doLegalMove(new Move(firstPos, pos, boardState.getPiece(firstPos)));
+            //boardState.doLegalMove(new Move(firstPos, pos, boardState.getPiece(firstPos)));
+            boardState = new BoardState(boardState, new Move(firstPos, pos, boardState.getPiece(firstPos)));
             updateBoard(boardState);
 
             swapCounter = 0;
@@ -84,8 +87,7 @@ public class Board {
 
     public void updateBoard(BoardState boardState) {
         YX currentPos = new YX(0, 0);
-
-        System.out.println("updateboard");
+        //System.out.println("updateboard");
         for (; currentPos.y < 8; currentPos.y++) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
                 //System.out.println(currentPos);
@@ -220,8 +222,16 @@ public class Board {
         for (Move move : listOfMoves) {
             if (boardState.hasPiece(move.destination)) {
                 this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
-            } else
+            }
+            else
                 this.getSquare(move.destination).setAlpha(1f);
+
+            if (move.piece instanceof Pawn) {
+                if (move.destination.equals(boardState.getEnPassantPos())) {
+                    setPossibleClick(move.destination);
+                    this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
+                }
+            }
 
             setPossibleClick(move.destination);
         }
@@ -324,8 +334,13 @@ public class Board {
                     public void onClick(View v) {
                         String fen = getFENstring(boardState);
                         move(yx);
-                        if (!boardState.isWhiteTurn()) {
-                            if (fen != getFENstring(boardState)) {
+
+                        if (!boardState.isGameOver()) {
+                            if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
+                                if (!boardState.isWhiteTurn()) {
+                                    if (!fen.equals(getFENstring(boardState))) {
+
+                                /*
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                                 String rootFen = boardState.getFENString();
                                 Node root = new Node(rootFen);
@@ -337,9 +352,74 @@ public class Board {
                                 System.out.println("Testing:  " + res);
                                 root.children.get(res).boardState.printBoardState();
                                 boardState = new BoardState(root.children.get(res).boardState.getFENString());
-                                updateBoard(boardState);
-                                clearVisibleMoves();
+                                */
+
+
+                                        //System.out.println("---------------");
+                                        //System.out.println("\nminimax: ");
+                                        //System.out.println(boardState.getFENString());
+                                        //System.out.println(boardState);
+                                        Timer timer = new Timer();
+
+                                        timer.startTimer();
+                                        Node root = new Node(boardState.getFENString());
+                                        timer.stopTimer();
+                                        System.out.println(timer.retreiveTime());
+
+                                    /*
+                                    int nrOfNodes = 0;
+                                    for (Node node1 : root.children) {
+                                        for (Node node2 : node1.children) {
+                                            nrOfNodes += node2.children.size();
+                                        }
+                                        nrOfNodes += node1.children.size();
+                                    }
+                                    nrOfNodes += root.children.size();
+                                    nrOfNodes++;
+                                    System.out.println("nr: " + nrOfNodes);
+                                    System.out.println("nrOfMoves: " + root.children.size());
+                                    */
+
+                                        timer.startTimer();
+                                        double bestScore = 99999;
+                                        Node bestMove = null;
+                                        for (Node child : root.children) {
+                                            double score = Minimax.minimax(child, 3, true);
+                                            //System.out.println(score);
+                                            if (bestScore > score) {
+                                                bestScore = score;
+                                                bestMove = child;
+                                            }
+                                        }
+                                        timer.stopTimer();
+                                        System.out.println(timer.retreiveTime());
+
+                                        System.out.println("b" + bestScore);
+                                        //System.out.println(bestMove.boardState);
+                                        boardState = new BoardState(bestMove.boardState.getFENString());
+                                        //System.out.println(boardState.getFENString());
+                                        updateBoard(boardState);
+                                        clearVisibleMoves();
+
+                                    }
+                                }
                             }
+                        }
+                        // its game over
+                        else {
+                            if (boardState.isDraw()) {
+                                GameInfo.get().winner = "draw";
+                                GameInfo.get().winCondition = "draw";
+                            } else {
+                                if (boardState.isWhiteTurn())
+                                    GameInfo.get().winner = "b";
+                                else
+                                    GameInfo.get().winner = "w";
+
+                                GameInfo.get().winCondition = "checkmate";
+                            }
+
+                            GameInfo.get().game.endGame();
                         }
                     }
                 });

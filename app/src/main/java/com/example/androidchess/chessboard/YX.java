@@ -9,6 +9,10 @@ public class YX {
         this.x = x;
     }
 
+    public boolean equals(YX pos) {
+        return (y == pos.y && x == pos.x);
+    }
+
     @Override
     public String toString() {
         return "YX{" +
