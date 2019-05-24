@@ -329,33 +329,33 @@ public class Board {
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
                                 String rootFen = boardState.getFENString();
                                 Node root = new Node(rootFen);
-                                int increment=root.DEPTH;
-Node best=null;
+                                int increment = root.DEPTH;
+                                Node best = null;
                                 MinMax minMax = new MinMax();
-                                LinkedList<Node>bottomBIATCH=new LinkedList<>();
-                                int h=0;
-                                    for (Node node: root.children) {
-                                    for (Node node1: node.children) {
-                                    for (Node node2:node1.children){
-                                     if (increment==3){
-                                         h=node2.children.size();
-                                         bottomBIATCH=node2.children;
-                                     break;
-                                     }
+                                LinkedList<Node> bottomBIATCH = new LinkedList<>();
+                                int h = 0;
+                                for (Node node : root.children) {
+                                    for (Node node1 : node.children) {
+                                        for (Node node2 : node1.children) {
+                                            if (increment == 3) {
+                                                h = node2.children.size();
+                                                bottomBIATCH = node2.children;
+                                                break;
+                                            }
                                         }
                                     }
                                 }
-                                int res = minMax.minimax(increment, 0,bottomBIATCH , h);
+                                int res = minMax.minimax(increment, 0, bottomBIATCH, h);
                                 System.out.println("Testing:  " + res);
 
-                                for (Node node: root.children) {
-                                    for (Node node1: node.children) {
-                                        for (Node node2:node1.children){
-                                            if (increment==3){
-                                                node2=bottomBIATCH.get(res);
-                                                node1.parent =node2.parent;
-                                                node.parent=node1.parent;
-                                                 best =  node.parent;
+                                for (Node node : root.children) {
+                                    for (Node node1 : node.children) {
+                                        for (Node node2 : node1.children) {
+                                            if (increment == 3) {
+                                                node2 = bottomBIATCH.get(res);
+                                                node1.parent = node2.parent;
+                                                node.parent = node1.parent;
+                                                best = node.parent;
                                                 break;
                                             }
                                         }
