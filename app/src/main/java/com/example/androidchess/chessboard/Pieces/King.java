@@ -69,7 +69,7 @@ public class King extends Piece {
                 if (!boardState.getPiece(boardState.getKingPos(true)).isSafeFromCheck(sourcePos, boardState)){
                     obstacle = true;
                 }
-                while (--x >= 2 && !obstacle) {
+                while (--x >= 1 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
                     if (boardState.hasPiece(currentPos)) {
@@ -120,7 +120,7 @@ public class King extends Piece {
                 if (!boardState.getPiece(boardState.getKingPos(false)).isSafeFromCheck(sourcePos, boardState)) {
                     obstacle = true;
                 }
-                while (--x >= 2 && !obstacle) {
+                while (--x >= 1 && !obstacle) {
                     currentPos.y = y;
                     currentPos.x = x;
                     if (boardState.hasPiece(currentPos)) {

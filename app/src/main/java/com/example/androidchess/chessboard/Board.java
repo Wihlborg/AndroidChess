@@ -1,6 +1,7 @@
 package com.example.androidchess.chessboard;
 
 import android.graphics.Color;
+import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.DisplayMetrics;
@@ -139,8 +140,7 @@ public class Board {
         for (Move move : listOfMoves) {
             if (boardState.hasPiece(move.destination)) {
                 this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
-            }
-            else
+            } else
                 this.getSquare(move.destination).setAlpha(1f);
 
             if (move.piece instanceof Pawn) {
@@ -257,19 +257,28 @@ public class Board {
 
                         if (!boardState.isGameOver()) {
                             if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
-                                if (boardState.isWhiteTurn()){
-                                    Move chosenMove = ai.getHenkeFishMove(boardState);
-                                    move(chosenMove.source);
-                                    move(chosenMove.destination);
-                                    if (boardState.isCheckMate()){
-                                        GameInfo.get().winner = "w";
-                                        GameInfo.get().winCondition = "checkmate";
-                                        GameInfo.get().game.endGame();
-                                        return;
-                                    }
-                                }
-                                if (!boardState.isWhiteTurn()) {
 
+                                Thread thread = new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+
+                                        if (boardState.isWhiteTurn() && false) {
+                                            GameInfo.get().game.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Move chosenMove = ai.getHenkeFishMove(boardState);
+                                                    move(chosenMove.source);
+                                                    move(chosenMove.destination);
+                                                    if (boardState.isCheckMate()) {
+                                                        GameInfo.get().game.endGame("w", "checkmate");
+                                                        return;
+                                                    }
+                                                    updateBoard(boardState);
+                                                }
+                                            });
+                                        }
+
+                                        if (!boardState.isWhiteTurn()) {
 
                                 /*
                                 //String rootFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -313,16 +322,16 @@ public class Board {
                                 */
 
 
-                                        //System.out.println("---------------");
-                                        //System.out.println("\nminimax: ");
-                                        //System.out.println(boardState.getFENString());
-                                        //System.out.println(boardState);
-                                        Timer timer = new Timer();
+                                            //System.out.println("---------------");
+                                            //System.out.println("\nminimax: ");
+                                            //System.out.println(boardState.getFENString());
+                                            //System.out.println(boardState);
+                                            Timer timer = new Timer();
 
-                                        timer.startTimer();
-                                        Node root = new Node(boardState.getFENString());
-                                        timer.stopTimer();
-                                        System.out.println(timer.retreiveTime());
+                                            timer.startTimer();
+                                            Node root = new Node(boardState.getFENString());
+                                            timer.stopTimer();
+                                            System.out.println(timer.retreiveTime());
 
                                     /*
                                     int nrOfNodes = 0;
@@ -338,51 +347,53 @@ public class Board {
                                     System.out.println("nrOfMoves: " + root.children.size());
                                     */
 
-                                        timer.startTimer();
-                                        double bestScore = 99999;
-                                        Node bestMove = null;
-                                        for (Node child : root.children) {
-                                            double score = Minimax.minimax(child, 3, true);
-                                            //System.out.println(score);
-                                            if (bestScore > score) {
-                                                bestScore = score;
-                                                bestMove = child;
+                                            timer.startTimer();
+                                            double bestScore = 99999;
+                                            Node bestMove = null;
+                                            for (Node child : root.children) {
+                                                double score = Minimax.minimax(child, 3, true);
+                                                //System.out.println(score);
+                                                if (bestScore > score) {
+                                                    bestScore = score;
+                                                    bestMove = child;
+                                                }
                                             }
-                                        }
-                                        timer.stopTimer();
-                                        System.out.println(timer.retreiveTime());
+                                            timer.stopTimer();
+                                            System.out.println(timer.retreiveTime());
 
-                                        System.out.println("b" + bestScore);
-                                        //System.out.println(bestMove.boardState);
-                                        boardState = new BoardState(bestMove.boardState.getFENString());
-                                        //System.out.println(boardState.getFENString());
-                                        updateBoard(boardState);
-                                        clearVisibleMoves();
-                                    if (boardState.isCheckMate()){
-                                        GameInfo.get().winner = "b";
-                                        GameInfo.get().winCondition = "checkmate";
-                                        GameInfo.get().game.endGame();
-                                        return;
+                                            System.out.println("b" + bestScore);
+                                            //System.out.println(bestMove.boardState);
+                                            boardState = new BoardState(bestMove.boardState.getFENString());
+                                            //System.out.println(boardState.getFENString());
+                                            GameInfo.get().game.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    updateBoard(boardState);
+                                                    clearVisibleMoves();
+                                                    if (boardState.isCheckMate()) {
+                                                        GameInfo.get().game.endGame("b", "checkmate");
+                                                        return;
+                                                    }
+                                                }
+                                            });
+                                        }
                                     }
-                                    }
-                                }
+                                });
+                                thread.start();
                             }
+                        }
 
                         // its game over
                         else {
                             if (boardState.isDraw()) {
-                                GameInfo.get().winner = "draw";
-                                GameInfo.get().winCondition = "draw";
+                                GameInfo.get().game.endGame("d", "draw");
                             } else {
                                 if (boardState.isWhiteTurn())
-                                    GameInfo.get().winner = "b";
+                                    GameInfo.get().game.endGame("b", "checkmate");
                                 else
-                                    GameInfo.get().winner = "w";
+                                    GameInfo.get().game.endGame("w", "checkmate");
 
-                                GameInfo.get().winCondition = "checkmate";
                             }
-
-                            GameInfo.get().game.endGame();
                         }
                     }
                 });

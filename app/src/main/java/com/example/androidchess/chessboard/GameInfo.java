@@ -23,8 +23,6 @@ public class GameInfo {
         info = null;
     }
 
-    public String winner, winCondition;
-
     public ChessClock blackClock, whiteClock;
 
     public YX promotionPos;

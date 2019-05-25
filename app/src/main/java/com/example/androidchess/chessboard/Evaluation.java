@@ -81,7 +81,7 @@ public class Evaluation {
     public static double getEvaluation(BoardState boardState){
         double evaluation = 0;
 
-        if (boardState.isGameOver()) {
+        if (boardState.getCheckMate()) {
             if (boardState.isWhiteTurn()) {
                 return -5000;
             }

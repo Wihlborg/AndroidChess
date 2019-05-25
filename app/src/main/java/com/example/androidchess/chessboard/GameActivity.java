@@ -78,9 +78,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
 
-    public void endGame() {
-        String winner = GameInfo.get().winner;
-        String winCondition = GameInfo.get().winCondition;
+    public void endGame(String winner, String winCondition) {
         if (User.INSTANCE.getSounds())
             soundPool.play(checkMateSound, (float)1.0, (float)1.0, 0, 0, (float)1.0);
         System.out.println("endGame()");

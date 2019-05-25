@@ -94,7 +94,14 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos)) {
                     if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
                         if (kingSafety(currentPos, sourcePos, boardState)) {
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                            if (currentPos.y == 7) {
+                                this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Knight(this.isWhite())));
+                            }
+                            else
+                                this.addMove(new Move(sourcePos, currentPos, this));
                         }
                     }
                 }
@@ -113,7 +120,14 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos)) {
                     if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
                         if (kingSafety(currentPos, sourcePos, boardState)) {
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                            if (currentPos.y == 7) {
+                                this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Knight(this.isWhite())));
+                            }
+                            else
+                                this.addMove(new Move(sourcePos, currentPos, this));
                         }
                     }
                 }
@@ -177,7 +191,7 @@ public class Pawn extends Piece {
 
             if (currentPos.y >= 0 && !boardState.hasPiece(currentPos)) {
                 if (kingSafety(currentPos, sourcePos, boardState)) {
-                    if (currentPos.y == 7) {
+                    if (currentPos.y == 0) {
                         this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
                         this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
                         this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
@@ -196,7 +210,14 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos)) {
                     if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
                         if (kingSafety(currentPos, sourcePos, boardState)) {
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                            if (currentPos.y == 0) {
+                                this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Knight(this.isWhite())));
+                            }
+                            else
+                                this.addMove(new Move(sourcePos, currentPos, this));
                         }
                     }
                 }
@@ -215,7 +236,14 @@ public class Pawn extends Piece {
                 if (boardState.hasPiece(currentPos)) {
                     if (this.isWhite() != boardState.getPiece(currentPos).isWhite()) {
                         if (kingSafety(currentPos, sourcePos, boardState)) {
-                            this.addMove(new Move(sourcePos, currentPos, this));
+                            if (currentPos.y == 0) {
+                                this.addMove(new Move(sourcePos, currentPos, new Queen(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Bishop(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Rook(this.isWhite())));
+                                this.addMove(new Move(sourcePos, currentPos, new Knight(this.isWhite())));
+                            }
+                            else
+                                this.addMove(new Move(sourcePos, currentPos, this));
                         }
                     }
                 }

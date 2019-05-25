@@ -57,18 +57,16 @@ public class ChessClock extends Thread {
                 }
                 updateTime();
             }
-            if (txt.getTag().toString().equals("white")) {
-                GameInfo.get().winner = "b";
-            }
-            else {
-                GameInfo.get().winner = "w";
-            }
-            GameInfo.get().winCondition = "timer running out";
+
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    //TODO fix
-                    // game.endGame();
+                    if (txt.getTag().toString().equals("white")) {
+                        game.endGame("b", "timer ran out");
+                    }
+                    else {
+                        game.endGame("w", "timer ran out");
+                    }
                 }
             });
 
