@@ -1,5 +1,6 @@
 package com.example.androidchess.Database;
 
+import android.nfc.Tag;
 import android.os.StrictMode;
 import android.util.Log;
 import com.example.androidchess.Elo;
