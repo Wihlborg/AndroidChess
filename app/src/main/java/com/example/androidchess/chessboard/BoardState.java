@@ -32,7 +32,7 @@ public class BoardState {
     //public YX promotionPos;
 
     // full move is when both sides has made a move
-    // increment everytime black makes a move
+    // increment every time black makes a move
     private int fullMoveCounter;
 
     /*
