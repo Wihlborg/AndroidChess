@@ -15,6 +15,7 @@ import android.widget.*;
 import com.example.androidchess.GameMode;
 import com.example.androidchess.R;
 import com.example.androidchess.chessboard.GameActivity;
+import com.example.androidchess.chessboard.GameInfo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -74,7 +75,9 @@ public class LobbyActivity extends AppCompatActivity {
                 case MESSAGE_READ:
                     byte[] readBuff = (byte[]) msg.obj;
                     String tempMsg = new String(readBuff, 0, msg.arg1);
-                    GameActivity.setBoardGameState(tempMsg);
+                    //TODO receiving board game state from opponent
+                    //GameInfo.setBoardGameState(tempMsg);
+
                     //System.out.println(tempMsg);
                     //read_msg_box.setText(tempMsg);
 

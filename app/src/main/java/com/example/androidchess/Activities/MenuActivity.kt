@@ -77,6 +77,8 @@ class MenuActivity : AppCompatActivity() {
 
         val shareByte = findViewById<ImageButton>(R.id.shareButton)
         shareByte.setOnClickListener { share() }
+
+        TimerInfo.enable = false
     }
 
     override fun onBackPressed() {
@@ -92,6 +94,7 @@ class MenuActivity : AppCompatActivity() {
     }
 
     override fun onResume() {
+        TimerInfo.enable = false
         val layout = findViewById<ConstraintLayout>(R.id.multiplayerlayout)
         layout.visibility = View.GONE
         val localLayout = findViewById<ConstraintLayout>(R.id.localwifi)
