@@ -64,6 +64,12 @@ public class Board {
             boardState = new BoardState(boardState, new Move(firstPos, pos, boardState.getPiece(firstPos)));
             updateBoard(boardState);
 
+            // if the pawn is able to do promotion for either side
+            if (boardState.getPiece(pos) instanceof Pawn && ((pos.y == 7 && boardState.getPiece(pos).isWhite()) || (pos.y == 0 && !boardState.getPiece(pos).isWhite()) )) {
+                GameInfo.get().promotionPos = pos;
+                GameInfo.get().game.promotionUI();
+            }
+
             swapCounter = 0;
             //swapTurn();
 
