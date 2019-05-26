@@ -47,8 +47,8 @@ public class OldLobbyActivity extends Activity {
     private void initRecyclerView() {
         Log.d(TAG, "initRecyclerView: init recyclerView. ");
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        RecycleViewAdapter adapter = new RecycleViewAdapter(this, mNames, mImageUrls);
-        recyclerView.setAdapter(adapter);
+        //RecycleViewAdapter adapter = new RecycleViewAdapter(this, mNames, mImageUrls);
+        //recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }

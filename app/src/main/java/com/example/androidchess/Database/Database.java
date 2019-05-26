@@ -26,7 +26,7 @@ public class Database {
     //Database constructor
     private Database() {
 
-        String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=sjukhus1&password=lirdon!";
+        String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
         try {
             connect = DriverManager.getConnection(url);
             Log.d(TAG,"Connected to database");

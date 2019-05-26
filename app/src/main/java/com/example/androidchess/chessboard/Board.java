@@ -150,7 +150,7 @@ public class Board {
                 this.getSquare(move.destination).setAlpha(1f);
 
             if (move.piece instanceof Pawn) {
-                if (move.destination.equals(boardState.getEnPassantPos())) {
+                if (move.destination.equals(boardState.getEnPassantPos()) && move.destination.x != move.source.x) {
                     setPossibleClick(move.destination);
                     this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
                 }
