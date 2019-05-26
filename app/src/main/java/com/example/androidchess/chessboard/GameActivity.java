@@ -36,6 +36,19 @@ public class GameActivity extends AppCompatActivity {
     private SoundPool soundPool;
     private int moveSound, checkMateSound;
 
+    public ChessClock blackClock;
+    public ChessClock whiteClock;
+
+    @Override
+    public void onBackPressed() {
+        this.finish();
+        if (blackClock != null)
+            blackClock.stopTimer();
+        if (whiteClock != null)
+            whiteClock.stopTimer();
+        super.onBackPressed();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +58,18 @@ public class GameActivity extends AppCompatActivity {
         ConstraintLayout boardContainer = findViewById(R.id.boardContainer);
         GameInfo.get().game = this;
         board = new Board(this, boardContainer);
+
+        if (TimerInfo.INSTANCE.getEnable()) {
+            TextView bt = findViewById(R.id.timerblack);
+            TextView wt = findViewById(R.id.timerwhite);
+
+            bt.setVisibility(View.VISIBLE);
+            wt.setVisibility(View.VISIBLE);
+
+            blackClock = new ChessClock(0, 5, 0, bt, this);
+            whiteClock = new ChessClock(0, 5, 0, wt, this);
+
+        }
 
         //GameInfo.get().boardState.setWhiteTurn(true);
         /*

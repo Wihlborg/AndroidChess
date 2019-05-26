@@ -6,6 +6,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.TextView;
 import com.example.androidchess.GameMode;
 import com.example.androidchess.R;
 import com.example.androidchess.chessboard.Pieces.*;
@@ -65,7 +66,7 @@ public class Board {
             updateBoard(boardState);
 
             swapCounter = 0;
-            //swapTurn();
+            clockAction();
 
             clearVisibleMoves();
         }
@@ -86,6 +87,29 @@ public class Board {
         this.setSquare(firstPos, this.getSquare(secondPos));
 
         this.setSquare(secondPos, temp);
+    }
+
+    public void clockAction() {
+        GameActivity game = GameInfo.get().game;
+        if (!boardState.isWhiteTurn()) {
+            if (TimerInfo.INSTANCE.getEnable()) {
+                game.whiteClock.stopTimer();
+                if (!game.blackClock.isAlive()) {
+                    game.blackClock = new ChessClock((TextView) game.findViewById(R.id.timerblack), game);
+                }
+                game.blackClock.startTimer();
+            }
+        }
+        
+        else {
+            if (TimerInfo.INSTANCE.getEnable()) {
+                game.blackClock.stopTimer();
+                if (!game.whiteClock.isAlive()) {
+                    game.whiteClock = new ChessClock((TextView) game.findViewById(R.id.timerwhite), game);
+                }
+                game.whiteClock.startTimer();
+            }
+        }
     }
 
     public void updateBoard(BoardState boardState) {
