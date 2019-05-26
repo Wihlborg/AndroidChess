@@ -1,5 +1,6 @@
 package com.example.androidchess.Database;
 
+import android.nfc.Tag;
 import android.os.StrictMode;
 import android.util.Log;
 import com.example.androidchess.Elo;
@@ -25,7 +26,7 @@ public class Database {
     //Database constructor
     private Database() {
 
-        String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=myshack&password=liridon!";
+        String url = "jdbc:mysql://den1.mysql3.gear.host/myshack?user=sjukhus1&password=lirdon!";
         try {
             connect = DriverManager.getConnection(url);
             Log.d(TAG,"Connected to database");

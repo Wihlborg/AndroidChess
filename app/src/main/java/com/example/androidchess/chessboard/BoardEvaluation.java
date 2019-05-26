@@ -158,4 +158,75 @@ public class BoardEvaluation {
 
         return evaluation;
     }
+
+    public static double getEvaluation(String fenString){
+        boolean stop = false;
+        int charPos = 0;
+        int gridPos = 0;
+        String[] pieces = new String[64];
+
+        while (!stop) {
+            switch (fenString.charAt(charPos)) {
+                case 'q':
+                    pieces[gridPos] = "qb";
+                    break;
+                case 'Q':
+                    pieces[gridPos] = "qw";
+                    break;
+                case 'k':
+                    pieces[gridPos] = "kb";
+                    break;
+                case 'K':
+                    pieces[gridPos] = "kw";
+                    break;
+                case 'n':
+                    pieces[gridPos] = "nb";
+                    break;
+                case 'N':
+                    pieces[gridPos] = "nw";
+                    break;
+                case 'b':
+                    pieces[gridPos] = "bb";
+                    break;
+                case 'B':
+                    pieces[gridPos] = "bw";
+                    break;
+                case 'r':
+                    pieces[gridPos] = "rb";
+                    break;
+                case 'R':
+                    pieces[gridPos] = "rw";
+                    break;
+                case 'p':
+                    pieces[gridPos] = "pb";
+                    break;
+                case 'P':
+                    pieces[gridPos] = "pw";
+                    break;
+                case ' ':
+                    stop = true;
+                    break;
+                case '/':
+                    gridPos--;
+                    break;
+                default:
+                    for (int t = 0; t < Character.getNumericValue(fenString.charAt(charPos)); t++) {
+                        /*
+                        System.out.println("t:"+t);
+                        System.out.println("n:"+gridPos);
+                        System.out.println("----");
+                        */
+                        pieces[gridPos++] = "ts";
+
+                    }
+                    gridPos--;
+                    break;
+            }
+            charPos++;
+            gridPos++;
+            //System.out.println("n++:"+gridPos);
+        }
+
+        return getEvaluation(pieces);
+    }
 }
