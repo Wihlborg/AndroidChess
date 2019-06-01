@@ -266,6 +266,8 @@ public class GameActivity extends AppCompatActivity {
 
         findViewById(R.id.promotionblock).setVisibility(View.GONE);
         board.updateBoard(boardState);
+        boardState.clearPossibleMoves();
+        boardState.calcAllPossibleMoves();
 
         //findViewById(R.id.promotionblock).setVisibility(View.GONE);
         //popup = false;

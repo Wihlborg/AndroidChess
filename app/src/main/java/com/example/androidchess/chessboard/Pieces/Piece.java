@@ -124,6 +124,7 @@ public abstract class Piece {
 
         safe = isCheckedBishopMovement(sourcePos, boardState);
 
+
         if (safe)
             safe = isCheckedRookMovement(sourcePos, boardState);
 
@@ -396,7 +397,7 @@ public abstract class Piece {
         boolean safe = true;
         YX currentPos = new YX(sourcePos.y, sourcePos.x);
 
-        if (boardState.isWhiteTurn()) {
+        if (!boardState.isWhiteTurn()) {
 
             // check right diagonal
             currentPos.y--;

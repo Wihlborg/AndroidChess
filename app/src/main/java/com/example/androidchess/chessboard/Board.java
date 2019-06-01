@@ -27,6 +27,7 @@ public class Board {
         set.clone(boardContainer);
         setConstraints(set, boardContainer);
         setBoardState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+        //setBoardState("rnbqkbnr/pppppp2/8/8/8/8/PPPP3p/RNBQK3 w Qkq - 0 1");
         boardState.calcAllPossibleMoves();
         this.ai = new AI();
     }
@@ -292,7 +293,7 @@ public class Board {
                                     @Override
                                     public void run() {
 
-                                        if (boardState.isWhiteTurn() && false) {
+                                        if (boardState.isWhiteTurn()) {
                                             GameInfo.get().game.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
