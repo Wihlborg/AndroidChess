@@ -5,35 +5,25 @@ import com.example.androidchess.chessboard.Move;
 import com.example.androidchess.chessboard.YX;
 
 
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Piece {
     // for example black queen is = qb
     private boolean isWhite;
-    private LinkedList<Move> moves;
+    private List<Move> moves;
 
     public Piece() {
-        moves = new LinkedList<>();
+        moves = new ArrayList<>();
     }
-/*
-    public Piece(Piece piece) {
-        this.moves = new LinkedList<>();
-        this.isWhite = piece.isWhite;
-    }
-    */
 
-    /*
+    /**
     calculates the possible moves for this piece
     taking into account if the king is getting attacked using kingSafety() on every possible evaluated square
     */
     abstract public void calcPossibleMoves(YX sourcePos, BoardState boardState);
 
-    /*
-    calculates which square this piece attacks
-    */
-    //abstract public void calcAttackedSquares(YX sourcePos, BoardState boardState);
-
-    /*
+    /**
     swaps places of pieces/empty squares and calculates if the king stands in check.
     removes piece temporarily and swaps to simulate a capture if current checked position contains a piece
     */
@@ -54,22 +44,12 @@ public abstract class Piece {
 
         // if source piece is king
         if (boardState.getPiece(currentPos) instanceof King) {
-            if (boardState.getPiece(currentPos).isWhite())
-                boardState.setKingPos(true, currentPos);
-
-            else
-                boardState.setKingPos(false, currentPos);
+            boardState.setKingPos(boardState.getPiece(currentPos).isWhite(), currentPos);
         }
 
         // isSafeFromCheck
-        if (boardState.isWhiteTurn()) {
-            YX pos = boardState.getKingPos(true);
-            safe = (boardState.getPiece(pos)).isSafeFromCheck(pos, boardState);
-        }
-        else {
-            YX pos = boardState.getKingPos(false);
-            safe = (boardState.getPiece(pos)).isSafeFromCheck(pos, boardState);
-        }
+        YX pos = boardState.getKingPos(boardState.isWhiteTurn());
+        safe = (boardState.getPiece(pos)).isSafeFromCheck(pos, boardState);
 
         /*
         // temporarily save the array to skip new reset and calculations
@@ -105,11 +85,7 @@ public abstract class Piece {
 
         // if piece is king
         if (boardState.getPiece(sourcePos) instanceof King) {
-            if (boardState.getPiece(sourcePos).isWhite())
-                boardState.setKingPos(true, sourcePos);
-
-            else
-                boardState.setKingPos(false, sourcePos);
+            boardState.setKingPos(boardState.getPiece(sourcePos).isWhite(), sourcePos);
         }
 
         if (piece != null) {
@@ -120,19 +96,19 @@ public abstract class Piece {
     }
 
     public boolean isSafeFromCheck(YX sourcePos, BoardState boardState) {
-        boolean safe = true;
+        boolean safe = isCheckedBishopMovement(sourcePos, boardState);
 
-        safe = isCheckedBishopMovement(sourcePos, boardState);
-
-
-        if (safe)
+        if (safe) {
             safe = isCheckedRookMovement(sourcePos, boardState);
+        }
 
-        if (safe)
+        if (safe) {
             safe = isCheckedKnightMovement(sourcePos, boardState);
+        }
 
-        if (safe)
+        if (safe) {
             safe = isCheckedPawnMovement(sourcePos, boardState);
+        }
 
         return safe;
     }
@@ -462,7 +438,7 @@ public abstract class Piece {
         return moves.get(index);
     }
 
-    public LinkedList<Move> getMoves() {
+    public List<Move> getMoves() {
         return this.moves;
     }
 
@@ -477,7 +453,5 @@ public abstract class Piece {
     public void setWhite(boolean white) {
         isWhite = white;
     }
-
-    abstract public String toString();
 }
 

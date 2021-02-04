@@ -1,17 +1,17 @@
 package com.example.androidchess.Database;
 
-import android.os.StrictMode;
 import android.util.Log;
 import com.example.androidchess.Elo;
 import com.example.androidchess.User;
 
 import java.sql.*;
+import java.util.Locale;
 import java.util.Random;
 
 public class Database {
     private static final String TAG = "Database";
     private static Database db = null;
-    private Encryption encrypt = new Encryption();
+    private final Encryption encrypt = new Encryption();
     private Connection connect = null;
 
     //Singleton of Database
@@ -31,6 +31,7 @@ public class Database {
             Log.d(TAG,"Connected to database");
         } catch (SQLException e) {
             Log.d(TAG, "Failed to connect to database");
+            db = null;
         }
 
     }
@@ -186,8 +187,8 @@ public class Database {
 
              if (winnerA == 0){
                  winnerB = 1;
-             } else if (winnerA == (1/2)){
-                 winnerB = (1/2);
+             } else if (winnerA == ((double)1/2)){
+                 winnerB = ((double)1/2);
              }
 
              double newEloA = elo.getNewRating(eloA, eloB, winnerA);
@@ -195,8 +196,8 @@ public class Database {
 
              Statement statement = connect.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 
-             String stringA = String.format("UPDATE myshack.user WHERE username = %s SET elo_rating = %d", usernameA, newEloA);
-             String stringB = String.format("UPDATE myshack.user WHERE username = %s SET elo_rating = %d", usernameB, newEloB);
+             String stringA = String.format(Locale.ENGLISH,"UPDATE myshack.user WHERE username = %s SET elo_rating = %f", usernameA, newEloA);
+             String stringB = String.format(Locale.ENGLISH,"UPDATE myshack.user WHERE username = %s SET elo_rating = %f", usernameB, newEloB);
              statement.addBatch(stringA);
              statement.addBatch(stringB);
              statement.executeBatch();

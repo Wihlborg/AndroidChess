@@ -1,5 +1,7 @@
 package com.example.androidchess.chessboard;
 
+import org.jetbrains.annotations.NotNull;
+
 public class YX {
     public int y;
     public int x;
@@ -13,6 +15,7 @@ public class YX {
         return (y == pos.y && x == pos.x);
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "YX{" +

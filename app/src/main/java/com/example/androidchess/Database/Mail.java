@@ -56,8 +56,6 @@ public class Mail {
 
             Transport.send(message);
 
-            System.out.println("Done");
-
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

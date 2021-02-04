@@ -106,10 +106,8 @@ public class GameActivity extends AppCompatActivity {
     public void endGame(String winner, String winCondition) {
         if (User.INSTANCE.getSounds())
             soundPool.play(checkMateSound, (float)1.0, (float)1.0, 0, 0, (float)1.0);
-        System.out.println("endGame()");
         findViewById(R.id.winContainer).setVisibility(View.VISIBLE);
         findViewById(R.id.winContainer).animate().alpha(1f).setDuration(500).setListener(null);
-        System.out.println("Winner " + winner);
 
         ((ImageButton) findViewById(R.id.shareButton)).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -231,14 +229,12 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void promotion(View v) {
-        System.out.println("promotion()");
         String imgName = v.getTag().toString();
         char choice = imgName.charAt(0);
 
         BoardState boardState = board.boardState;
         switch (choice) {
             case 'q':
-                System.out.println(imgName);
                 if (imgName.charAt(1) == 'w')
                     boardState.setPiece(new Queen(true), GameInfo.get().promotionPos);
                 else

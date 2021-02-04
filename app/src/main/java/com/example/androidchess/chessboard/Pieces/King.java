@@ -4,6 +4,8 @@ import com.example.androidchess.chessboard.BoardState;
 import com.example.androidchess.chessboard.Move;
 import com.example.androidchess.chessboard.YX;
 
+import org.jetbrains.annotations.NotNull;
+
 public class King extends Piece {
 
     public King(boolean isWhite) {
@@ -204,61 +206,9 @@ public class King extends Piece {
         }
     }
 
-    /*
-    @Override
-    public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
-
-        YX currentPos = new YX(sourcePos.y, sourcePos.x);
-        int y = sourcePos.y;
-        int x = sourcePos.x;
-        currentPos.y = y - 1;
-        currentPos.x = x;
-        if (currentPos.y >= 0)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y - 1;
-        currentPos.x = x + 1;
-        if (currentPos.y >= 0 && currentPos.x < 8)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y;
-        currentPos.x = x + 1;
-        if (currentPos.x < 8)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y + 1;
-        currentPos.x = x + 1;
-        if (currentPos.y < 8 && currentPos.x < 8)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y + 1;
-        currentPos.x = x;
-        if (currentPos.y < 8)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y + 1;
-        currentPos.x = x - 1;
-        if (currentPos.y < 8 && currentPos.x >= 0)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y;
-        currentPos.x = x - 1;
-        if (currentPos.x >= 0)
-            this.setSquareAttackValue(currentPos, boardState);
-
-        currentPos.y = y - 1;
-        currentPos.x = x - 1;
-        if (currentPos.y >= 0 && currentPos.x >= 0)
-            this.setSquareAttackValue(currentPos, boardState);
-
-    }
-    */
-
+    @NotNull
     @Override
     public String toString() {
-        if (isWhite())
-            return "kw";
-        else
-            return "kb";
+        return isWhite() ? "kw" : "kb";
     }
 }

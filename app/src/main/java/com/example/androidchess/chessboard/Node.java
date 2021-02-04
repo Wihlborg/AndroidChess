@@ -1,20 +1,23 @@
 package com.example.androidchess.chessboard;
 
-import java.util.LinkedList;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Node {
     final int DEPTH = 3;
-    LinkedList<Node> children;
+    ArrayList<Node> children;
     //Node parent;
     BoardState boardState;
     double value;
 
     // constructor for root
     public Node(String FENStr) {
-        children = new LinkedList<>();
+        children = new ArrayList<>();
         //parent = null;
         BoardState boardState = new BoardState(FENStr);
-        LinkedList<Move> list = boardState.getAllMoves();
+        List<Move> list = boardState.getAllMoves();
         int depth = 0;
         for (Move move: list) {
             addChild(move, depth, boardState);
@@ -22,9 +25,9 @@ public class Node {
     }
 
     public Node(BoardState bs, int depth) {
-        children = new LinkedList<>();
+        children = new ArrayList<>();
         //this.parent = parent;
-        LinkedList<Move> list = bs.getAllMoves();
+        List<Move> list = bs.getAllMoves();
         depth++;
         for (Move move: list) {
             addChild(move, depth, bs);
@@ -48,6 +51,8 @@ public class Node {
             children.add(new Node(new BoardState(bs, move), depth));
     }
 
+    @NotNull
+    @Override
     public String toString() {
         String str;
 

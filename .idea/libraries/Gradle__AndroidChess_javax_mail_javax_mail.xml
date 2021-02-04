@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: AndroidChess.javax.mail.javax.mail">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/javax.mail/javax.mail.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

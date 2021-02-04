@@ -4,6 +4,8 @@ import com.example.androidchess.chessboard.BoardState;
 import com.example.androidchess.chessboard.Move;
 import com.example.androidchess.chessboard.YX;
 
+import org.jetbrains.annotations.NotNull;
+
 public class Pawn extends Piece {
 
     public Pawn(boolean isWhite) {
@@ -257,68 +259,9 @@ public class Pawn extends Piece {
         }
     }
 
-    /*
-    @Override
-    public void calcAttackedSquares(YX sourcePos, BoardState boardState) {
-
-        YX currentPos = new YX(0, 0);
-
-        // white pawn logic
-        if (this.isWhite()) {
-            // check diagonal left
-            // Y value is the same
-            currentPos.y = sourcePos.y + 1;
-            currentPos.x = sourcePos.x - 1;
-
-            if (currentPos.y < 8 && currentPos.x >= 0) {
-                if (boardState.hasPiece(currentPos)) {
-                    this.setSquareAttackValue(currentPos, boardState);
-
-                }
-            }
-
-            // check diagonal right
-            // Y value is the same
-            currentPos.x = sourcePos.x + 1;
-
-            if (currentPos.y < 8 && currentPos.x < 8) {
-                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
-                    this.setSquareAttackValue(currentPos, boardState);
-
-                }
-            }
-        }
-        // black pawn logic
-        else {
-            currentPos.y = sourcePos.y - 1;
-            currentPos.x = sourcePos.x - 1;
-
-            if (currentPos.y >= 0 && currentPos.x >= 0) {
-                if (boardState.hasPiece(currentPos)) {
-                    this.setSquareAttackValue(currentPos, boardState);
-
-                }
-            }
-
-            // check diagonal right
-            // Y value is the same
-            currentPos.x = sourcePos.x + 1;
-
-            if (currentPos.y >= 0 && currentPos.x < 8) {
-                if (boardState.hasPiece(currentPos) || currentPos == boardState.getEnPassantPos()) {
-                    this.setSquareAttackValue(currentPos, boardState);
-
-                }
-            }
-        }
-    }
-    */
-
+    @NotNull
     @Override
     public String toString() {
-        if (isWhite())
-            return "pw";
-        else
-            return "pb";
+        return isWhite() ? "pw" : "pb";
     }
 }

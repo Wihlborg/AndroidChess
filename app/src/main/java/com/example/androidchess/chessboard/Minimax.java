@@ -8,20 +8,20 @@ public class Minimax {
             return Evaluation.getEvaluation(node.boardState);
         }
 
+        double value;
         if (maxPlayer) {
-            double value = -99999;
+            value = -99999;
             for (Node child: node.children) {
                 value = Math.max(value, minimax(child, depth - 1, false));
             }
-            return value;
         }
         else /* minplayer*/ {
-            double value = +99999;
+            value = +99999;
             for (Node child: node.children) {
                 value = Math.min(value, minimax(child, depth - 1, true));
             }
-            return value;
         }
+        return value;
 
     }
 }

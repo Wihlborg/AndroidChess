@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/AndroidChess.iml" filepath="$PROJECT_DIR$/.idea/AndroidChess.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/AndroidChess.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/AndroidChess.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/javax.mail/AndroidChess.javax.mail.iml" filepath="$PROJECT_DIR$/.idea/modules/javax.mail/AndroidChess.javax.mail.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/mysql-connector-java-5.1.28-bin/AndroidChess.mysql-connector-java-5.1.28-bin.iml" filepath="$PROJECT_DIR$/.idea/modules/mysql-connector-java-5.1.28-bin/AndroidChess.mysql-connector-java-5.1.28-bin.iml" />
+    </modules>
+  </component>
+</project>

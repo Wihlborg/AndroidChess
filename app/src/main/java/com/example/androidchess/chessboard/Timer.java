@@ -12,10 +12,10 @@ public class Timer {
 
     public float stopTimer() {
         stopTime = System.nanoTime();
-        return retreiveTime();
+        return retrieveTime();
     }
 
-    public float retreiveTime() {
+    public float retrieveTime() {
         return (float)(stopTime-startTime)/1000000000;
     }
 

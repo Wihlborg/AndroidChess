@@ -27,16 +27,4 @@ public class Utils {
         view.destroyDrawingCache();
         return b;
     }
-
-    public static void savePic(Bitmap b, String strFileName) {
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream(strFileName);
-            b.compress(Bitmap.CompressFormat.PNG, 90, fos);
-            fos.flush();
-            fos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 }

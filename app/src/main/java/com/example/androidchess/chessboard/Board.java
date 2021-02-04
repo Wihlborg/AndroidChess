@@ -1,22 +1,27 @@
 package com.example.androidchess.chessboard;
 
 import android.graphics.Color;
-import android.os.Handler;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.TextView;
+
 import com.example.androidchess.GameMode;
 import com.example.androidchess.R;
-import com.example.androidchess.chessboard.Pieces.*;
+import com.example.androidchess.chessboard.Pieces.Bishop;
+import com.example.androidchess.chessboard.Pieces.King;
+import com.example.androidchess.chessboard.Pieces.Knight;
+import com.example.androidchess.chessboard.Pieces.Pawn;
+import com.example.androidchess.chessboard.Pieces.Queen;
+import com.example.androidchess.chessboard.Pieces.Rook;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class Board {
     private Square[][] squares;
     public BoardState boardState;
-    private AI ai;
+    //private AI ai;
 
     public boolean[][] possibleClicks = new boolean[8][8];
 
@@ -27,9 +32,8 @@ public class Board {
         set.clone(boardContainer);
         setConstraints(set, boardContainer);
         setBoardState("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
-        //setBoardState("rnbqkbnr/pppppp2/8/8/8/8/PPPP3p/RNBQK3 w Qkq - 0 1");
         boardState.calcAllPossibleMoves();
-        this.ai = new AI();
+        //this.ai = new AI();
     }
 
     YX firstPos = new YX(4, 4);
@@ -56,13 +60,9 @@ public class Board {
             firstPos = pos;
             this.getSquare(pos).setBackgroundColor(Color.parseColor("#00FFFF"));
             showPossibleMoves(pos);
-            //System.out.println(boardState.getPiece(pos).getMoves().toString());
-            //System.out.println(boardState);
-            //System.out.println(boardState.getFENString());
         }
         // a legal move is made
         else if (swapCounter == 2 && legalMove(pos)) {
-            //boardState.doLegalMove(new Move(firstPos, pos, boardState.getPiece(firstPos)));
             boardState = new BoardState(boardState, new Move(firstPos, pos, boardState.getPiece(firstPos)));
             updateBoard(boardState);
 
@@ -77,14 +77,12 @@ public class Board {
 
             clearVisibleMoves();
         }
-        //
         else {
             swapCounter = 0;
             clearVisibleMoves();
         }
 
         timer.stopTimer();
-        //System.out.println(timer.retreiveTime());
     }
 
     public void swap(YX firstPos, YX secondPos) {
@@ -121,14 +119,11 @@ public class Board {
 
     public void updateBoard(BoardState boardState) {
         YX currentPos = new YX(0, 0);
-        //System.out.println("updateboard");
         for (; currentPos.y < 8; currentPos.y++) {
             for (currentPos.x = 0; currentPos.x < 8; currentPos.x++) {
-                //System.out.println(currentPos);
                 this.getSquare(currentPos).setPiece(boardState.getPiece(currentPos));
             }
         }
-        //board.redrawViews();
     }
 
     public void setBoardState(String FENStr) {
@@ -164,10 +159,7 @@ public class Board {
     */
 
     public void showPossibleMoves(YX sourcePos) {
-        LinkedList<Move> listOfMoves = boardState.getPiece(sourcePos).getMoves();
-        //System.out.println("object: "+System.identityHashCode(boardState.getPiece(sourcePos)));
-        //System.out.println("list: "+System.identityHashCode(listOfMoves));
-        //System.out.println(listOfMoves.toString());
+        List<Move> listOfMoves = boardState.getPiece(sourcePos).getMoves();
         for (Move move : listOfMoves) {
             if (boardState.hasPiece(move.destination)) {
                 this.getSquare(move.destination).setBackgroundColor(Color.parseColor("#FF0000"));
@@ -223,26 +215,6 @@ public class Board {
         }
     }
 
-    /*
-    public void resetBackgrounds() {
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                if (y % 2 == 0) {
-                    if (x % 2 == 0)
-                        squares[y][x].setBackgroundColor(Color.parseColor("#45515F"));
-                    else
-                        squares[y][x].setBackgroundColor(Color.parseColor("#FFFFFF"));
-                } else {
-                    if (x % 2 == 0)
-                        squares[y][x].setBackgroundColor(Color.parseColor("#FFFFFF"));
-                    else
-                        squares[y][x].setBackgroundColor(Color.parseColor("#45515F"));
-                }
-            }
-        }
-    }
-    */
-
     public void createSquares(GameActivity gameActivity, ConstraintLayout boardContainer) {
         DisplayMetrics metrics = gameActivity.getResources().getDisplayMetrics();
 
@@ -252,7 +224,6 @@ public class Board {
             for (int x = 0; x < 8; x++) {
                 char a = 'a';
                 String coordinate = "" + ((char) (a + y)) + (x + 1);
-                //System.out.println(coordinate);
                 squares[y][x] = new Square(gameActivity, coordinate);
                 boardContainer.addView(squares[y][x]);
                 squares[y][x].setId(View.generateViewId());
@@ -280,11 +251,7 @@ public class Board {
                 squares[y][x].setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        String fen = boardState.getFENString();
                         move(yx);
-                        boardState.printBoardState();
-                        System.out.println(boardState.getEnPassantPos());
-                        System.out.println(boardState.getFENString());
 
                         if (!boardState.isGameOver()) {
                             if (GameMode.INSTANCE.getMode() == GameMode.Mode.AI) {
@@ -292,8 +259,8 @@ public class Board {
                                 Thread thread = new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-
-                                        if (boardState.isWhiteTurn()) {
+                                        //Avkommentera för henkeFish som vit
+                                        /*if (boardState.isWhiteTurn()) {
                                             GameInfo.get().game.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -307,7 +274,7 @@ public class Board {
                                                     updateBoard(boardState);
                                                 }
                                             });
-                                        }
+                                        }*/
 
                                         if (!boardState.isWhiteTurn()) {
 
@@ -362,7 +329,7 @@ public class Board {
                                             timer.startTimer();
                                             Node root = new Node(boardState.getFENString());
                                             timer.stopTimer();
-                                            System.out.println(timer.retreiveTime());
+                                            System.out.println(timer.retrieveTime());
 
                                     /*
                                     int nrOfNodes = 0;
@@ -390,12 +357,10 @@ public class Board {
                                                 }
                                             }
                                             timer.stopTimer();
-                                            System.out.println(timer.retreiveTime());
+                                            System.out.println(timer.retrieveTime());
 
                                             System.out.println("b" + bestScore);
-                                            //System.out.println(bestMove.boardState);
                                             boardState = new BoardState(bestMove.boardState.getFENString());
-                                            //System.out.println(boardState.getFENString());
                                             GameInfo.get().game.runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -510,14 +475,6 @@ public class Board {
         squares[7][6].setPiece(new Bishop(false));
         squares[7][7].setPiece(new Rook(false));
 
-    }
-
-    public void redrawViews() {
-        for (int y = 0; y < 8; y++) {
-            for (int x = 0; x < 8; x++) {
-                squares[y][x].postInvalidate();
-            }
-        }
     }
 
     public Square getSquare(YX yx) {
